@@ -7,6 +7,12 @@
 		<ClCompile Include="src\main.cpp">
 			<Filter>src</Filter>
 		</ClCompile>
+		<ClCompile Include="src\main.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
+		<ClCompile Include="src\ofApp.cpp">
+			<Filter>src</Filter>
+		</ClCompile>
 		<ClCompile Include="..\..\..\addons\ofxGui\src\ofxBaseGui.cpp">
 			<Filter>addons\ofxGui\src</Filter>
 		</ClCompile>
@@ -52,6 +58,12 @@
 		<ClCompile Include="..\..\..\addons\ofxHPVPlayer\src\ofxHPVPLayer.cpp">
 			<Filter>addons\ofxHPVPlayer\src</Filter>
 		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxJSON\src\ofxJSONElement.cpp">
+			<Filter>addons\ofxJSON\src</Filter>
+		</ClCompile>
+		<ClCompile Include="..\..\..\addons\ofxJSON\libs\jsoncpp\src\jsoncpp.cpp">
+			<Filter>addons\ofxJSON\libs\jsoncpp\src</Filter>
+		</ClCompile>
 	</ItemGroup>
 	<ItemGroup>
 		<Filter Include="src">
@@ -72,8 +84,32 @@
 		<Filter Include="addons\ofxHPVPlayer\src">
 			<UniqueIdentifier>{C2440AC6-7342-B6E7-CD74-B096}</UniqueIdentifier>
 		</Filter>
+		<Filter Include="addons\ofxJSON">
+			<UniqueIdentifier>{CF86E01B-D8D7-A112-88F3-5883}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxJSON\src">
+			<UniqueIdentifier>{CE83AFE9-FE4A-682E-D5C9-50B4}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxJSON\libs">
+			<UniqueIdentifier>{5302B3F8-ECDD-0465-334A-F39E}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxJSON\libs\jsoncpp">
+			<UniqueIdentifier>{87D6C548-39D9-FD9F-093E-9F4E}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxJSON\libs\jsoncpp\include">
+			<UniqueIdentifier>{0B6CA981-484E-6E8C-776C-7298}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxJSON\libs\jsoncpp\include\json">
+			<UniqueIdentifier>{5FF260B2-1497-3EFE-19D5-40DB}</UniqueIdentifier>
+		</Filter>
+		<Filter Include="addons\ofxJSON\libs\jsoncpp\src">
+			<UniqueIdentifier>{6D569A5B-6719-AEFD-C08E-5CE5}</UniqueIdentifier>
+		</Filter>
 	</ItemGroup>
 	<ItemGroup>
+		<ClInclude Include="src\ofApp.h">
+			<Filter>src</Filter>
+		</ClInclude>
 		<ClInclude Include="src\ofApp.h">
 			<Filter>src</Filter>
 		</ClInclude>
@@ -136,6 +172,18 @@
 		</ClInclude>
 		<ClInclude Include="..\..\..\addons\ofxHPVPlayer\src\Timer.h">
 			<Filter>addons\ofxHPVPlayer\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxJSON\src\ofxJSON.h">
+			<Filter>addons\ofxJSON\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxJSON\src\ofxJSONElement.h">
+			<Filter>addons\ofxJSON\src</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxJSON\libs\jsoncpp\include\json\json-forwards.h">
+			<Filter>addons\ofxJSON\libs\jsoncpp\include\json</Filter>
+		</ClInclude>
+		<ClInclude Include="..\..\..\addons\ofxJSON\libs\jsoncpp\include\json\json.h">
+			<Filter>addons\ofxJSON\libs\jsoncpp\include\json</Filter>
 		</ClInclude>
 	</ItemGroup>
 	<ItemGroup>
