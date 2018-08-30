@@ -2,7 +2,7 @@
 
 ## Platform
 
-Openframeworks 0.10.10 (Windows 10, VS 2017)
+Openframeworks 0.10.0 (Windows 10, VS 2017)
 
 ## Addons
 
@@ -10,7 +10,7 @@ Openframeworks 0.10.10 (Windows 10, VS 2017)
 	
 1. Make your project with Project Generator, including the ofxKinectForWindows2 addon, and open in IDE (Visual Studio 2017)
 	
-2. In Property Manager (open it from View -> Other Windows -> Property Manager), right click on your project to select Add Existing Property Sheet... and select the ofxKinectForWindows2.props file located in ofxKinectForWindows2 master folder
+2. In `Property Manager` (open it from `View` -> `Other Windows` -> `Property Manager`), right click on your project to select Add Existing Property Sheet... and select the `ofxKinectForWindows2.props` file located in `ofxKinectForWindows2` master folder
 
 * ofxHPVPlayer [https://github.com/vjacob/ofxHPVPlayer]
 
@@ -20,13 +20,13 @@ Openframeworks 0.10.10 (Windows 10, VS 2017)
 int main( )
 {
     ofGLWindowSettings settings;
-	settings.setSize(1024, 512);
+    settings.setSize(1024, 512);
     settings.windowMode = OF_WINDOW;
     settings.setGLVersion(4, 1);
-    
-    ofCreateWindow(settings);
 
-	ofRunApp(new ofApp());
+    ofCreateWindow(settings);
+	
+    ofRunApp(new ofApp());
 }
 ```
 	
