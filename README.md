@@ -14,7 +14,7 @@ Openframeworks 0.10.10 (Windows 10, VS 2017)
 
 * ofxHPVPlayer [https://github.com/vjacob/ofxHPVPlayer]
 
-for oF ver 0.10.0, use the following func in `main.cpp` to set OpenGL ver. 4.1
+	- for oF ver 0.10.0, use the following func in `main.cpp` to set OpenGL ver. 4.1
 
 ```C++
 int main( )
