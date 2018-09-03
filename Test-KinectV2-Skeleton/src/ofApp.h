@@ -26,7 +26,7 @@ class ofApp : public ofBaseApp{
 		ofxKFW2::Device kinect;
 		ICoordinateMapper* coordinateMapper;
 
-		vector<ofxKFW2::Data::Body> &bodies;
+		//vector<ofxKFW2::Data::Body> &bodies;
 
 		ofImage bodyIndexImg, foregroundImg;
 		vector<ofVec2f> colorCoords;
