@@ -115,8 +115,24 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+	ofSetColor(255);
+	ofFill();
 	bodyIndexImg.draw(0, 0);
 	foregroundImg.draw(0, DEPTH_HEIGHT);
+
+	ofSetColor(0);
+	ofFill();
+
+	for (auto& body: kinect.getBodySource()->getBodies()){
+		if (body.tracked)
+		{
+			for (auto& joint: body.joints)
+			{
+				ofVec2f jointDepthPos = joint.second.getPositionInDepthMap();
+				ofDrawEllipse(jointDepthPos.x, jointDepthPos.y, 5, 5);
+			}
+		}
+	}
 }
 
 //--------------------------------------------------------------
