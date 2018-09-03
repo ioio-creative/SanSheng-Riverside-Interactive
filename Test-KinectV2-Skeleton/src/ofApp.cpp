@@ -9,7 +9,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-	//ofSetWindowPosition(DEPTH_WIDTH, DEPTH_HEIGHT);
+	ofSetWindowPosition(DEPTH_WIDTH, DEPTH_HEIGHT*2);
 
 	kinect.open();
 	kinect.initDepthSource();
@@ -23,6 +23,11 @@ void ofApp::setup(){
 	}
 
 	bHaveAllStreams = false;
+
+	bodyIndexImg.allocate(DEPTH_WIDTH, DEPTH_HEIGHT, OF_IMAGE_COLOR);
+	foregroundImg.allocate(DEPTH_WIDTH, DEPTH_HEIGHT, OF_IMAGE_COLOR);
+
+	colorCoords.resize(DEPTH_WIDTH * DEPTH_HEIGHT);
 }
 
 //--------------------------------------------------------------
@@ -110,7 +115,8 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-
+	bodyIndexImg.draw(0, 0);
+	foregroundImg.draw(0, DEPTH_HEIGHT);
 }
 
 //--------------------------------------------------------------
