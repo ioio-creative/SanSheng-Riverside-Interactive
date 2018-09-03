@@ -50,7 +50,7 @@ void ofApp::update(){
 
 	// Count number of tracked bodies
 	numBodiesTracked = 0;
-	auto& bodies = kinect.getBodySource()->getBodies();
+	bodies = kinect.getBodySource()->getBodies();
 	for (auto& body : bodies) {
 		if (body.tracked) {
 			numBodiesTracked++;
@@ -117,6 +117,20 @@ void ofApp::update(){
 void ofApp::draw(){
 	bodyIndexImg.draw(0, 0);
 	foregroundImg.draw(0, DEPTH_HEIGHT);
+
+	ofFill();
+	ofSetColor(0);
+
+	for (auto& body: bodies){
+		if (body.tracked)
+		{
+			for (auto& joint: body.joints)
+			{
+				ofVec2f jointDepthPos = joint.second.getPositionInDepthMap();
+				ofDrawEllipse(jointDepthPos.x, jointDepthPos.y, 5, 5);
+			}
+		}
+	}
 }
 
 //--------------------------------------------------------------
