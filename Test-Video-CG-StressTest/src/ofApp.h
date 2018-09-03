@@ -46,7 +46,8 @@ class ofApp : public ofBaseApp{
 		vector<ofVideoPlayer> vid;
 #endif
 
-		ofFbo CGScene;
+		ofFbo CGFbo;
+		ofFbo VideoFbo;
 
 		//Settings
 		ofxJSONElement settings;
