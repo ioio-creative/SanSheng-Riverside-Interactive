@@ -1,18 +1,20 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxJSON.h"
+
 /* ======================================================
  //Settings
  ======================================================*/
 #define USE_HPVPLAYER
 #define NUM_OF_VID 2
 
+ /* ======================================================
+  //Includes
+  ======================================================*/
+#include "ofxJSON.h"
 #ifdef USE_HPVPLAYER
 #include "ofxHPVPlayer.h"
 #endif
-
-
 
 
 class ofApp : public ofBaseApp{
@@ -46,7 +48,8 @@ class ofApp : public ofBaseApp{
 		vector<ofVideoPlayer> vid;
 #endif
 
-		ofFbo CGScene;
+		ofFbo CGFbo;
+		ofFbo VideoFbo;
 
 		//Settings
 		ofxJSONElement settings;
