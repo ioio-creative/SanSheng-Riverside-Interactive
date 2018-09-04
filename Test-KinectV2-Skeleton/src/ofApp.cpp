@@ -7,8 +7,11 @@
 #define COLOR_WIDTH 1920
 #define COLOR_HEIGHT 1080
 
+#define MAX_PLAYERS 6
+
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofLogToConsole();
 	ofSetWindowPosition(DEPTH_WIDTH, DEPTH_HEIGHT*2);
 
 	kinect.open();
@@ -28,6 +31,8 @@ void ofApp::setup(){
 	foregroundImg.allocate(DEPTH_WIDTH, DEPTH_HEIGHT, OF_IMAGE_COLOR);
 
 	colorCoords.resize(DEPTH_WIDTH * DEPTH_HEIGHT);
+
+	bodyPositions.resize(MAX_PLAYERS+1);
 }
 
 //--------------------------------------------------------------
@@ -38,6 +43,7 @@ void ofApp::update(){
 	auto& depthPix = kinect.getDepthSource()->getPixels();
 	auto& bodyIndexPix = kinect.getBodyIndexSource()->getPixels();
 	auto& colorPix = kinect.getColorSource()->getPixels();
+	floorPlane = kinect.getBodySource()->getFloorClipPlane();
 
 	// Make sure there's some data here, otherwise the cam probably isn't ready yet
 	if (!depthPix.size() || !bodyIndexPix.size() || !colorPix.size()) {
@@ -50,10 +56,19 @@ void ofApp::update(){
 
 	// Count number of tracked bodies
 	numBodiesTracked = 0;
+	bodyPositions.clear();
 	auto& bodies = kinect.getBodySource()->getBodies();
 	for (auto& body : bodies) {
 		if (body.tracked) {
 			numBodiesTracked++;
+
+			//bodyPositions[body.bodyId] = body.joints.at(JointType_Head).getPosition();
+			int ID = body.bodyId;
+			ofLogNotice() << "tracked body ID: " << ID << endl;
+		}
+		else
+		{
+			//bodyPositions.erase(bodyPositions.begin()+body.bodyId);
 		}
 	}
 
@@ -131,8 +146,16 @@ void ofApp::draw(){
 				ofVec2f jointDepthPos = joint.second.getPositionInDepthMap();
 				ofDrawEllipse(jointDepthPos.x, jointDepthPos.y, 5, 5);
 			}
+			
+			ofSetColor(255, 255, 0);
+			ofFill();
+
+			//ofVec3f& headJoint = bodyPositions[body.bodyId];
+			//ofDrawEllipse(headJoint.x, headJoint.y, 10, 10);
 		}
 	}
+
+
 }
 
 //--------------------------------------------------------------
