@@ -14,9 +14,10 @@ void ofApp::setup(){
 	}
 
 	//init
+	ofSetVerticalSync(true);
+	ofSetFrameRate(60);
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
-	ofSetVerticalSync(true);
 
 	w = ofGetScreenWidth();
 	h = ofGetScreenHeight();
@@ -39,7 +40,6 @@ void ofApp::update(){
 	else {
 		ofShowCursor();
 	}
-
 }
 
 //--------------------------------------------------------------
@@ -64,7 +64,9 @@ void ofApp::keyReleased(int key){
 		break;
 	}
 }
-
+//--------------------------------------------------------------
+//------------------------- Video Player -----------------------
+//--------------------------------------------------------------
 //--------------------------------------------------------------
 void ofApp::setupVideoPlayer() {
 
@@ -92,6 +94,11 @@ void ofApp::setupVideoPlayer() {
 vid[currVidID].setPaused(false);
 vid[currVidID].play();
 */
+}
+
+void ofApp::exit() {
+	/* Cleanup and destroy HPV Engine upon exit */
+	HPV::DestroyHPVEngine();
 }
 
 //--------------------------------------------------------------

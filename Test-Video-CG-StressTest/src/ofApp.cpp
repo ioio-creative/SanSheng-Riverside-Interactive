@@ -16,9 +16,10 @@ void ofApp::setup() {
 	}
 
 	//init
+	ofSetVerticalSync(true);
+	ofSetFrameRate(60);
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
-	ofSetVerticalSync(true);
 
 	w = ofGetScreenWidth();
 	h = ofGetScreenHeight();
@@ -52,6 +53,46 @@ void ofApp::setup() {
 
 	vid[currVidID].setPaused(false);
 	vid[currVidID].play();
+
+
+#ifdef USE_PARTICLE
+
+	//particle
+	 // 1,000,000 particles
+	unsigned partW = w;
+	unsigned partH = h;
+
+	particles.init(partW, partH);
+
+	if (ofIsGLProgrammableRenderer()) particles.loadShaders("shaders330/update", "shaders330/draw");
+	else particles.loadShaders("shaders120/update", "shaders120/draw");
+
+	// initial positions
+	// use new to allocate 4,000,000 floats on the heap rather than
+	// the stack
+	float* particlePosns = new float[partW * partH * 4];
+	for (unsigned y = 0; y < partH; ++y)
+	{
+		for (unsigned x = 0; x < partW; ++x)
+		{
+			unsigned idx = y * partW + x;
+			particlePosns[idx * 4] = 400.f * x / (float)partW - 200.f; // particle x
+			particlePosns[idx * 4 + 1] = 400.f * y / (float)partH - 200.f; // particle y
+			particlePosns[idx * 4 + 2] = 0.f; // particle z
+			particlePosns[idx * 4 + 3] = 0.f; // dummy
+		}
+	}
+	particles.loadDataTexture(ofxGpuParticles::POSITION, particlePosns);
+	delete[] particlePosns;
+
+	// initial velocities
+	particles.zeroDataTexture(ofxGpuParticles::VELOCITY);
+
+	// listen for update event to set additonal update uniforms
+	ofAddListener(particles.updateEvent, this, &ofApp::onParticlesUpdate);
+
+
+#endif
 }
 
 //--------------------------------------------------------------
@@ -80,11 +121,11 @@ void ofApp::update() {
 		}
 
 		currVidID++;
-		
 
 		if (currVidID >= NUM_OF_VID) {
 			currVidID = 0;
 		}
+
 		if (debugMode) {
 		ofLog() << "Movie Play: " << currVidID;
 		}
@@ -93,7 +134,9 @@ void ofApp::update() {
 		vid[currVidID].play();
 	}
 
-
+#ifdef USE_PARTICLE
+	particles.update();
+#endif
 }
 
 //--------------------------------------------------------------
@@ -106,6 +149,15 @@ void ofApp::draw() {
 	//fbo - CG
 	CGFbo.begin();
 	ofClear(255, 255, 255, 0);
+	ofBackground(0, 0, 0);
+
+#ifdef USE_PARTICLE
+	cam.begin();
+	ofEnableBlendMode(OF_BLENDMODE_ADD);
+	particles.draw();
+	ofDisableBlendMode();
+	cam.end();
+#endif
 	CGFbo.end();
 
 
@@ -118,6 +170,7 @@ void ofApp::draw() {
 	VideoFbo.end();
 
 	//fbo - draw
+	ofSetColor(255, 255, 255, 255 - vidAlpha);
 	CGFbo.draw(0,0);
 	ofSetColor(255, 255, 255, vidAlpha);
 	VideoFbo.draw(0,0);
@@ -204,10 +257,24 @@ void ofApp::keyReleased(int key) {
 //-------------------------- video --------------------------
 //--------------------------------------------------------------
 #ifdef USE_HPVPLAYER
-void exit() {
+void ofApp::exit() {
 	/* Cleanup and destroy HPV Engine upon exit */
 	HPV::DestroyHPVEngine();
 }
 #else
+
+#endif
+
+
+
+#ifdef USE_PARTICLE
+// set any update uniforms in this function
+void ofApp::onParticlesUpdate(ofShader& shader)
+{
+	ofVec3f mouse(ofGetMouseX() - .5f * ofGetWidth(), .5f * ofGetHeight() - ofGetMouseY(), 0.f);
+	shader.setUniform3fv("mouse", mouse.getPtr());
+	shader.setUniform1f("elapsed", ofGetLastFrameTime());
+	shader.setUniform1f("radiusSquared", 200.f * 200.f);
+}
 
 #endif

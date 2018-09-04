@@ -1,3 +1,4 @@
+ofxGpuParticles
 ofxGui
 ofxHPVPlayer
 ofxJSON
