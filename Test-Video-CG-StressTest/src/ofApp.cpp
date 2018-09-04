@@ -39,8 +39,9 @@ void ofApp::setup() {
 		ofLog() << i;
 		/* Try to load file and start playback */
 		vid[i].load(ofToString(i) + ".hpv");
+		vid[i].setLoopState(OF_LOOP_NONE);
 		vid[i].play();
-
+		vid[i].setPaused(true);
 #else
 	vid[i].load("1.hpv");
 #endif
@@ -48,27 +49,50 @@ void ofApp::setup() {
 
 	CGFbo.allocate(w, h, GL_RGBA);
 	VideoFbo.allocate(w, h, GL_RGBA);
+
+	vid[currVidID].setPaused(false);
+	vid[currVidID].play();
 }
 
 //--------------------------------------------------------------
 void ofApp::update() {
 	currTime = ofGetElapsedTimef();
+
+	if (!debugMode) {
+		ofHideCursor();
+	}
+	else {
+		ofShowCursor();
+	}
+
 	//video
 #ifdef USE_HPVPLAYER
 	HPV::Update();
 #else
 	vid[currVidID].update();
 #endif
-	if (vid[currVidID].getPosition() == 1) {
-		currVidID++;
-		ofLog() << "Movie Done: " << vid[currVidID].getIsMovieDone();
 
-		if (currVidID == 1) {
+	if (vid[currVidID].getCurrentFrame() == vid[currVidID].getTotalNumFrames()-1) {
+		vid[currVidID].setPaused(true);
+		vid[currVidID].seekToFrame(0);
+		if (debugMode) {
+			ofLog() << "Movie Done: " << currVidID;
+		}
+
+		currVidID++;
+		
+
+		if (currVidID >= NUM_OF_VID) {
 			currVidID = 0;
 		}
-		else if (currVidID == 0) { currVidID = 1; }
+		if (debugMode) {
+		ofLog() << "Movie Play: " << currVidID;
+		}
+
+		vid[currVidID].setPaused(false);
+		vid[currVidID].play();
 	}
-	ofLog() << "Curr Movie ID: " << currVidID << " " << vid[currVidID].getPosition();
+
 
 }
 
@@ -88,10 +112,9 @@ void ofApp::draw() {
 	//fbo - Video
 	VideoFbo.begin();
 	ofClear(255, 255, 255, 0);
-
-	vid[0].draw(0, 0, w / 2, h / 2);
-
-	vid[1].draw(w / 2, h / 2, w, h);
+	ofSetColor(255, 255, 255);
+	vid[0].draw(0, 0, w, h / 2);
+	vid[1].draw(0, h / 2, w, h/2);
 	VideoFbo.end();
 
 	//fbo - draw
@@ -101,7 +124,7 @@ void ofApp::draw() {
 
 	if (debugMode) {
 		ofSetColor(255, 0, 0);
-		ofDrawBitmapString(ofToString(ofGetFrameRate()), 20, 20);
+		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
 	}
 }
 
@@ -169,9 +192,12 @@ void ofApp::loadSettings() {
 
 
 void ofApp::keyReleased(int key) {
-	if (key == 'd') {
+	switch (key) {
+	case 'd':
 		debugMode = !debugMode;
+		break;
 	}
+
 }
 
 //--------------------------------------------------------------
