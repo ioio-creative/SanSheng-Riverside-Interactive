@@ -23,10 +23,16 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
+		float pointDistFromPlane(ofVec3f point, Vector4 plane) {
+			ofVec3f* normal = new ofVec3f(plane.x, plane.y, plane.z);
+			return (normal->dot(point) + plane.w) / (normal->length());
+		}
+
 		ofxKFW2::Device kinect;
 		ICoordinateMapper* coordinateMapper;
 
-		//vector<ofxKFW2::Data::Body> &bodies;
+		Vector4 floorPlane;
+		vector<ofVec3f> bodyPositions;
 
 		ofImage bodyIndexImg, foregroundImg;
 		vector<ofVec2f> colorCoords;
