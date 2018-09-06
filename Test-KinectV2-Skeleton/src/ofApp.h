@@ -38,4 +38,8 @@ class ofApp : public ofBaseApp{
 		vector<ofVec2f> colorCoords;
 		int numBodiesTracked;
 		bool bHaveAllStreams;
+
+		ofEasyCam Cam3D;
+
+		bool debugLog = false;
 };

@@ -12,6 +12,7 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofLogToConsole();
+	ofSetLogLevel(OF_LOG_ERROR);
 	ofSetWindowPosition(DEPTH_WIDTH, DEPTH_HEIGHT*2);
 
 	kinect.open();
@@ -44,6 +45,8 @@ void ofApp::update(){
 	auto& bodyIndexPix = kinect.getBodyIndexSource()->getPixels();
 	auto& colorPix = kinect.getColorSource()->getPixels();
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
+	string floorMsg = "[" + to_string(floorPlane.x) + "][" + to_string(floorPlane.y) + "][" + to_string(floorPlane.z) + "][" + to_string(floorPlane.w) + "]";
+	ofLogError() << "Floor Plane Vector: " << floorMsg << endl;
 
 	// Make sure there's some data here, otherwise the cam probably isn't ready yet
 	if (!depthPix.size() || !bodyIndexPix.size() || !colorPix.size()) {
@@ -56,15 +59,15 @@ void ofApp::update(){
 
 	// Count number of tracked bodies
 	numBodiesTracked = 0;
-	bodyPositions.clear();
 	auto& bodies = kinect.getBodySource()->getBodies();
+
 	for (auto& body : bodies) {
 		if (body.tracked) {
 			numBodiesTracked++;
-
-			//bodyPositions[body.bodyId] = body.joints.at(JointType_Head).getPosition();
-			int ID = body.bodyId;
-			ofLogNotice() << "tracked body ID: " << ID << endl;
+			//TODO: type casting
+			int bodyIdx = body.bodyId;
+			bodyPositions[bodyIdx] = body.joints.at(JointType_Head).getPosition();
+			ofLogNotice() << "tracked body ID: " << bodyIdx << endl;
 		}
 		else
 		{
@@ -130,15 +133,22 @@ void ofApp::update(){
 
 //--------------------------------------------------------------
 void ofApp::draw(){
-	ofSetColor(255);
+	/*ofSetColor(255);
 	ofFill();
 	bodyIndexImg.draw(0, 0);
-	foregroundImg.draw(0, DEPTH_HEIGHT);
+	foregroundImg.draw(0, DEPTH_HEIGHT);*/
+
+	Cam3D.begin();
+	ofPushMatrix();
+	
+	ofScale(100, 100, 100);
 
 	ofSetColor(0);
 	ofFill();
 
-	for (auto& body: kinect.getBodySource()->getBodies()){
+	ofDrawPlane(floorPlane.x, floorPlane.y, floorPlane.z, 5, 5);
+	ofPopMatrix();
+	/*for (auto& body: kinect.getBodySource()->getBodies()){
 		if (body.tracked)
 		{
 			for (auto& joint: body.joints)
@@ -149,13 +159,12 @@ void ofApp::draw(){
 			
 			ofSetColor(255, 255, 0);
 			ofFill();
-
-			//ofVec3f& headJoint = bodyPositions[body.bodyId];
-			//ofDrawEllipse(headJoint.x, headJoint.y, 10, 10);
+			ofVec3f& headJoint = bodyPositions[int(body.bodyId)];
+			ofDrawEllipse(headJoint.x, headJoint.y, 10, 10);
 		}
-	}
+	}*/
 
-
+	Cam3D.end();
 }
 
 //--------------------------------------------------------------
@@ -165,7 +174,18 @@ void ofApp::exit() {
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
-
+	if (key == 'd')
+	{
+		debugLog = !debugLog;
+		if (debugLog)
+		{
+			ofSetLogLevel(OF_LOG_NOTICE);
+		}
+		else
+		{
+			ofSetLogLevel(OF_LOG_ERROR);
+		}
+	}
 }
 
 //--------------------------------------------------------------
