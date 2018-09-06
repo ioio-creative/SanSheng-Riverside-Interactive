@@ -158,10 +158,11 @@ void ofApp::draw(){
 				ofDrawSphere(jointPos.x, jointPos.y, jointPos.z, 0.02);
 			}
 			
-			//ofSetColor(255, 255, 0);
+			ofSetColor(255, 0, 0);
 			//ofFill();
 			ofVec3f& headJoint = bodyPositions[int(body.bodyId)];
-			ofDrawEllipse(headJoint.x, headJoint.y, 10, 10);
+			ofVec3f headOnFloor = projectedPointOntoPlane(headJoint, floorPlane);
+			ofDrawBox(headOnFloor, 0.1);
 		}
 	}
 

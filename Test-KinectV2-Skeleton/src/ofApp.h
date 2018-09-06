@@ -28,6 +28,11 @@ class ofApp : public ofBaseApp{
 			return (normal->dot(point) + plane.w) / (normal->length());
 		}
 
+		ofVec3f projectedPointOntoPlane(ofVec3f point, Vector4 plane) {
+			ofVec3f n = ofVec3f(plane.x, plane.y, plane.z);			
+			return (point - (n.dot(point) + plane.w ) * n);
+		}
+
 		ofxKFW2::Device kinect;
 		ICoordinateMapper* coordinateMapper;
 
