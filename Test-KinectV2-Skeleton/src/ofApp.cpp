@@ -143,27 +143,29 @@ void ofApp::draw(){
 	
 	ofScale(100, 100, 100);
 
-	ofSetColor(0);
+	ofSetColor(ofColor::blue);
 	ofFill();
 
-	ofDrawPlane(floorPlane.x, floorPlane.y, floorPlane.z, 5, 5);
-	ofPopMatrix();
-	/*for (auto& body: kinect.getBodySource()->getBodies()){
+	//ofDrawPlane(floorPlane.x, floorPlane.y, floorPlane.z, 5, 5);
+	
+	for (auto& body: kinect.getBodySource()->getBodies()){
 		if (body.tracked)
 		{
 			for (auto& joint: body.joints)
 			{
-				ofVec2f jointDepthPos = joint.second.getPositionInDepthMap();
-				ofDrawEllipse(jointDepthPos.x, jointDepthPos.y, 5, 5);
+				//ofVec2f jointDepthPos = joint.second.getPositionInDepthMap();
+				ofVec3f jointPos = joint.second.getPositionInWorld();
+				ofDrawSphere(jointPos.x, jointPos.y, jointPos.z, 0.02);
 			}
 			
-			ofSetColor(255, 255, 0);
-			ofFill();
+			//ofSetColor(255, 255, 0);
+			//ofFill();
 			ofVec3f& headJoint = bodyPositions[int(body.bodyId)];
 			ofDrawEllipse(headJoint.x, headJoint.y, 10, 10);
 		}
-	}*/
+	}
 
+	ofPopMatrix();
 	Cam3D.end();
 }
 
