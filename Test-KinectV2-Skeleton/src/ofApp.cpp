@@ -8,11 +8,12 @@
 #define COLOR_HEIGHT 1080
 
 #define MAX_PLAYERS 6
+#define REFJOINTTYPE JointType_SpineShoulder
 
 //--------------------------------------------------------------
 void ofApp::setup(){
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_ERROR);
+	ofSetLogLevel(OF_LOG_NOTICE);
 	ofSetWindowPosition(DEPTH_WIDTH, DEPTH_HEIGHT*2);
 
 	kinect.open();
@@ -36,6 +37,10 @@ void ofApp::setup(){
 	bodyPositions.resize(MAX_PLAYERS+1);
 }
 
+void ofApp::setupGui() {
+
+}
+
 //--------------------------------------------------------------
 void ofApp::update(){
 	kinect.update();
@@ -47,6 +52,9 @@ void ofApp::update(){
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
 	string floorMsg = "[" + to_string(floorPlane.x) + "][" + to_string(floorPlane.y) + "][" + to_string(floorPlane.z) + "][" + to_string(floorPlane.w) + "]";
 	ofLogError() << "Floor Plane Vector: " << floorMsg << endl;
+	tiltAngle = atan(floorPlane.z / floorPlane.y);
+	rollAngle = atan(floorPlane.x / floorPlane.y);
+
 
 	// Make sure there's some data here, otherwise the cam probably isn't ready yet
 	if (!depthPix.size() || !bodyIndexPix.size() || !colorPix.size()) {
@@ -66,7 +74,7 @@ void ofApp::update(){
 			numBodiesTracked++;
 			//TODO: type casting
 			int bodyIdx = body.bodyId;
-			bodyPositions[bodyIdx] = body.joints.at(JointType_Head).getPosition();
+			bodyPositions[bodyIdx] = body.joints.at(REFJOINTTYPE).getPosition();
 			ofLogNotice() << "tracked body ID: " << bodyIdx << endl;
 		}
 		else
@@ -129,6 +137,8 @@ void ofApp::update(){
 	// pixel data to the texture on the GPU so it can get drawn to screen
 	bodyIndexImg.update();
 	foregroundImg.update();
+
+	colorTex = kinect.getColorSource()->getTexture();
 }
 
 //--------------------------------------------------------------
@@ -141,16 +151,30 @@ void ofApp::draw(){
 	Cam3D.begin();
 	ofPushMatrix();
 	
+	ofDrawGrid(20, 20, true, true, true, true);
 	ofScale(100, 100, 100);
 
-	ofSetColor(ofColor::blue);
-	ofFill();
-
-	//ofDrawPlane(floorPlane.x, floorPlane.y, floorPlane.z, 5, 5);
+	ofVec3f originOnFloor = projectedPointOntoPlane(ofVec3f(), floorPlane);
 	
+	ofPushMatrix();
+	ofTranslate(originOnFloor.x, originOnFloor.y, originOnFloor.z);
+	ofRotateXDeg(90);
+	//ofDrawPlane(originOnFloor.x, originOnFloor.y, originOnFloor.z, 5, 5);
+	ofSetColor(255);
+	ofFill();
+	ofDrawPlane(0,0,0,5,5);
+	ofPopMatrix();
+		
+	//draw origin projected on floor
+	ofSetColor(0);
+	ofFill();
+	ofDrawSphere(originOnFloor, 0.1);
+
 	for (auto& body: kinect.getBodySource()->getBodies()){
 		if (body.tracked)
 		{
+			ofSetColor(ofColor::blue);
+			ofFill();		
 			for (auto& joint: body.joints)
 			{
 				//ofVec2f jointDepthPos = joint.second.getPositionInDepthMap();
@@ -158,16 +182,20 @@ void ofApp::draw(){
 				ofDrawSphere(jointPos.x, jointPos.y, jointPos.z, 0.02);
 			}
 			
-			ofSetColor(255, 0, 0);
-			//ofFill();
+			ofSetColor(255, 50, 50);
+			ofFill();
 			ofVec3f& headJoint = bodyPositions[int(body.bodyId)];
-			ofVec3f headOnFloor = projectedPointOntoPlane(headJoint, floorPlane);
-			ofDrawBox(headOnFloor, 0.1);
+			ofVec3f bodyOnFloor = projectedPointOntoPlane(headJoint, floorPlane);
+			ofDrawBox(bodyOnFloor, 0.2);
 		}
 	}
 
 	ofPopMatrix();
 	Cam3D.end();
+}
+
+void ofApp::drawGui(ofEventArgs & args) {
+	colorTex.draw(0, 0, ofGetWidth(), ofGetHeight());
 }
 
 //--------------------------------------------------------------
