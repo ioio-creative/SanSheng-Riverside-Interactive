@@ -10,10 +10,15 @@
 #define MAX_PLAYERS 6
 #define REFJOINTTYPE JointType_SpineShoulder
 
+#define CANVAS_WIDTH 1280
+#define CANVAS_HEIGHT 720
+
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofBackground(0);
+
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_NOTICE);
+	ofSetLogLevel(OF_LOG_ERROR);
 	ofSetWindowPosition(DEPTH_WIDTH, DEPTH_HEIGHT*2);
 
 	kinect.open();
@@ -34,11 +39,13 @@ void ofApp::setup(){
 
 	colorCoords.resize(DEPTH_WIDTH * DEPTH_HEIGHT);
 
-	bodyPositions.resize(MAX_PLAYERS+1);
+	bodyIdxTracked.resize(MAX_PLAYERS);
+	bodyPositions.resize(MAX_PLAYERS);
+	bodyPosOnScreen.resize(MAX_PLAYERS);
 }
 
 void ofApp::setupGui() {
-
+	ofBackground(0);
 }
 
 //--------------------------------------------------------------
@@ -51,7 +58,7 @@ void ofApp::update(){
 	auto& colorPix = kinect.getColorSource()->getPixels();
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
 	string floorMsg = "[" + to_string(floorPlane.x) + "][" + to_string(floorPlane.y) + "][" + to_string(floorPlane.z) + "][" + to_string(floorPlane.w) + "]";
-	ofLogError() << "Floor Plane Vector: " << floorMsg << endl;
+	ofLogNotice() << "Floor Plane Vector: " << floorMsg << endl;
 	tiltAngle = atan(floorPlane.z / floorPlane.y);
 	rollAngle = atan(floorPlane.x / floorPlane.y);
 
@@ -65,21 +72,23 @@ void ofApp::update(){
 		bHaveAllStreams = true;
 	}
 
-	// Count number of tracked bodies
+	// Count number of tracked bodies, and clear bool flags
 	numBodiesTracked = 0;
+	for (int i = 0; i < bodyIdxTracked.size(); i++)
+	{
+		bodyIdxTracked[i] = false;
+	}
+
 	auto& bodies = kinect.getBodySource()->getBodies();
 
 	for (auto& body : bodies) {
-		if (body.tracked) {
+		if (body.tracked) {			
 			numBodiesTracked++;
-			//TODO: type casting
 			int bodyIdx = body.bodyId;
-			bodyPositions[bodyIdx] = body.joints.at(REFJOINTTYPE).getPosition();
-			ofLogNotice() << "tracked body ID: " << bodyIdx << endl;
-		}
-		else
-		{
-			//bodyPositions.erase(bodyPositions.begin()+body.bodyId);
+			bodyIdxTracked[bodyIdx] = true;
+			ofVec3f refJoint = body.joints.at(REFJOINTTYPE).getPosition();
+			bodyPositions[bodyIdx] = glm::vec3(refJoint.x, refJoint.y, refJoint.z);
+			ofLogError() << "tracked body ID: " << bodyIdx << endl;
 		}
 	}
 
@@ -148,19 +157,22 @@ void ofApp::draw(){
 	bodyIndexImg.draw(0, 0);
 	foregroundImg.draw(0, DEPTH_HEIGHT);*/
 
+	ofSetColor(ofColor::gold);
+	ofDrawEllipse(100,100,20,20);
+
 	Cam3D.begin();
 	ofPushMatrix();
 	
-	ofDrawGrid(20, 20, true, true, true, true);
+	//ofDrawGrid(20, 20, true, true, true, true);
 	ofScale(100, 100, 100);
 
-	ofVec3f originOnFloor = projectedPointOntoPlane(ofVec3f(), floorPlane);
+	glm::vec3 originOnFloor = projectedPointOntoPlane(glm::vec3(), floorPlane);
 	
 	ofPushMatrix();
-	ofTranslate(originOnFloor.x, originOnFloor.y, originOnFloor.z);
+	ofTranslate(originOnFloor);
 	ofRotateXDeg(90);
 	ofRotateXRad(tiltAngle);
-
+	ofRotateZRad(rollAngle);
 	ofSetColor(255);
 	ofFill();
 	ofDrawPlane(0,0,0,5,5);
@@ -169,9 +181,10 @@ void ofApp::draw(){
 	//draw origin projected on floor
 	ofSetColor(0);
 	ofFill();
-	ofDrawSphere(originOnFloor, 0.1);
+	//ofDrawSphere(originOnFloor, 0.1);
 
 	for (auto& body: kinect.getBodySource()->getBodies()){
+		int bodyIdx = int(body.bodyId);
 		if (body.tracked)
 		{
 			ofSetColor(ofColor::blue);
@@ -185,18 +198,47 @@ void ofApp::draw(){
 			
 			ofSetColor(255, 50, 50);
 			ofFill();
-			ofVec3f& headJoint = bodyPositions[int(body.bodyId)];
-			ofVec3f bodyOnFloor = projectedPointOntoPlane(headJoint, floorPlane);
+			
+			glm::vec3& headJoint = bodyPositions[bodyIdx];
+			glm::vec3 bodyOnFloor = projectedPointOntoPlane(headJoint, floorPlane);
+			bodyPosOnScreen[bodyIdx] = screenXYNormFromCamPointOnPlane(bodyOnFloor, tiltAngle, rollAngle);
 			ofDrawBox(bodyOnFloor, 0.2);
 		}
-	}
 
+	}
+	ofScale(0.01, 0.01, 0.01);
 	ofPopMatrix();
 	Cam3D.end();
+	//for (int i = 0; i < bodyPosOnScreen.size(); i++)
+	//{
+	//	float screenX = bodyPosOnScreen[i].x * ofGetWidth() + ofGetWidth()/2;
+	//	float screenY = bodyPosOnScreen[i].y * ofGetHeight() + ofGetHeight()/2;
+	//	ofLogError() << screenX << " || " << screenY << endl;
+	//	ofDrawEllipse(int(bodyPosOnScreen[i].x), int(bodyPosOnScreen[i].y), 10, 10);
+	//}
+	ofSetColor(ofColor::silver);
+	ofDrawEllipse(200, 200, 20, 20);
 }
 
 void ofApp::drawGui(ofEventArgs & args) {
-	colorTex.draw(0, 0, ofGetWidth(), ofGetHeight());
+	//colorTex.draw(0, 0, ofGetWidth(), ofGetHeight());
+
+	ofSetColor(ofColor::crimson);
+	ofNoFill();
+	ofSetLineWidth(3);
+
+	for (int i = 0; i < bodyPosOnScreen.size(); i++)
+	{
+		if (!bodyIdxTracked[i])
+		{			
+			continue;
+		}
+		float screenX = bodyPosOnScreen[i].x * CANVAS_WIDTH + CANVAS_WIDTH / 2;
+		float screenY = bodyPosOnScreen[i].y * CANVAS_HEIGHT / 2;
+		//ofLogError() << screenX << " || " << screenY << endl;
+		ofLogError() << i << endl;
+		ofDrawEllipse(screenX, screenY, 20, 20);
+	}
 }
 
 //--------------------------------------------------------------

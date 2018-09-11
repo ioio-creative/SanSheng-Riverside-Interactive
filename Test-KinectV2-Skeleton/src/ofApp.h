@@ -25,31 +25,33 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
 		
-		float pointDistFromPlane(ofVec3f point, Vector4 plane) {
-			ofVec3f* normal = new ofVec3f(plane.x, plane.y, plane.z);
-			return (normal->dot(point) + plane.w) / (normal->length());
+		float pointDistFromPlane(glm::vec3 point, Vector4 plane) {
+			glm::vec3 normal = glm::vec3(plane.x, plane.y, plane.z);
+			return (glm::dot(normal, point) + plane.w) / (glm::length(normal));
 		}
 
-		ofVec3f projectedPointOntoPlane(ofVec3f point, Vector4 plane) {
-			ofVec3f n = ofVec3f(plane.x, plane.y, plane.z);			
-			return (point - (n.dot(point) + plane.w ) * n);
+		glm::vec3 projectedPointOntoPlane(glm::vec3 point, Vector4 plane) {
+			glm::vec3 n = glm::vec3(plane.x, plane.y, plane.z);
+			return (point - (glm::dot(n, point) + plane.w ) * n);
 		}		
 
 
 		//TODO: verify accuracy
-		float camYZpointOntoScreenYNorm(ofVec3f point, float YZTiltRad) {
+		float camYZpointOntoScreenYNorm(glm::vec3 point, float YZTiltRad) {
 			return (point.z + point.y * tanf(YZTiltRad * PI/180.f));
 		}
 
-		float camXYpointOntoScreenXNorm(ofVec3f point, float XYRollRad) {
+		float camXYpointOntoScreenXNorm(glm::vec3 point, float XYRollRad) {
 			return (point.x + point.y * tanf(XYRollRad * PI/180.f));
 		}
 
-		ofVec2f screenXYNormFromCamPointNorm(ofVec3f point, float YZTiltRad, float XYRollRad) {
+		glm::vec2 screenXYNormFromCamPointOnPlane(glm::vec3 point, float YZTiltRad, float XYRollRad) {
 			float screenY = camYZpointOntoScreenYNorm(point, YZTiltRad);
 			float screenX = camXYpointOntoScreenXNorm(point, XYRollRad);
-			return ofVec2f(screenX, screenY);
+			return glm::vec2(screenX, screenY);
 		}
+
+		
 
 		ofxKFW2::Device kinect;
 		ICoordinateMapper* coordinateMapper;
@@ -57,8 +59,11 @@ class ofApp : public ofBaseApp{
 		Vector4 floorPlane;
 		float tiltAngle;
 		float rollAngle;
+		//ofMatrix4x4 floorTransform;
 
-		vector<ofVec3f> bodyPositions;
+		vector<bool> bodyIdxTracked;
+		vector<glm::vec3> bodyPositions;
+		vector<glm::vec2> bodyPosOnScreen;
 
 		ofImage bodyIndexImg, foregroundImg;
 		ofTexture colorTex;
