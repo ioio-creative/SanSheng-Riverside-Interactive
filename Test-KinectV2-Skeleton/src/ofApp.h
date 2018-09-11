@@ -37,17 +37,17 @@ class ofApp : public ofBaseApp{
 
 
 		//TODO: verify accuracy
-		float camYZpointOntoScreenYNorm(ofVec3f point, float YZTiltDeg) {
-			return (point.z + point.y * tanf(YZTiltDeg * PI/180.f));
+		float camYZpointOntoScreenYNorm(ofVec3f point, float YZTiltRad) {
+			return (point.z + point.y * tanf(YZTiltRad * PI/180.f));
 		}
 
-		float camXYpointOntoScreenXNorm(ofVec3f point, float XYRollDeg) {
-			return (point.x + point.y * tanf(XYRollDeg * PI/180.f));
+		float camXYpointOntoScreenXNorm(ofVec3f point, float XYRollRad) {
+			return (point.x + point.y * tanf(XYRollRad * PI/180.f));
 		}
 
-		ofVec2f screenXYNormFromCamPointNorm(ofVec3f point, float YZTiltDeg, float XYRollDeg) {
-			float screenY = camYZpointOntoScreenYNorm(point, YZTiltDeg);
-			float screenX = camXYpointOntoScreenXNorm(point, XYRollDeg);
+		ofVec2f screenXYNormFromCamPointNorm(ofVec3f point, float YZTiltRad, float XYRollRad) {
+			float screenY = camYZpointOntoScreenYNorm(point, YZTiltRad);
+			float screenX = camXYpointOntoScreenXNorm(point, XYRollRad);
 			return ofVec2f(screenX, screenY);
 		}
 

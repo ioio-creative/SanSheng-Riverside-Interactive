@@ -159,7 +159,8 @@ void ofApp::draw(){
 	ofPushMatrix();
 	ofTranslate(originOnFloor.x, originOnFloor.y, originOnFloor.z);
 	ofRotateXDeg(90);
-	//ofDrawPlane(originOnFloor.x, originOnFloor.y, originOnFloor.z, 5, 5);
+	ofRotateXRad(tiltAngle);
+
 	ofSetColor(255);
 	ofFill();
 	ofDrawPlane(0,0,0,5,5);
