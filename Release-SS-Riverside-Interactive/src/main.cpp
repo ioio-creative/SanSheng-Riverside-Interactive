@@ -4,8 +4,8 @@
 //========================================================================
 int main( ){
 	ofGLWindowSettings settings;
-	settings.setSize(1920, 1080); //<-- final resolution
-	settings.windowMode = OF_FULLSCREEN;
+	settings.setSize(1280, 720);//(1920, 1080); //<-- final resolution
+	settings.windowMode = OF_WINDOW;//OF_FULLSCREEN;
 	settings.setGLVersion(4, 1);
 
 	ofCreateWindow(settings);

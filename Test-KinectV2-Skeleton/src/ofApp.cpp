@@ -19,7 +19,7 @@ void ofApp::setup(){
 
 	ofLogToConsole();
 	ofSetLogLevel(OF_LOG_ERROR);
-	ofSetWindowPosition(DEPTH_WIDTH, DEPTH_HEIGHT*2);
+	ofSetWindowShape(DEPTH_WIDTH, DEPTH_HEIGHT*2);
 
 	kinect.open();
 	kinect.initDepthSource();
@@ -57,6 +57,7 @@ void ofApp::update(){
 	auto& bodyIndexPix = kinect.getBodyIndexSource()->getPixels();
 	auto& colorPix = kinect.getColorSource()->getPixels();
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
+	floorTransform = kinect.getBodySource()->getFloorTransform();
 	string floorMsg = "[" + to_string(floorPlane.x) + "][" + to_string(floorPlane.y) + "][" + to_string(floorPlane.z) + "][" + to_string(floorPlane.w) + "]";
 	ofLogNotice() << "Floor Plane Vector: " << floorMsg << endl;
 	tiltAngle = atan(floorPlane.z / floorPlane.y);
@@ -88,7 +89,7 @@ void ofApp::update(){
 			bodyIdxTracked[bodyIdx] = true;
 			ofVec3f refJoint = body.joints.at(REFJOINTTYPE).getPosition();
 			bodyPositions[bodyIdx] = glm::vec3(refJoint.x, refJoint.y, refJoint.z);
-			ofLogError() << "tracked body ID: " << bodyIdx << endl;
+			ofLogNotice() << "tracked body ID: " << bodyIdx << endl;
 		}
 	}
 
@@ -157,27 +158,24 @@ void ofApp::draw(){
 	bodyIndexImg.draw(0, 0);
 	foregroundImg.draw(0, DEPTH_HEIGHT);*/
 
-	ofSetColor(ofColor::gold);
-	ofDrawEllipse(100,100,20,20);
-
 	Cam3D.begin();
 	ofPushMatrix();
 	
-	//ofDrawGrid(20, 20, true, true, true, true);
+	ofDrawGrid(20, 20, true, true, true, true);
 	ofScale(100, 100, 100);
 
 	glm::vec3 originOnFloor = projectedPointOntoPlane(glm::vec3(), floorPlane);
+	glm::mat4 floorMat4 = glm::mat4(floorTransform);
 	
 	ofPushMatrix();
 	ofTranslate(originOnFloor);
 	ofRotateXDeg(90);
 	ofRotateXRad(tiltAngle);
 	ofRotateZRad(rollAngle);
-	ofSetColor(255);
-	ofFill();
-	ofDrawPlane(0,0,0,5,5);
+	ofSetColor(ofColor::lightGoldenRodYellow);
+	ofDrawPlane(0, 0, 0, 5, 5);
 	ofPopMatrix();
-		
+
 	//draw origin projected on floor
 	ofSetColor(0);
 	ofFill();
@@ -199,14 +197,24 @@ void ofApp::draw(){
 			ofSetColor(255, 50, 50);
 			ofFill();
 			
-			glm::vec3& headJoint = bodyPositions[bodyIdx];
-			glm::vec3 bodyOnFloor = projectedPointOntoPlane(headJoint, floorPlane);
-			bodyPosOnScreen[bodyIdx] = screenXYNormFromCamPointOnPlane(bodyOnFloor, tiltAngle, rollAngle);
-			ofDrawBox(bodyOnFloor, 0.2);
+			glm::vec3& torsoJoint = bodyPositions[bodyIdx];
+			glm::vec3 bodyOnFloor = projectedPointOntoPlane(torsoJoint, floorPlane);
+			glm::vec4 bodyPosVec4 = glm::vec4(bodyOnFloor.x, bodyOnFloor.y, bodyOnFloor.z, 1);
+			glm::vec4 bodyPosOnHorizonOffset = floorMat4 * bodyPosVec4;
+			bodyPosOnScreen[bodyIdx] = glm::vec2(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.z);
+			//Red Box drawn along 3d floor plane
+			ofDrawBox(bodyOnFloor, 0.2);			
+			//Blue Box drawn along horizontal plane, projected from RedBox
+			ofSetColor(ofColor::aqua);
+			ofDrawBox(bodyPosOnScreen[bodyIdx].x, 0, bodyPosOnScreen[bodyIdx].y, 0.15);					
+			//Gold Box drawn from mat4 multiply Position on Floor
+			ofSetColor(ofColor::gold);
+			ofNoFill();
+			ofDrawBox(glm::vec3(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.y, bodyPosOnHorizonOffset.z), 0.25);
 		}
 
 	}
-	ofScale(0.01, 0.01, 0.01);
+
 	ofPopMatrix();
 	Cam3D.end();
 	//for (int i = 0; i < bodyPosOnScreen.size(); i++)
@@ -216,8 +224,6 @@ void ofApp::draw(){
 	//	ofLogError() << screenX << " || " << screenY << endl;
 	//	ofDrawEllipse(int(bodyPosOnScreen[i].x), int(bodyPosOnScreen[i].y), 10, 10);
 	//}
-	ofSetColor(ofColor::silver);
-	ofDrawEllipse(200, 200, 20, 20);
 }
 
 void ofApp::drawGui(ofEventArgs & args) {
@@ -236,7 +242,7 @@ void ofApp::drawGui(ofEventArgs & args) {
 		float screenX = bodyPosOnScreen[i].x * CANVAS_WIDTH + CANVAS_WIDTH / 2;
 		float screenY = bodyPosOnScreen[i].y * CANVAS_HEIGHT / 2;
 		//ofLogError() << screenX << " || " << screenY << endl;
-		ofLogError() << i << endl;
+		ofLogNotice() << i << endl;
 		ofDrawEllipse(screenX, screenY, 20, 20);
 	}
 }

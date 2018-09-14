@@ -1,3 +1,4 @@
 ofxGui
 ofxHPVPlayer
 ofxJSON
+ofxKinectForWindows2

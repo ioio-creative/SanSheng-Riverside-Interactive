@@ -13,6 +13,7 @@
   ======================================================*/
 #include "ofxJSON.h"
 #include "ofxHPVPlayer.h"
+#include "ofxKinectForWindows2.h"
 
 class ofApp : public ofBaseApp{
 
@@ -39,10 +40,29 @@ class ofApp : public ofBaseApp{
 		//basic variables
 		bool debugMode;
 		int w, h;
+		
+		//kinect
+		ofxKFW2::Device kinect;
+		ICoordinateMapper* coordinateMapper;
+
+		Vector4 floorPlane;
+		float tiltAngle;
+		float rollAngle;
+
+		vector<bool> bodyIdxTracked;
+		vector<glm::vec3> bodyPositions;
+		vector<glm::vec2> bodyPosOnScreen;
+
+		ofImage bodyIndexImg, foregroundImg;
+		ofTexture colorTex;
+		vector<ofVec2f> colorCoords;
+		int numBodiesTracked;
+		bool bHaveAllStreams;
 
 		//fbo CG / video
 		ofFbo CGFbo;
 		ofFbo VideoFbo;
+		ofFbo KinectCalibrateFbo;
 
 		//video player
 		vector<ofxHPVPlayer> vid;

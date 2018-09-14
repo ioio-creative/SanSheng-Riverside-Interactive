@@ -34,23 +34,6 @@ class ofApp : public ofBaseApp{
 			glm::vec3 n = glm::vec3(plane.x, plane.y, plane.z);
 			return (point - (glm::dot(n, point) + plane.w ) * n);
 		}		
-
-
-		//TODO: verify accuracy
-		float camYZpointOntoScreenYNorm(glm::vec3 point, float YZTiltRad) {
-			return (point.z + point.y * tanf(YZTiltRad * PI/180.f));
-		}
-
-		float camXYpointOntoScreenXNorm(glm::vec3 point, float XYRollRad) {
-			return (point.x + point.y * tanf(XYRollRad * PI/180.f));
-		}
-
-		glm::vec2 screenXYNormFromCamPointOnPlane(glm::vec3 point, float YZTiltRad, float XYRollRad) {
-			float screenY = camYZpointOntoScreenYNorm(point, YZTiltRad);
-			float screenX = camXYpointOntoScreenXNorm(point, XYRollRad);
-			return glm::vec2(screenX, screenY);
-		}
-
 		
 
 		ofxKFW2::Device kinect;
@@ -59,7 +42,7 @@ class ofApp : public ofBaseApp{
 		Vector4 floorPlane;
 		float tiltAngle;
 		float rollAngle;
-		//ofMatrix4x4 floorTransform;
+		ofMatrix4x4 floorTransform;
 
 		vector<bool> bodyIdxTracked;
 		vector<glm::vec3> bodyPositions;

@@ -20,7 +20,8 @@
 x64/
 x86/
 bld/
-[Bb]in/
+[Bb]in/*
+*.hpv
 [Oo]bj/
 [Ll]og/
 
