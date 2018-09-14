@@ -3,6 +3,13 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+# bin except data folder
+*/[Bb]in/*
+!*/[Bb]in/data/
+
+# Video Files
+*.hpv
+
 # User-specific files
 *.suo
 *.user
@@ -20,9 +27,6 @@
 x64/
 x86/
 bld/
-*/[Bb]in/*
-!*/[Bb]in/data/
-*.hpv
 [Oo]bj/
 [Ll]og/
 
