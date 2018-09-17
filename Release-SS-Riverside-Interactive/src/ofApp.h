@@ -48,6 +48,7 @@ class ofApp : public ofBaseApp{
 		Vector4 floorPlane;
 		float tiltAngle;
 		float rollAngle;
+		glm::mat4 floorTransform;
 
 		vector<bool> bodyIdxTracked;
 		vector<glm::vec3> bodyPositions;
@@ -58,6 +59,13 @@ class ofApp : public ofBaseApp{
 		vector<ofVec2f> colorCoords;
 		int numBodiesTracked;
 		bool bHaveAllStreams;
+		bool calibrationMode = false;
+
+		glm::vec3 projectedPointOntoPlane(glm::vec3 point, Vector4 plane);
+
+		void setupKinect2();
+		void updateKinect2();
+		void drawKinectFbo();
 
 		//fbo CG / video
 		ofFbo CGFbo;

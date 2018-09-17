@@ -2,6 +2,7 @@
 
 #include "ofMain.h"
 #include "ofxKinectForWindows2.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -55,6 +56,9 @@ class ofApp : public ofBaseApp{
 		bool bHaveAllStreams;
 
 		ofEasyCam Cam3D;
+
+		ofxPanel gui;
+		
 
 		bool debugLog = false;
 };
