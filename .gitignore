@@ -5,7 +5,7 @@
 
 # bin except data folder
 */[Bb]in/
-!*/[Bb]in/data/
+!*/[Bb]in/data/*
 
 # Video Files
 *.hpv

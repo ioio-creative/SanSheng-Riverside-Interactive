@@ -14,6 +14,7 @@
 #include "ofxJSON.h"
 #include "ofxHPVPlayer.h"
 #include "ofxKinectForWindows2.h"
+#include "ofxGui.h"
 
 class ofApp : public ofBaseApp{
 
@@ -54,23 +55,30 @@ class ofApp : public ofBaseApp{
 		vector<glm::vec3> bodyPositions;
 		vector<glm::vec2> bodyPosOnScreen;
 
-		ofImage bodyIndexImg, foregroundImg;
 		ofTexture colorTex;
 		vector<ofVec2f> colorCoords;
 		int numBodiesTracked;
 		bool bHaveAllStreams;
-		bool calibrationMode = false;
-
+		
 		glm::vec3 projectedPointOntoPlane(glm::vec3 point, Vector4 plane);
 
 		void setupKinect2();
 		void updateKinect2();
 		void drawKinectFbo();
 
+		//kinect 3D to 2D calibration
+		ofImage target;
+
+		ofParameter<glm::vec3> bodyPos;
+		ofxPanel calibrationGui;
+
+		bool calibrationMode = false;
+
 		//fbo CG / video
 		ofFbo CGFbo;
 		ofFbo VideoFbo;
 		ofFbo KinectCalibrateFbo;
+		ofEasyCam kinect3DCam;
 
 		//video player
 		vector<ofxHPVPlayer> vid;

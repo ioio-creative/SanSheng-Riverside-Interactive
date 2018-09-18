@@ -11,8 +11,10 @@
 #define MAX_PLAYERS 6
 #define REFJOINTTYPE JointType_SpineShoulder
 
-#define CANVAS_WIDTH 1280
-#define CANVAS_HEIGHT 720
+#define CANVAS_WIDTH 1200 /3
+#define CANVAS_HEIGHT 3456 /3
+
+#define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -49,10 +51,11 @@ void ofApp::setup(){
 	//fbo
 	CGFbo.allocate(w, h, GL_RGBA);
 	VideoFbo.allocate(w, h, GL_RGBA);
-	KinectCalibrateFbo.allocate(w, h, GL_RGBA);
+	KinectCalibrateFbo.allocate(w, h/3, GL_RGBA);
 	KinectCalibrateFbo.begin();
 	ofClear(ofColor::black);
 	KinectCalibrateFbo.end();
+	kinect3DCam.setControlArea(ofRectangle(0, h*2/3, w, h/3));
 
 }
 
@@ -77,7 +80,7 @@ void ofApp::draw(){
 		ofSetColor(255, 0, 0);
 		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
 	}
-
+	ofSetColor(255);
 	if (calibrationMode)
 	{
 		drawKinectFbo();		
@@ -91,6 +94,14 @@ void ofApp::keyReleased(int key){
 	switch (key) {
 	case 'd':
 		debugMode = !debugMode;
+		if (debugMode)
+		{
+			ofSetLogLevel(OF_LOG_NOTICE);
+		}
+		else
+		{
+			ofSetLogLevel(OF_LOG_ERROR);
+		}
 		break;
 	case 'f':
 		ofToggleFullscreen();
@@ -99,7 +110,9 @@ void ofApp::keyReleased(int key){
 		calibrationMode = !calibrationMode;
 		if (!calibrationMode)
 		{
-			KinectCalibrateFbo.clear();
+			KinectCalibrateFbo.begin();
+			ofClear(0);
+			KinectCalibrateFbo.end();
 		}
 	}
 }
@@ -131,7 +144,7 @@ void ofApp::updateKinect2() {
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
 	floorTransform = glm::mat4(kinect.getBodySource()->getFloorTransform());
 	string floorMsg = "[" + to_string(floorPlane.x) + "][" + to_string(floorPlane.y) + "][" + to_string(floorPlane.z) + "][" + to_string(floorPlane.w) + "]";
-	ofLogNotice() << "Floor Plane Vector: " << floorMsg << endl;
+	KINECTNOTICELOG << "Floor Plane Vector: " << floorMsg << endl;
 	tiltAngle = atan(floorPlane.z / floorPlane.y);
 	rollAngle = atan(floorPlane.x / floorPlane.y);
 
@@ -153,7 +166,7 @@ void ofApp::updateKinect2() {
 	}
 
 	auto& bodies = bodySrc->getBodies();
-	ofLogNotice() << "tracked body ID: ";
+	KINECTNOTICELOG << "tracked body ID: ";
 	for (auto& body : bodies) {
 		if (body.tracked) {
 			numBodiesTracked++;
@@ -170,15 +183,14 @@ void ofApp::updateKinect2() {
 }
 
 void ofApp::drawKinectFbo() {
-	
-	
-	
 	KinectCalibrateFbo.begin();
-	
+	ofClear(ofColor::white);
+	ofBackground(0);
+	kinect3DCam.begin();
 
 	ofPushMatrix();
 	ofDrawGrid(20, 20, true, true, true, true);
-	ofScale(100, 100, 100);
+	ofScale(50, 50, 50);
 
 	ofPushMatrix();
 	glm::vec3 originOnFloor = projectedPointOntoPlane(glm::vec3(), floorPlane);
@@ -186,7 +198,7 @@ void ofApp::drawKinectFbo() {
 	ofRotateXDeg(90);
 	ofRotateXRad(tiltAngle);
 	ofRotateZRad(rollAngle);
-	ofSetColor(ofColor::lightCoral);
+	ofSetColor(ofColor::violet);
 	ofDrawPlane(0, 0, 0, 5, 5);
 	ofPopMatrix();
 
@@ -229,9 +241,12 @@ void ofApp::drawKinectFbo() {
 	}
 	ofPopMatrix();
 
-
+	kinect3DCam.end();
 	KinectCalibrateFbo.end();
+	ofPushMatrix();
+	ofTranslate(0, ofGetHeight() * 2 / 3);
 	KinectCalibrateFbo.draw(0, 0);
+	ofPopMatrix();
 }
 
 glm::vec3 ofApp::projectedPointOntoPlane(glm::vec3 point, Vector4 plane) {

@@ -210,7 +210,7 @@ void ofApp::draw(){
 			//Gold Box drawn from mat4 multiply Position on Floor
 			ofSetColor(ofColor::gold);
 			ofNoFill();
-			ofDrawBox(glm::vec3(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.y, bodyPosOnHorizonOffset.z), 0.25);
+			ofDrawBox(glm::vec3(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.y, bodyPosOnHorizonOffset.z), 0.15);
 		}
 
 	}
