@@ -1,5 +1,3 @@
----# SanSheng-Riverside-Interactive
-
 ## 製作日程總表
 https://docs.google.com/spreadsheets/d/13Cj-VZlZ8MZo7MhLsoFPpzRJiK4N8sjay6_cyU0qCDs/edit#gid=403743726
 
