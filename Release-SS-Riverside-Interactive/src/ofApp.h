@@ -102,13 +102,18 @@ class ofApp : public ofBaseApp{
 			cv::Point2f(100, KINECTAREA_HEIGHT - 100)
 		};
 		cv::Mat camToScreenTransform;
-
-		ofImage target;
-		ofParameter<glm::vec3> bodyPos;
+				
 		ofxPanel calibrationGui;
-
+		ofxLabel someLabel;
+		ofParameter<int> refBodyIdx;
+		ofParameter<string> bodyPosInspect[MAX_PLAYERS];
+		
+		
+		ofImage target;
 		bool calibrationMode = false;
 
+		void setupCalibrationGui();
+		void updateGuiInspectorValues();
 
 		//fbo CG / video
 		ofFbo CGFbo;
@@ -117,6 +122,7 @@ class ofApp : public ofBaseApp{
 		ofEasyCam kinect3DCam;
 		ofFbo CanvasCalibrateFbo;
 		void setupCavasCalibrateFbo();
+		
 		//video player
 		vector<ofxHPVPlayer> vid;
 		int currVidID;

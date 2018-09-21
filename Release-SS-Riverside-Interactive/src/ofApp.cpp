@@ -23,11 +23,10 @@ void ofApp::setup(){
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
 	
-	//calibration gui
-	setupCalibrationGui();
-
 	//kinect
 	setupKinect2();
+	//calibration gui
+	setupCalibrationGui();
 
 	//video player
 	setupVideoPlayer();
@@ -44,10 +43,6 @@ void ofApp::setup(){
 	setupCavasCalibrateFbo();
 	
 
-}
-
-void ofApp::setupCalibrationGui() {
-	calibrationGui.setup("Kinect Calibration");
 }
 
 void ofApp::setupCavasCalibrateFbo() {
@@ -75,6 +70,9 @@ void ofApp::update(){
 
 	//kinect update
 	updateKinect2();
+
+	//update ofxGui
+	updateGuiInspectorValues();
 }
 
 //--------------------------------------------------------------
@@ -86,11 +84,13 @@ void ofApp::draw(){
 	}
 	ofSetColor(255);
 	if (calibrationMode)
-	{
+	{		
 		drawKinectFbo();
 		CanvasCalibrateFbo.draw(0, 0);
+		
+		
 	}
-
+	calibrationGui.draw();
 }
 
 //--------------------------------------------------------------
@@ -125,7 +125,7 @@ void ofApp::keyReleased(int key){
 }
 
 //--------------------------------------------------------------
-//------------------------- Kinect -----------------------
+//------------------------- Kinect -----------------------------
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 void ofApp::setupKinect2() {
@@ -276,6 +276,31 @@ void ofApp::drawKinectFbo() {
 glm::vec3 ofApp::projectedPointOntoPlane(glm::vec3 point, Vector4 plane) {
 	glm::vec3 n = glm::vec3(plane.x, plane.y, plane.z);
 	return (point - (glm::dot(n, point) + plane.w) * n);
+}
+
+//--------------------------------------------------------------
+//------------------------- Calibration GUI --------------------
+//--------------------------------------------------------------
+//--------------------------------------------------------------
+
+
+//TODO: Add ofxButton to grab Ref Body Positions and save them to kinectFourCorners[4]
+void ofApp::setupCalibrationGui() {
+	calibrationGui.setup("Kinect Calibration");
+	calibrationGui.add(refBodyIdx.set("Selected Body Index", 0, 0, 5));
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		calibrationGui.add(bodyPosInspect[i].set(("Body[" + ofToString(i) + "]"), ""));
+	}
+	//calibrationGui.add(someLabel.setup("TestLabel", "Some Label", 500 ,100));
+	calibrationGui.add(someLabel.setup(bodyPosInspect[0], 200, 50));
+}
+
+void ofApp::updateGuiInspectorValues() {
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		bodyPosInspect[i] = ofToString(bodyPositions[i].x) + ", " + ofToString(bodyPositions[i].y) + ", " + ofToString(bodyPositions[i].z);
+	}
 }
 
 //--------------------------------------------------------------
