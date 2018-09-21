@@ -1,4 +1,6 @@
+ofxCv
 ofxGui
 ofxHPVPlayer
 ofxJSON
 ofxKinectForWindows2
+ofxOpenCv

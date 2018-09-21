@@ -1,20 +1,6 @@
 #include "ofApp.h"
 
-//Kinect sources dimensions
-#define DEPTH_WIDTH 512
-#define DEPTH_HEIGHT 424
-#define DEPTH_SIZE DEPTH_WIDTH * DEPTH_HEIGHT
 
-#define COLOR_WIDTH 1920
-#define COLOR_HEIGHT 1080
-
-#define MAX_PLAYERS 6
-#define REFJOINTTYPE JointType_SpineShoulder
-
-#define CANVAS_WIDTH 1200 /3
-#define CANVAS_HEIGHT 3456 /3
-
-#define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
 
 //--------------------------------------------------------------
 void ofApp::setup(){
@@ -37,11 +23,6 @@ void ofApp::setup(){
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
 
-	w = ofGetScreenWidth();
-	h = ofGetScreenHeight();
-	w = ofGetWidth();
-	h = ofGetHeight();
-
 	//kinect
 	setupKinect2();
 
@@ -49,14 +30,30 @@ void ofApp::setup(){
 	setupVideoPlayer();
 	
 	//fbo
-	CGFbo.allocate(w, h, GL_RGBA);
-	VideoFbo.allocate(w, h, GL_RGBA);
-	KinectCalibrateFbo.allocate(w, h/3, GL_RGBA);
-	KinectCalibrateFbo.begin();
+	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
+	VideoFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
+	KinectVisionFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT / 3, GL_RGBA);
+	KinectVisionFbo.begin();
 	ofClear(ofColor::black);
-	KinectCalibrateFbo.end();
-	kinect3DCam.setControlArea(ofRectangle(0, h*2/3, w, h/3));
+	KinectVisionFbo.end();
+	kinect3DCam.setControlArea(ofRectangle(0, CANVAS_HEIGHT * 2/3, CANVAS_WIDTH, CANVAS_HEIGHT /3));
+	CanvasCalibrateFbo.allocate(KINECTAREA_WIDTH, KINECTAREA_HEIGHT, GL_RGBA);
+	setupCavasCalibrateFbo();
+	
 
+}
+
+void ofApp::setupCavasCalibrateFbo() {
+	target.loadImage("images/target.png");
+	target.resize(128, 128);
+	target.setAnchorPercent(0.5, 0.5);
+	CanvasCalibrateFbo.begin();
+	ofClear(ofColor::slateGrey);
+	for (auto canvasCorner : canvasFourCorners)
+	{
+		target.draw(canvasCorner.x, canvasCorner.y);
+	}
+	CanvasCalibrateFbo.end();
 }
 
 //--------------------------------------------------------------
@@ -83,7 +80,8 @@ void ofApp::draw(){
 	ofSetColor(255);
 	if (calibrationMode)
 	{
-		drawKinectFbo();		
+		drawKinectFbo();
+		CanvasCalibrateFbo.draw(0, 0);
 	}
 
 }
@@ -110,10 +108,12 @@ void ofApp::keyReleased(int key){
 		calibrationMode = !calibrationMode;
 		if (!calibrationMode)
 		{
-			KinectCalibrateFbo.begin();
+			KinectVisionFbo.begin();
 			ofClear(0);
-			KinectCalibrateFbo.end();
+			KinectVisionFbo.end();
 		}
+	case 'v':
+		VideoFbo.draw(0,0);
 	}
 }
 
@@ -136,6 +136,7 @@ void ofApp::setupKinect2() {
 
 	bodyIdxTracked.resize(MAX_PLAYERS);
 	bodyPositions.resize(MAX_PLAYERS);
+	bodyPosOnFloor.resize(MAX_PLAYERS);
 	bodyPosOnScreen.resize(MAX_PLAYERS);
 }
 
@@ -177,13 +178,12 @@ void ofApp::updateKinect2() {
 			ofLogNotice() << "[" << bodyIdx << "]";
 		}
 	}
-	ofLogNotice() << endl;
 
 	colorTex = kinect.getColorSource()->getTexture();
 }
 
 void ofApp::drawKinectFbo() {
-	KinectCalibrateFbo.begin();
+	KinectVisionFbo.begin();
 	ofClear(ofColor::white);
 	ofBackground(0);
 	kinect3DCam.begin();
@@ -227,25 +227,42 @@ void ofApp::drawKinectFbo() {
 			glm::vec3 bodyOnFloor = projectedPointOntoPlane(torsoJoint, floorPlane);
 			glm::vec4 bodyPosVec4 = glm::vec4(bodyOnFloor.x, bodyOnFloor.y, bodyOnFloor.z, 1);
 			glm::vec4 bodyPosOnHorizonOffset = floorTransform * bodyPosVec4;
-			bodyPosOnScreen[bodyIdx] = glm::vec2(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.z);
+			bodyPosOnFloor[bodyIdx] = cv::Point2f(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.z);
+			//bodyPosOnScreen[bodyIdx] = glm::vec2(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.z);
+			
+			
 			//Red Box drawn along 3d floor plane
 			ofDrawBox(bodyOnFloor, 0.2);
 			//Blue Box drawn along horizontal plane, projected from RedBox
 			ofSetColor(ofColor::aqua);
-			ofDrawBox(bodyPosOnScreen[bodyIdx].x, 0, bodyPosOnScreen[bodyIdx].y, 0.15);
+			//ofDrawBox(bodyPosOnScreen[bodyIdx].x, 0, bodyPosOnScreen[bodyIdx].y, 0.15);
 			//Gold Box drawn from mat4 multiply Position on Floor
 			ofSetColor(ofColor::gold);
 			ofNoFill();
 			ofDrawBox(glm::vec3(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.y, bodyPosOnHorizonOffset.z), 0.25);
 		}
 	}
+	
+	camToScreenTransform = cv::getPerspectiveTransform(kinectFourCorners, canvasFourCorners);
+	cv::perspectiveTransform(bodyPosOnFloor, bodyPosOnScreen, camToScreenTransform);
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (bodyIdxTracked[i])
+		{
+			ofSetColor(ofColor::aqua);
+			ofFill();
+			ofDrawBox(bodyPosOnScreen[i].x, bodyPosOnScreen[i].y, 0, 0.3);
+		}
+		else continue;
+	}
+
 	ofPopMatrix();
 
 	kinect3DCam.end();
-	KinectCalibrateFbo.end();
+	KinectVisionFbo.end();
 	ofPushMatrix();
 	ofTranslate(0, ofGetHeight() * 2 / 3);
-	KinectCalibrateFbo.draw(0, 0);
+	KinectVisionFbo.draw(0, 0);
 	ofPopMatrix();
 }
 
@@ -273,7 +290,7 @@ void ofApp::setupVideoPlayer() {
 		vid[i].init(HPV::NewPlayer());
 		ofLog() << i;
 		/* Try to load file and start playback */
-		vid[i].load(ofToString(i) + ".hpv");
+		vid[i].load("videos/"+ofToString(i) + ".hpv");
 		vid[i].setLoopState(OF_LOOP_NONE);
 		vid[i].play();
 		vid[i].setPaused(true);
