@@ -22,6 +22,9 @@ void ofApp::setup(){
 	ofSetFrameRate(60);
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
+	
+	//calibration gui
+	setupCalibrationGui();
 
 	//kinect
 	setupKinect2();
@@ -41,6 +44,10 @@ void ofApp::setup(){
 	setupCavasCalibrateFbo();
 	
 
+}
+
+void ofApp::setupCalibrationGui() {
+	calibrationGui.setup("Kinect Calibration");
 }
 
 void ofApp::setupCavasCalibrateFbo() {
