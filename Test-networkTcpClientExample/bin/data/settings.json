@@ -1,0 +1,48 @@
+{
+    "ip": "127.0.0.1",
+    "port": 3721,
+    "message-delimiter": "\n",
+    "video-commands":
+                      [
+                        {
+                          "name" : "file",
+                          "string" : "<video,file,0>"
+                        },
+                        {
+                          "name" : "play-pause",
+                          "string" : "<video,play-pause>"
+                        },
+                        {
+                          "name" : "previous",
+                          "string" : "<video,previous>"
+                        },
+                        {
+                          "name" : "next",
+                          "string" : "<video,next>"
+                        },
+                        {
+                          "name" : "backward",
+                          "string" : "<video,backward>"
+                        },
+                        {
+                          "name" : "forward",
+                          "string" : "<video,forward>"
+                        },
+                        {
+                          "name" : "stop",
+                          "string" : "<video,stop>"
+                        },
+                        {
+                          "name" : "volume-val",
+                          "string" : "<video,volume,100>"
+                        },
+                        {
+                          "name" : "volume-up",
+                          "string" : "<video,volume,+>"
+                        },
+                        {
+                          "name" : "volume-down",
+                          "string" : "<video,volume,->"
+                        }
+                      ]
+}
