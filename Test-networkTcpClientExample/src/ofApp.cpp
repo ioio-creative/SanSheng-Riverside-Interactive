@@ -12,6 +12,8 @@ void ofApp::setup(){
 	msgTx	= "";
 	msgRx	= "";
 
+	tcpMessageToSend = "";
+
 	connectTime = 0;
 	deltaTime = 0;
 
@@ -30,9 +32,43 @@ void ofApp::setup(){
 	tcpGui.add(stopBtn.setup(videoCommandsName[6]));
 	tcpGui.add(volumeUp.setup(videoCommandsName[8]));
 	tcpGui.add(volumeDn.setup(videoCommandsName[9]));
+	tcpGui.add(status.setup("TCP Send", tcpMessageToSend));
+
+	playBtn.addListener(this, &ofApp::playButtonPressed);
+	prevBtn.addListener(this, &ofApp::prevButtonPressed);
+	nextBtn.addListener(this, &ofApp::nextButtonPressed);
+	stopBtn.addListener(this, &ofApp::stopButtonPressed);
+	volumeUp.addListener(this, &ofApp::volumeUpButtonPressed);
+	volumeDn.addListener(this, &ofApp::volumeDnButtonPressed);
+	
 
 	tcpGui.setPosition(ofGetWidth() / 2, 10);
+	tcpGui.setWidthElements(ofGetWidth() / 3);
+	tcpGui.set
+
 }
+
+
+void ofApp::playButtonPressed() {
+	sendTCPMessage(videoCommandsString[1]);
+};
+void ofApp::prevButtonPressed() {
+	sendTCPMessage(videoCommandsString[2]);
+};
+void ofApp::nextButtonPressed() {
+	sendTCPMessage(videoCommandsString[3]);
+};
+void ofApp::stopButtonPressed() {
+	sendTCPMessage(videoCommandsString[6]);
+};
+void ofApp::volumeUpButtonPressed() {
+	sendTCPMessage(videoCommandsString[8]);
+};
+void ofApp::volumeDnButtonPressed() {
+	sendTCPMessage(videoCommandsString[9]);
+};
+
+
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -57,6 +93,17 @@ void ofApp::update(){
 
 	}
 }
+
+void ofApp::exit() {
+	playBtn.removeListener(this, &ofApp::playButtonPressed);
+	prevBtn.removeListener(this, &ofApp::prevButtonPressed);
+	nextBtn.removeListener(this, &ofApp::nextButtonPressed);
+	stopBtn.removeListener(this, &ofApp::stopButtonPressed);
+	volumeUp.removeListener(this, &ofApp::volumeUpButtonPressed);
+	volumeDn.removeListener(this, &ofApp::volumeDnButtonPressed);
+
+}
+
 
 //--------------------------------------------------------------
 void ofApp::draw(){
@@ -103,6 +150,20 @@ void ofApp::keyPressed(ofKeyEventArgs & key){
 			msgTx.clear();
 		}
 	}
+}
+
+
+void ofApp::sendTCPMessage(string s) {
+
+	if (tcpClient.isConnected()) {
+		tcpClient.send(s);
+		status = s;
+	}
+	else {
+		status = "not connected, " + s;
+	}
+
+
 }
 
 //======================== JSON =============================

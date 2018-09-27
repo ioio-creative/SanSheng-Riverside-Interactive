@@ -13,6 +13,7 @@ class ofApp : public ofBaseApp{
 		void update();
 		void draw();
 		void keyPressed(ofKeyEventArgs & key);
+		void exit();
 
 		void keyReleased(int key) {};
 		void mouseMoved(int x, int y) {};
@@ -45,6 +46,8 @@ class ofApp : public ofBaseApp{
 		vector<string> videoCommandsName;
 		vector<string> videoCommandsString;
 
+		void sendTCPMessage(string s);
+
 	//======================== JSON =============================
 		ofxJSONElement settings;
 		void saveSettings();
@@ -61,8 +64,16 @@ class ofApp : public ofBaseApp{
 		ofxButton volumeDn;
 
 		ofxLabel status;
+		string tcpMessageToSend;
 
 		ofxPanel tcpGui;
+
+		void playButtonPressed();
+		void prevButtonPressed();
+		void nextButtonPressed();
+		void stopButtonPressed();
+		void volumeUpButtonPressed();
+		void volumeDnButtonPressed();
 
 };
 
