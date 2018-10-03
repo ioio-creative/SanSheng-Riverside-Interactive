@@ -87,14 +87,14 @@ class ofApp : public ofBaseApp{
 		void drawKinectFbo();
 
 		//kinect 3D to 2D calibration
-		cv::Point2f kinectFourCorners[4] = 
+		ofParameter<glm::vec2> kinectFourCorners[4] = 
 		{ 
-			cv::Point2f(0, 0),
-			cv::Point2f(10, 0),
-			cv::Point2f(10, 10),
-			cv::Point2f(0, 10)
+			glm::vec2(0, 0),
+			glm::vec2(10, 0),
+			glm::vec2(10, 10),
+			glm::vec2(0, 10)
 		};
-		cv::Point2f canvasFourCorners[4] =
+		const cv::Point2f canvasFourCorners[4] =
 		{
 			cv::Point2f(100, 100),
 			cv::Point2f(KINECTAREA_WIDTH - 100, 100),
@@ -102,11 +102,26 @@ class ofApp : public ofBaseApp{
 			cv::Point2f(100, KINECTAREA_HEIGHT - 100)
 		};
 		cv::Mat camToScreenTransform;
+		void refreshCamToScreenTransform();
 				
 		ofxPanel calibrationGui;
-		ofxLabel someLabel;
+		ofParameterGroup cornersGroup;
+		
+		ofParameterGroup bodyPosGuiGroup;
+		ofxLabel selectedBodyLabel;
 		ofParameter<int> refBodyIdx;
 		ofParameter<string> bodyPosInspect[MAX_PLAYERS];
+		ofParameter<bool> refBodyIdxFlags[MAX_PLAYERS];
+		
+		ofxButton cornerBtn0;
+		ofxButton cornerBtn1;
+		ofxButton cornerBtn2;
+		ofxButton cornerBtn3;
+		void refBodyIdxChanged(int& idx);
+		void corner0ButtonPressed();
+		void corner1ButtonPressed();
+		void corner2ButtonPressed();
+		void corner3ButtonPressed();
 		
 		
 		ofImage target;
