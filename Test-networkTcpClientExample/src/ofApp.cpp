@@ -26,6 +26,8 @@ void ofApp::setup(){
 	tcpGui.setup(); // most of the time you don't need a name
 	
 	//tcpGui.add(playBtn.setup(videoCommandsName[0]));
+	tcpGui.add(ip.set("IP : " , ip));
+	tcpGui.add(port.set("Port : ", port));
 	tcpGui.add(playBtn.setup(videoCommandsName[1]));
 	tcpGui.add(prevBtn.setup(videoCommandsName[2]));
 	tcpGui.add(nextBtn.setup(videoCommandsName[3]));
@@ -42,10 +44,11 @@ void ofApp::setup(){
 	volumeDn.addListener(this, &ofApp::volumeDnButtonPressed);
 	
 
-	tcpGui.setPosition(ofGetWidth() / 2, 10);
-	tcpGui.setWidthElements(ofGetWidth() / 3);
-	tcpGui.set
+	tcpGui.setPosition(ofGetWidth()-410, 10);
+	tcpGui.setWidthElements(400);
 
+	prevIp = ip;
+	prevPort = port;
 }
 
 
@@ -73,6 +76,16 @@ void ofApp::volumeDnButtonPressed() {
 //--------------------------------------------------------------
 void ofApp::update(){
 
+	if (prevIp.compare(ip) || prevPort.compare(port)) {
+		prevIp = ip;
+		prevPort = port;
+		tcpClient.close();
+		saveSettings();
+		tcpClient.setup(ip, ofToInt(port));
+		tcpClient.setMessageDelimiter(delimiter);
+		connectTime = ofGetElapsedTimeMillis();
+	}
+	
 	//======================== Network ==========================
 	if(tcpClient.isConnected()){
 		// we are connected - lets try to receive from the server
@@ -86,7 +99,7 @@ void ofApp::update(){
 		deltaTime = ofGetElapsedTimeMillis() - connectTime;
 
 		if( deltaTime > 5000 ){
-			tcpClient.setup(ip, port);
+			tcpClient.setup(ip, ofToInt(port));
 			tcpClient.setMessageDelimiter(delimiter);
 			connectTime = ofGetElapsedTimeMillis();
 		}
@@ -108,17 +121,21 @@ void ofApp::exit() {
 //--------------------------------------------------------------
 void ofApp::draw(){
 
+	stringstream ss;
+	ss << "ip : " << ip << " port : " << port  << endl;
 	ofSetColor(20);
-	ofDrawBitmapString("openFrameworks TCP Send Example", 15, 30);
+	ofDrawBitmapString(ss.str(), 15, 30);
+
 
 	//======================== Network ==========================
 
 	if(tcpClient.isConnected()){
 		if(!msgTx.empty()){
+			status = "sending : " + msgTx;
 			ofDrawBitmapString("sending:", 15, 55);
 			ofDrawBitmapString(msgTx, 85, 55);
 		}else{
-			ofDrawBitmapString("status: type something to send data to port 11999", 15, 55);
+			ofDrawBitmapString("status: type something to send data to port " + ofToInt(port), 15, 55);
 		}
 		ofDrawBitmapString("from server: \n" + msgRx, 15, 270);
 	}else{
@@ -169,6 +186,9 @@ void ofApp::sendTCPMessage(string s) {
 //======================== JSON =============================
 void ofApp::saveSettings() {
 	// now write pretty print
+
+	settings["ip"] = ofToString(ip);
+	settings["port"] = ofToString(port);
 	if (!settings.save("settings.json", true))
 	{
 		ofLogNotice("ofApp::setup") << "example_output_pretty.json written unsuccessfully.";
@@ -190,9 +210,9 @@ void ofApp::loadSettings() {
 		ofLogNotice("ofApp::setup") << settings.getRawString();
 
 		ip = settings["ip"].asString();
-		port = settings["port"].asDouble();
+		port = settings["port"].asString();
 
-		ofxTCPSettings IPsettings(ip, port);
+		ofxTCPSettings IPsettings(ip, ofToInt(port));
 
 		// set other options:
 		//settings.blocking = false;
