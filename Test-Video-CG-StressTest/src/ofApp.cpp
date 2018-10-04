@@ -142,14 +142,14 @@ void ofApp::update() {
 //--------------------------------------------------------------
 void ofApp::draw() {
 
-	ofBackground(255, 255, 255);
+	//ofBackground(255, 255, 255);
 	int vidAlpha = ofMap(mouseY, 0, ofGetWindowHeight(), 0, 255);
 
 
 	//fbo - CG
 	CGFbo.begin();
 	ofClear(255, 255, 255, 0);
-	ofBackground(0, 0, 0);
+	//ofBackground(0, 0, 0);
 
 #ifdef USE_PARTICLE
 	cam.begin();
@@ -161,19 +161,22 @@ void ofApp::draw() {
 	CGFbo.end();
 
 
+#ifdef USE_HPVPLAYER
 	//fbo - Video
 	VideoFbo.begin();
 	ofClear(255, 255, 255, 0);
 	ofSetColor(255, 255, 255);
 	vid[0].draw(0, 0, w, h / 2);
-	vid[1].draw(0, h / 2, w, h/2);
+	vid[1].draw(0, h / 2, w, h / 2);
 	VideoFbo.end();
 
 	//fbo - draw
 	ofSetColor(255, 255, 255, 255 - vidAlpha);
-	CGFbo.draw(0,0);
+	CGFbo.draw(0, 0);
 	ofSetColor(255, 255, 255, vidAlpha);
-	VideoFbo.draw(0,0);
+	VideoFbo.draw(0, 0);
+#endif // USE_HPVPLAYER
+
 
 	if (debugMode) {
 		ofSetColor(255, 0, 0);
