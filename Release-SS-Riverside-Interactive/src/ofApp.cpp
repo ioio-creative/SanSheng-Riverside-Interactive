@@ -295,8 +295,6 @@ glm::vec3 ofApp::projectedPointOntoPlane(glm::vec3 point, Vector4 plane) {
 //--------------------------------------------------------------
 //--------------------------------------------------------------
 
-
-//TODO: Add ofxButton to grab Ref Body Positions and save them to kinectFourCorners[4]
 void ofApp::setupCalibrationGui() {
 	calibrationGui.setup("Kinect Calibration");
 

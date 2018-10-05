@@ -10,6 +10,8 @@
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 
+#include "KinectToScreenMapper.h"
+
 /* ======================================================
 //Settings
 ======================================================*/
@@ -32,6 +34,7 @@
 
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT / 2
+#define KINECTAREA_VERTICALOFFSET 
 
 #define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
 
