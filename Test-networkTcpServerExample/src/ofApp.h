@@ -33,5 +33,7 @@ class ofApp : public ofBaseApp{
 
 		string msgTx;
 		string msgRx;
+
+		int port;
 };
 

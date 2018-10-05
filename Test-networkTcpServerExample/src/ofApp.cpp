@@ -10,8 +10,9 @@ void ofApp::setup(){
 	msgTx = "";
 	msgRx = "";
 
+	port = 3721;
 	// setup the server to listen on 11999
-	ofxTCPSettings settings(11999);
+	ofxTCPSettings settings(port);
 
 	// set other options
 	//settings.blocking = false;

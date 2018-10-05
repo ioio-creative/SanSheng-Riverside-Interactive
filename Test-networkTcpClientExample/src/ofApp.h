@@ -39,8 +39,11 @@ class ofApp : public ofBaseApp{
 
 		int size;
 
-		string ip;
-		int port;
+		ofParameter<string> ip;
+		ofParameter<string> port;
+		string prevIp;
+		string prevPort;
+
 		string delimiter;
 
 		vector<string> videoCommandsName;
@@ -63,7 +66,9 @@ class ofApp : public ofBaseApp{
 		ofxButton volumeUp;
 		ofxButton volumeDn;
 
+		ofxLabel ipInput;
 		ofxLabel status;
+
 		string tcpMessageToSend;
 
 		ofxPanel tcpGui;
