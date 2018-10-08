@@ -39,7 +39,7 @@ void ofApp::setup(){
 	KinectVisionFbo.begin();
 	ofClear(ofColor::black);
 	KinectVisionFbo.end();
-	kinect3DCam.setControlArea(ofRectangle(0, CANVAS_HEIGHT * 2/3, CANVAS_WIDTH, CANVAS_HEIGHT /3));
+	kinect3DCam.setControlArea(ofRectangle(0, CANVAS_HEIGHT * 1/3, CANVAS_WIDTH, CANVAS_HEIGHT /3));
 	CanvasCalibrateFbo.allocate(KINECTAREA_WIDTH, KINECTAREA_HEIGHT, GL_RGBA);
 	setupCavasCalibrateFbo();
 	
@@ -86,9 +86,8 @@ void ofApp::draw(){
 	ofSetColor(255);
 	if (calibrationMode)
 	{		
-		drawKinectFbo();
 		CanvasCalibrateFbo.draw(0, 0);
-		
+		drawKinectFbo();
 		
 	}
 	calibrationGui.draw();
@@ -99,7 +98,7 @@ void ofApp::draw(){
 		{
 			ofSetColor(ofColor::aqua);
 			ofFill();
-			ofDrawEllipse(bodyPosOnScreen[i].x, bodyPosOnScreen[i].y, 15, 15);
+			ofDrawEllipse(bodyPosOnScreen[i].x, bodyPosOnScreen[i].y, 50, 50);
 		}
 		else continue;
 	}
@@ -276,7 +275,7 @@ void ofApp::drawKinectFbo() {
 
 	
 	ofPushMatrix();
-	ofTranslate(0, ofGetHeight() * 2 / 3);
+	ofTranslate(0, ofGetHeight() * 1 / 3);
 	KinectVisionFbo.draw(0, 0);
 	ofPopMatrix();
 
