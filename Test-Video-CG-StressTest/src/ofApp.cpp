@@ -171,10 +171,11 @@ void ofApp::draw() {
 	VideoFbo.end();
 
 	//fbo - draw
-	ofSetColor(255, 255, 255, 255 - vidAlpha);
-	CGFbo.draw(0, 0);
-	ofSetColor(255, 255, 255, vidAlpha);
+	ofSetColor(255, 255, 255, 255);
 	VideoFbo.draw(0, 0);
+	ofSetColor(255, 255, 255, vidAlpha);
+	CGFbo.draw(0, 0);
+	
 #endif // USE_HPVPLAYER
 
 
