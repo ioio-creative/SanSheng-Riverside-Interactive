@@ -98,7 +98,7 @@ void ofApp::draw(){
 		{
 			ofSetColor(ofColor::aqua);
 			ofFill();
-			ofDrawEllipse(bodyPosOnScreen[i].x, bodyPosOnScreen[i].y, 50, 50);
+			ofDrawEllipse(bodyPosOnScreen[i].x, bodyPosOnScreen[i].y, 100, 100);
 		}
 		else continue;
 	}
