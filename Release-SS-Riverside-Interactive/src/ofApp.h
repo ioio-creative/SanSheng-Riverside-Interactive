@@ -1,6 +1,8 @@
 #pragma once
 #include "ofMain.h"
 
+//#define EXHIBITION
+
 /* ======================================================
 //Includes
 ======================================================*/
@@ -29,8 +31,14 @@
 #define MAX_PLAYERS 6
 #define REFJOINTTYPE JointType_SpineShoulder
 
-#define CANVAS_WIDTH 1080//1200 /3
-#define CANVAS_HEIGHT 1920//3456 /3
+#ifdef EXHIBITION
+#define CANVAS_WIDTH 1200
+#define CANVAS_HEIGHT 3456
+#else
+#define CANVAS_WIDTH 1200/3
+#define CANVAS_HEIGHT 3456/3
+#endif
+
 
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT
