@@ -8,7 +8,7 @@
 ======================================================*/
 #include "ofxCv.h"
 #include "ofxJSON.h"
-#include "ofxHPVPlayer.h"
+#include "VideoPlayerManager.h"
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 
@@ -143,16 +143,12 @@ class ofApp : public ofBaseApp{
 
 		//fbo CG / video
 		ofFbo CGFbo;
-		ofFbo VideoFbo;
 		ofFbo KinectVisionFbo;
 		ofEasyCam kinect3DCam;
 		ofFbo CanvasCalibrateFbo;
 		void setupCavasCalibrateFbo();
 		
-		//video player
-		vector<ofxHPVPlayer> vid;
-		int currVidID;
-		void setupVideoPlayer();
+
 
 		//Settings
 		ofxJSONElement settings;
@@ -161,6 +157,9 @@ class ofApp : public ofBaseApp{
 		void saveSettings();
 		void loadSettings();
 
+		//------------------------------------- VideoPlayerManager ------------------------------------- 
+		VideoPlayerManager VideoPlayerManager;
+		bool drawVideoPlayerManager;
 };
 
 
