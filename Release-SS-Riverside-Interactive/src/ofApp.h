@@ -113,26 +113,10 @@ class ofApp : public ofBaseApp{
 		void updateKinect2();
 		void drawKinectFbo();
 
-		//kinect 3D to 2D calibration
-		ofParameter<glm::vec2> kinectFourCorners[4] =
-		{
-			glm::vec2(0, 0),
-			glm::vec2(10, 0),
-			glm::vec2(10, 10),
-			glm::vec2(0, 10)
-		};
-		const cv::Point2f canvasFourCorners[4] =
-		{
-			cv::Point2f(100, 100),
-			cv::Point2f(KINECTAREA_WIDTH - 100, 100),
-			cv::Point2f(KINECTAREA_WIDTH - 100, KINECTAREA_HEIGHT - 100),
-			cv::Point2f(100, KINECTAREA_HEIGHT - 100)
-		};
-		cv::Mat camToScreenTransform;
-		void refreshCamToScreenTransform();
-
+		//------------------------------------- Kinect Mapping -------------------------------------
+		KinectToFloorScreenMapper KinectMapper = KinectToFloorScreenMapper(int(KINECTAREA_WIDTH), int(KINECTAREA_HEIGHT));
+		
 		ofxPanel calibrationGui;
-		ofParameterGroup cornersGroup;
 
 		ofParameterGroup bodyPosGuiGroup;
 		ofxLabel selectedBodyLabel;
@@ -140,18 +124,9 @@ class ofApp : public ofBaseApp{
 		ofParameter<string> bodyPosInspect[MAX_PLAYERS];
 		ofParameter<bool> refBodyIdxFlags[MAX_PLAYERS];
 
-		ofxButton cornerBtn0;
-		ofxButton cornerBtn1;
-		ofxButton cornerBtn2;
-		ofxButton cornerBtn3;
 		void refBodyIdxChanged(int& idx);
-		void corner0ButtonPressed();
-		void corner1ButtonPressed();
-		void corner2ButtonPressed();
-		void corner3ButtonPressed();
 
 
-		ofImage target;
 		bool calibrationMode = false;
 
 		void setupCalibrationGui();
@@ -161,9 +136,6 @@ class ofApp : public ofBaseApp{
 		ofFbo CGFbo;
 		ofFbo KinectVisionFbo;
 		ofEasyCam kinect3DCam;
-		ofFbo CanvasCalibrateFbo;
-		void setupCavasCalibrateFbo();
-
 
 
 		//Settings

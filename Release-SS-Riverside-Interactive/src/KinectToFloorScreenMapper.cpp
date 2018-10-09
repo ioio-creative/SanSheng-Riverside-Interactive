@@ -3,6 +3,11 @@
 KinectToFloorScreenMapper::KinectToFloorScreenMapper(int width, int height) {
 	canvasWidth = width;
 	canvasHeight = height;
+	canvasFourCorners[0] = cv::Point2f(100, 100);
+	canvasFourCorners[1] = cv::Point2f(canvasWidth - 100, 100),
+	canvasFourCorners[2] = cv::Point2f(canvasWidth - 100, canvasHeight - 100),
+	canvasFourCorners[3] = cv::Point2f(100, canvasHeight - 100);
+
 	CanvasCalibrateFbo.allocate(canvasWidth, canvasHeight, GL_RGBA);
 }
 
@@ -42,10 +47,10 @@ void KinectToFloorScreenMapper::setupCalibrationParamGroup(ofxPanel &GUI) {
 	GUI.add(cornersGroup);
 	GUI.loadFromFile("settings.xml");
 
-	cornerBtn0.addListener(this, &corner0ButtonPressed);
-	cornerBtn1.addListener(this, &corner1ButtonPressed);
-	cornerBtn2.addListener(this, &corner2ButtonPressed);
-	cornerBtn3.addListener(this, &corner3ButtonPressed);
+	cornerBtn0.addListener(this, &KinectToFloorScreenMapper::corner0ButtonPressed);
+	cornerBtn1.addListener(this, &KinectToFloorScreenMapper::corner1ButtonPressed);
+	cornerBtn2.addListener(this, &KinectToFloorScreenMapper::corner2ButtonPressed);
+	cornerBtn3.addListener(this, &KinectToFloorScreenMapper::corner3ButtonPressed);
 	GUI.add(cornerBtn0.setup("Top Left: " + ofToString(kinectFourCorners[0])));
 	GUI.add(cornerBtn1.setup("Top Right: " + ofToString(kinectFourCorners[1])));
 	GUI.add(cornerBtn2.setup("Bottom Right: " + ofToString(kinectFourCorners[2])));

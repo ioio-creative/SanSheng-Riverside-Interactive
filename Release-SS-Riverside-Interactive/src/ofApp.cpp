@@ -28,7 +28,7 @@ void ofApp::setup(){
 	setupKinect2();
 	//calibration gui
 	setupCalibrationGui();
-	refreshCamToScreenTransform();
+	KinectMapper.refreshCamToScreenTransform();
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	VideoPlayerManager.setup();
@@ -44,24 +44,11 @@ void ofApp::setup(){
 	ofClear(ofColor::black);
 	KinectVisionFbo.end();
 	kinect3DCam.setControlArea(ofRectangle(0, CANVAS_HEIGHT * 1/3, CANVAS_WIDTH, CANVAS_HEIGHT /3));
-	CanvasCalibrateFbo.allocate(KINECTAREA_WIDTH, KINECTAREA_HEIGHT, GL_RGBA);
-	setupCavasCalibrateFbo();
 	
+	KinectMapper.setupCavasCalibrateFbo();
 
 }
 
-void ofApp::setupCavasCalibrateFbo() {
-	target.loadImage("images/target.png");
-	target.resize(128, 128);
-	target.setAnchorPercent(0.5, 0.5);
-	CanvasCalibrateFbo.begin();
-	ofClear(ofColor::slateGrey);
-	for (auto canvasCorner : canvasFourCorners)
-	{
-		target.draw(canvasCorner.x, canvasCorner.y);
-	}
-	CanvasCalibrateFbo.end();
-}
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -94,13 +81,7 @@ void ofApp::draw(){
 		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
 	}
 	ofSetColor(255);
-	if (calibrationMode)
-	{		
-		CanvasCalibrateFbo.draw(0, 0);
-		drawKinectFbo();
-		
-	}
-	calibrationGui.draw();
+	
 
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
@@ -122,7 +103,13 @@ void ofApp::draw(){
 	VideoPlayerManager.setAlpha(a);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
+	if (calibrationMode)
+	{
+		KinectMapper.CanvasCalibrateFbo.draw(0, 0);
+		drawKinectFbo();
 
+	}
+	calibrationGui.draw();
 }
 
 //--------------------------------------------------------------
@@ -228,7 +215,7 @@ void ofApp::updateKinect2() {
 		}
 	}
 
-	cv::perspectiveTransform(bodyPosOnFloor, bodyPosOnScreen, camToScreenTransform);
+	cv::perspectiveTransform(bodyPosOnFloor, bodyPosOnScreen, KinectMapper.GetTransform());
 
 	colorTex = kinect.getColorSource()->getTexture();
 }
@@ -331,60 +318,28 @@ void ofApp::setupCalibrationGui() {
 	calibrationGui.add(bodyPosGuiGroup);
 	calibrationGui.add(selectedBodyLabel.setup(bodyPosInspect[refBodyIdx], 250, 25));
 
-	cornersGroup.setName("Corners");
-	for (int i = 0; i < 4; i++)
-	{
-		cornersGroup.add(kinectFourCorners[i].set("Corner#"+ ofToString(i), kinectFourCorners[i]));
-	}
-	calibrationGui.add(cornersGroup);
-	calibrationGui.loadFromFile("settings.xml");
+	KinectMapper.setupCalibrationParamGroup(calibrationGui);
+	//cornersGroup.setName("Corners");
+	//for (int i = 0; i < 4; i++)
+	//{
+	//	cornersGroup.add(kinectFourCorners[i].set("Corner#"+ ofToString(i), kinectFourCorners[i]));
+	//}
+	//calibrationGui.add(cornersGroup);
+	//calibrationGui.loadFromFile("settings.xml");
 
-	cornerBtn0.addListener(this, &ofApp::corner0ButtonPressed);
-	cornerBtn1.addListener(this, &ofApp::corner1ButtonPressed);
-	cornerBtn2.addListener(this, &ofApp::corner2ButtonPressed);
-	cornerBtn3.addListener(this, &ofApp::corner3ButtonPressed);
-	calibrationGui.add(cornerBtn0.setup("Top Left: " + ofToString(kinectFourCorners[0])));
-	calibrationGui.add(cornerBtn1.setup("Top Right: " + ofToString(kinectFourCorners[1])));
-	calibrationGui.add(cornerBtn2.setup("Bottom Right: " + ofToString(kinectFourCorners[2])));
-	calibrationGui.add(cornerBtn3.setup("Bottom Left: " + ofToString(kinectFourCorners[3])));
+	//cornerBtn0.addListener(this, &ofApp::corner0ButtonPressed);
+	//cornerBtn1.addListener(this, &ofApp::corner1ButtonPressed);
+	//cornerBtn2.addListener(this, &ofApp::corner2ButtonPressed);
+	//cornerBtn3.addListener(this, &ofApp::corner3ButtonPressed);
+	//calibrationGui.add(cornerBtn0.setup("Top Left: " + ofToString(kinectFourCorners[0])));
+	//calibrationGui.add(cornerBtn1.setup("Top Right: " + ofToString(kinectFourCorners[1])));
+	//calibrationGui.add(cornerBtn2.setup("Bottom Right: " + ofToString(kinectFourCorners[2])));
+	//calibrationGui.add(cornerBtn3.setup("Bottom Left: " + ofToString(kinectFourCorners[3])));
 }
 
-void ofApp::refreshCamToScreenTransform() {
-	cv::Point2f k4C[] = {
-		cv::Point2f(kinectFourCorners[0]->x, kinectFourCorners[0]->y),
-		cv::Point2f(kinectFourCorners[1]->x, kinectFourCorners[1]->y),
-		cv::Point2f(kinectFourCorners[2]->x, kinectFourCorners[2]->y),
-		cv::Point2f(kinectFourCorners[3]->x, kinectFourCorners[3]->y)
-	};
-	camToScreenTransform = cv::getPerspectiveTransform(k4C, canvasFourCorners);
-}
 
 void ofApp::refBodyIdxChanged(int& idx) {
 	selectedBodyLabel.setup(bodyPosInspect[refBodyIdx], 250, 25);
-}
-
-void ofApp::corner0ButtonPressed() {
-	kinectFourCorners[0] = glm::vec2(bodyPosOnFloor[refBodyIdx].x, bodyPosOnFloor[refBodyIdx].y);
-	cornerBtn0.setName("Top Left: " + ofToString(kinectFourCorners[0]));
-	refreshCamToScreenTransform();
-}
-
-void ofApp::corner1ButtonPressed() {
-	kinectFourCorners[1] = glm::vec2(bodyPosOnFloor[refBodyIdx].x, bodyPosOnFloor[refBodyIdx].y);
-	cornerBtn1.setName("Top Right: " + ofToString(kinectFourCorners[1]));
-	refreshCamToScreenTransform();
-}
-
-void ofApp::corner2ButtonPressed() {
-	kinectFourCorners[2] = glm::vec2(bodyPosOnFloor[refBodyIdx].x, bodyPosOnFloor[refBodyIdx].y);
-	cornerBtn2.setName("Bottom Right: " + ofToString(kinectFourCorners[2]));
-	refreshCamToScreenTransform();
-}
-
-void ofApp::corner3ButtonPressed() {
-	kinectFourCorners[3] = glm::vec2(bodyPosOnFloor[refBodyIdx].x, bodyPosOnFloor[refBodyIdx].y);
-	cornerBtn3.setName("Bottom Left: " + ofToString(kinectFourCorners[3]));
-	refreshCamToScreenTransform();
 }
 
 void ofApp::updateGuiInspectorValues() {

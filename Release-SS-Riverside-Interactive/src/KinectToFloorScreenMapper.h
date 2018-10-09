@@ -25,14 +25,8 @@ class KinectToFloorScreenMapper {
 			glm::vec2(0, 10)
 		};
 
-		const cv::Point2f canvasFourCorners[4] = {
-				cv::Point2f(100, 100),
-				cv::Point2f(canvasWidth - 100, 100),
-				cv::Point2f(canvasWidth - 100, canvasHeight - 100),
-				cv::Point2f(100, canvasHeight - 100)
-		};
-		
-		
+		cv::Point2f canvasFourCorners[4];
+				
 		cv::Mat GetTransform();
 		void refreshCamToScreenTransform();
 		

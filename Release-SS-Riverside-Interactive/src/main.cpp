@@ -6,7 +6,7 @@ int main( ){
 	ofGLWindowSettings settings;
 
 
-	settings.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);//(1920, 1080); //<-- final resolution
+	settings.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);//<-- final resolution
 
 #ifdef EXHIBITION
 	settings.windowMode = OF_FULLSCREEN;
