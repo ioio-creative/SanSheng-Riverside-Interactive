@@ -13,6 +13,12 @@
 #include "KinectToScreenMapper.h"
 
 /* ======================================================
+//Compiler Flags
+======================================================*/
+//Use this flag to toggle window sizes for different usage
+#define IOIOTEST
+
+/* ======================================================
 //Settings
 ======================================================*/
 //Pls check final resolution in main.cpp
@@ -29,12 +35,22 @@
 #define MAX_PLAYERS 6
 #define REFJOINTTYPE JointType_SpineShoulder
 
-#define CANVAS_WIDTH 1080//1200 /3
-#define CANVAS_HEIGHT 1920//3456 /3
-
+#ifdef IOIOTEST
+#define CANVAS_WIDTH 1080
+#define CANVAS_HEIGHT 1920
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT
-#define KINECTAREA_VERTICALOFFSET 
+#else 
+#define CANVAS_WIDTH 1200
+#define CANVAS_HEIGHT 3456
+#define KINECTAREA_WIDTH CANVAS_WIDTH
+#define KINECTAREA_HEIGHT 1548
+#define KINECTAREA_VERTICALOFFSET CANVAS_HEIGHT - KINECTAREA_HEIGHT
+#endif 
+
+
+
+
 
 #define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
 
