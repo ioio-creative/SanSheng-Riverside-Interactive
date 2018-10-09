@@ -32,23 +32,23 @@ class KinectToFloorScreenMapper {
 				cv::Point2f(100, canvasHeight - 100)
 		};
 		
-		cv::Mat camToScreenTransform;
+		
+		cv::Mat GetTransform();
 		void refreshCamToScreenTransform();
 		
-
+		//ofxGui
 		ofParameterGroup cornersGroup;
 		ofxButton cornerBtn0;
 		ofxButton cornerBtn1;
 		ofxButton cornerBtn2;
 		ofxButton cornerBtn3;
-		void refBodyIdxChanged(int& idx);
+		void updateRefBodyPosOnFloor(const cv::Point2f &bodyPos);
 		void corner0ButtonPressed();
 		void corner1ButtonPressed();
 		void corner2ButtonPressed();
 		void corner3ButtonPressed();
 
-		void setupCalibrationGui(ofxPanel &GUI);
-		void updateGuiInspectorValues();
+		void setupCalibrationParamGroup(ofxPanel &GUI);
 		
 		//Fbo
 		ofFbo CanvasCalibrateFbo;
@@ -56,6 +56,9 @@ class KinectToFloorScreenMapper {
 
 	private:
 		int canvasWidth, canvasHeight;
+		cv::Mat camToScreenTransform;
+
+		const cv::Point2f *refBodyPosOnFloor;
 		ofImage target;
 };
 
