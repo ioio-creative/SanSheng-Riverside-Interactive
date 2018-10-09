@@ -163,7 +163,11 @@
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp">
       <Filter>addons\ofxOpenCv\src</Filter>
     </ClCompile>
+<<<<<<< HEAD
     <ClCompile Include="src\VideoPlayerManager.cpp">
+=======
+    <ClCompile Include="src\KinectToScreenMapper.cpp">
+>>>>>>> 0da37d436bb687679aec03a91105932d78c835c4
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1601,9 +1605,12 @@
     <ClInclude Include="..\..\..\addons\ofxOpenCv\libs\opencv\include\opencv2\world.hpp">
       <Filter>addons\ofxOpenCv\libs\opencv\include\opencv2</Filter>
     </ClInclude>
+<<<<<<< HEAD
     <ClInclude Include="src\VideoPlayerManager.h">
       <Filter>src</Filter>
     </ClInclude>
+=======
+>>>>>>> 0da37d436bb687679aec03a91105932d78c835c4
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="icon.rc" />

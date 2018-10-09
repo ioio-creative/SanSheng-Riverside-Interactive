@@ -13,6 +13,12 @@
 #include "ofxGui.h"
 
 #include "KinectToScreenMapper.h"
+/* ======================================================
+//Compiler Flags
+======================================================*/
+//Use this flag to toggle window sizes for different usage
+#define IOIOTEST
+//#define EXHIBITION
 
 /* ======================================================
 //Settings
@@ -31,18 +37,28 @@
 #define MAX_PLAYERS 6
 #define REFJOINTTYPE JointType_SpineShoulder
 
+
 #ifdef EXHIBITION
 #define CANVAS_WIDTH 1200
 #define CANVAS_HEIGHT 3456
+#define KINECTAREA_WIDTH CANVAS_WIDTH
+#define KINECTAREA_HEIGHT 1548
 #else
 #define CANVAS_WIDTH 1200/3
 #define CANVAS_HEIGHT 3456/3
+#define KINECTAREA_WIDTH CANVAS_WIDTH
+#define KINECTAREA_HEIGHT 1548/3
 #endif
 
-
+#ifdef IOIOTEST
+#define CANVAS_WIDTH 1080
+#define CANVAS_HEIGHT 1920
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT
-#define KINECTAREA_VERTICALOFFSET 
+#endif
+
+#define KINECTAREA_VERTICALOFFSET CANVAS_HEIGHT - KINECTAREA_HEIGHT
+
 
 #define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
 
@@ -71,7 +87,7 @@ class ofApp : public ofBaseApp{
 		//basic variables
 		bool debugMode;
 		int w, h;
-		
+
 		//kinect
 		ofxKFW2::Device kinect;
 		ICoordinateMapper* coordinateMapper;
@@ -90,7 +106,7 @@ class ofApp : public ofBaseApp{
 		vector<ofVec2f> colorCoords;
 		int numBodiesTracked;
 		bool bHaveAllStreams;
-		
+
 		glm::vec3 projectedPointOntoPlane(glm::vec3 point, Vector4 plane);
 
 		void setupKinect2();
@@ -98,8 +114,8 @@ class ofApp : public ofBaseApp{
 		void drawKinectFbo();
 
 		//kinect 3D to 2D calibration
-		ofParameter<glm::vec2> kinectFourCorners[4] = 
-		{ 
+		ofParameter<glm::vec2> kinectFourCorners[4] =
+		{
 			glm::vec2(0, 0),
 			glm::vec2(10, 0),
 			glm::vec2(10, 10),
@@ -114,16 +130,16 @@ class ofApp : public ofBaseApp{
 		};
 		cv::Mat camToScreenTransform;
 		void refreshCamToScreenTransform();
-				
+
 		ofxPanel calibrationGui;
 		ofParameterGroup cornersGroup;
-		
+
 		ofParameterGroup bodyPosGuiGroup;
 		ofxLabel selectedBodyLabel;
 		ofParameter<int> refBodyIdx;
 		ofParameter<string> bodyPosInspect[MAX_PLAYERS];
 		ofParameter<bool> refBodyIdxFlags[MAX_PLAYERS];
-		
+
 		ofxButton cornerBtn0;
 		ofxButton cornerBtn1;
 		ofxButton cornerBtn2;
@@ -133,8 +149,8 @@ class ofApp : public ofBaseApp{
 		void corner1ButtonPressed();
 		void corner2ButtonPressed();
 		void corner3ButtonPressed();
-		
-		
+
+
 		ofImage target;
 		bool calibrationMode = false;
 
@@ -147,7 +163,7 @@ class ofApp : public ofBaseApp{
 		ofEasyCam kinect3DCam;
 		ofFbo CanvasCalibrateFbo;
 		void setupCavasCalibrateFbo();
-		
+
 
 
 		//Settings
@@ -157,7 +173,7 @@ class ofApp : public ofBaseApp{
 		void saveSettings();
 		void loadSettings();
 
-		//------------------------------------- VideoPlayerManager ------------------------------------- 
+		//------------------------------------- VideoPlayerManager -------------------------------------
 		VideoPlayerManager VideoPlayerManager;
 		bool drawVideoPlayerManager;
 };
