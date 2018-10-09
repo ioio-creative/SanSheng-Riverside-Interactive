@@ -6,7 +6,7 @@
 ======================================================*/
 #include "ofxCv.h"
 #include "ofxJSON.h"
-#include "ofxHPVPlayer.h"
+#include "VideoPlayerManager.h"
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 
@@ -59,10 +59,6 @@
 #define KINECTAREA_VERTICALOFFSET CANVAS_HEIGHT - KINECTAREA_HEIGHT
 
 
-
-
-
-
 #define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
 
 class ofApp : public ofBaseApp{
@@ -90,7 +86,7 @@ class ofApp : public ofBaseApp{
 		//basic variables
 		bool debugMode;
 		int w, h;
-		
+
 		//kinect
 		ofxKFW2::Device kinect;
 		ICoordinateMapper* coordinateMapper;
@@ -109,7 +105,7 @@ class ofApp : public ofBaseApp{
 		vector<ofVec2f> colorCoords;
 		int numBodiesTracked;
 		bool bHaveAllStreams;
-		
+
 		glm::vec3 projectedPointOntoPlane(glm::vec3 point, Vector4 plane);
 
 		void setupKinect2();
@@ -117,8 +113,8 @@ class ofApp : public ofBaseApp{
 		void drawKinectFbo();
 
 		//kinect 3D to 2D calibration
-		ofParameter<glm::vec2> kinectFourCorners[4] = 
-		{ 
+		ofParameter<glm::vec2> kinectFourCorners[4] =
+		{
 			glm::vec2(0, 0),
 			glm::vec2(10, 0),
 			glm::vec2(10, 10),
@@ -133,16 +129,16 @@ class ofApp : public ofBaseApp{
 		};
 		cv::Mat camToScreenTransform;
 		void refreshCamToScreenTransform();
-				
+
 		ofxPanel calibrationGui;
 		ofParameterGroup cornersGroup;
-		
+
 		ofParameterGroup bodyPosGuiGroup;
 		ofxLabel selectedBodyLabel;
 		ofParameter<int> refBodyIdx;
 		ofParameter<string> bodyPosInspect[MAX_PLAYERS];
 		ofParameter<bool> refBodyIdxFlags[MAX_PLAYERS];
-		
+
 		ofxButton cornerBtn0;
 		ofxButton cornerBtn1;
 		ofxButton cornerBtn2;
@@ -152,8 +148,8 @@ class ofApp : public ofBaseApp{
 		void corner1ButtonPressed();
 		void corner2ButtonPressed();
 		void corner3ButtonPressed();
-		
-		
+
+
 		ofImage target;
 		bool calibrationMode = false;
 
@@ -162,16 +158,12 @@ class ofApp : public ofBaseApp{
 
 		//fbo CG / video
 		ofFbo CGFbo;
-		ofFbo VideoFbo;
 		ofFbo KinectVisionFbo;
 		ofEasyCam kinect3DCam;
 		ofFbo CanvasCalibrateFbo;
 		void setupCavasCalibrateFbo();
-		
-		//video player
-		vector<ofxHPVPlayer> vid;
-		int currVidID;
-		void setupVideoPlayer();
+
+
 
 		//Settings
 		ofxJSONElement settings;
@@ -180,6 +172,9 @@ class ofApp : public ofBaseApp{
 		void saveSettings();
 		void loadSettings();
 
+		//------------------------------------- VideoPlayerManager -------------------------------------
+		VideoPlayerManager VideoPlayerManager;
+		bool drawVideoPlayerManager;
 };
 
 

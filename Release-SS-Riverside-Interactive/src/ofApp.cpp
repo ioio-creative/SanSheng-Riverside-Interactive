@@ -30,12 +30,12 @@ void ofApp::setup(){
 	setupCalibrationGui();
 	refreshCamToScreenTransform();
 
-	//video player
-	setupVideoPlayer();
+	//------------------------------------- VideoPlayerManager ------------------------------------- 
+	VideoPlayerManager.setup();
+	drawVideoPlayerManager = true;
 	
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
-	VideoFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
 	KinectVisionFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT / 3, GL_RGBA);
 	KinectVisionFbo.begin();
 	ofClear(ofColor::black);
@@ -75,6 +75,9 @@ void ofApp::update(){
 
 	//update ofxGui
 	updateGuiInspectorValues();
+
+	//------------------------------------- VideoPlayerManager ------------------------------------- 
+	VideoPlayerManager.update();
 }
 
 //--------------------------------------------------------------
@@ -103,6 +106,11 @@ void ofApp::draw(){
 		}
 		else continue;
 	}
+
+	//------------------------------------- VideoPlayerManager ------------------------------------- 
+	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
+	VideoPlayerManager.setAlpha(a);
+	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 }
 
 //--------------------------------------------------------------
@@ -131,8 +139,12 @@ void ofApp::keyReleased(int key){
 			ofClear(0);
 			KinectVisionFbo.end();
 		}
+		break;
+
 	case 'v':
-		VideoFbo.draw(0,0);
+		ofLog() << "drawVideoPlayerManager : " << drawVideoPlayerManager;
+		drawVideoPlayerManager != drawVideoPlayerManager;
+		break;
 	}
 }
 
@@ -369,44 +381,10 @@ void ofApp::updateGuiInspectorValues() {
 	}
 }
 
-//--------------------------------------------------------------
-//------------------------- Video Player -----------------------
-//--------------------------------------------------------------
-//--------------------------------------------------------------
-void ofApp::setupVideoPlayer() {
-
-	HPV::InitHPVEngine();
-	/* Create resources for new player */
-	/* Alternatively, if you experience playback stutter, try to toggle double-buffering true/false
-	 * Default: OFF
-	 *
-	 * hpvPlayer.setDoubleBuffered(true);
-	 */
-
-	for (int i = 0; i < NUM_OF_VID; i++) {
-		vid.push_back(ofxHPVPlayer());
-		vid[i].init(HPV::NewPlayer());
-		ofLog() << i;
-		/* Try to load file and start playback */
-		vid[i].load("videos/"+ofToString(i) + ".hpv");
-		vid[i].setLoopState(OF_LOOP_NONE);
-		vid[i].play();
-		vid[i].setPaused(true);
-	}
-
-	//Play Standby Video
-/*
-vid[currVidID].setPaused(false);
-vid[currVidID].play();
-*/
-}
 
 void ofApp::exit() {
-	/* Cleanup and destroy HPV Engine upon exit */
-	HPV::DestroyHPVEngine();
-
-	/* Close and dispose Kinect sensor upon exit*/
-	kinect.close();
+	//------------------------------------- VideoPlayerManager ------------------------------------- 
+	VideoPlayerManager.exit();
 }
 
 //--------------------------------------------------------------
