@@ -4,6 +4,7 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+	ofLog() << "CANVAS_WIDTH : " << CANVAS_WIDTH << "CANVAS_HEIGHT : " << CANVAS_HEIGHT;
 	//debug
 	debugMode = false;
 	ofLogToConsole();

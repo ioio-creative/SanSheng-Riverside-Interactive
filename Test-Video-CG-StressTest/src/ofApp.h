@@ -10,15 +10,13 @@
 
 
 
-#define NUM_OF_VID 2
-
  /* ======================================================
   //Includes
   ======================================================*/
 #include "ofxJSON.h"
-#ifdef USE_HPVPLAYER
-#include "ofxHPVPlayer.h"
-#endif
+
+#include "VideoPlayerManager.h"
+
 #ifdef USE_PARTICLE
 #include "ofxGpuParticles.h"
 #define _PROGRAMMABLE_RENDERER
@@ -48,18 +46,12 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo) {};
 		void gotMessage(ofMessage msg) {};
 
+		VideoPlayerManager VideoPlayerManager;
+
 		bool debugMode;
 
-		//video
-#ifdef USE_HPVPLAYER
-		vector<ofxHPVPlayer> vid;
-		int currVidID;
-#else
-		vector<ofVideoPlayer> vid;
-#endif
-
 		ofFbo CGFbo;
-		ofFbo VideoFbo;
+
 
 		//Settings
 		ofxJSONElement settings;
