@@ -1,8 +1,6 @@
 #pragma once
 #include "ofMain.h"
 
-//#define EXHIBITION
-
 /* ======================================================
 //Includes
 ======================================================*/
@@ -12,13 +10,14 @@
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 
-#include "KinectToScreenMapper.h"
+#include "KinectToFloorScreenMapper.h"
 
 /* ======================================================
 //Compiler Flags
 ======================================================*/
 //Use this flag to toggle window sizes for different usage
 #define IOIOTEST
+//#define EXHIBITION
 
 /* ======================================================
 //Settings
@@ -38,20 +37,25 @@
 #define REFJOINTTYPE JointType_SpineShoulder
 
 
-#ifdef IOIOTEST
-#define CANVAS_WIDTH 1080
-#define CANVAS_HEIGHT 1920
 #ifdef EXHIBITION
 #define CANVAS_WIDTH 1200
 #define CANVAS_HEIGHT 3456
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT 1548
-
 #else
 #define CANVAS_WIDTH 1200/3
 #define CANVAS_HEIGHT 3456/3
+#define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT 1548/3
 #endif
+
+#ifdef IOIOTEST
+#define CANVAS_WIDTH 1080
+#define CANVAS_HEIGHT 1920
+#define KINECTAREA_WIDTH CANVAS_WIDTH
+#define KINECTAREA_HEIGHT CANVAS_HEIGHT
+#endif
+
 #define KINECTAREA_VERTICALOFFSET CANVAS_HEIGHT - KINECTAREA_HEIGHT
 
 
