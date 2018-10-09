@@ -19,6 +19,10 @@ void KinectToFloorScreenMapper::setupCavasCalibrateFbo() {
 	CanvasCalibrateFbo.end();
 }
 
+void KinectToFloorScreenMapper::setupCalibrationGui(ofxPanel &GUI) {
+
+}
+
 void KinectToFloorScreenMapper::refreshCamToScreenTransform() {
 	cv::Point2f k4C[] = {
 				cv::Point2f(kinectFourCorners[0]->x, kinectFourCorners[0]->y),
