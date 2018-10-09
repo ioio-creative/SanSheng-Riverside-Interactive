@@ -33,6 +33,9 @@ void ofApp::setup(){
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	VideoPlayerManager.setup();
 	drawVideoPlayerManager = true;
+
+	//------------------------------------- Particle Visuals Manager-------------------------------------
+	ParticleVisualsManager.setup(CANVAS_WIDTH, CANVAS_HEIGHT);
 	
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
@@ -78,6 +81,9 @@ void ofApp::update(){
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	VideoPlayerManager.update();
+
+	//------------------------------------- Particle Visuals Manager-------------------------------------
+	ParticleVisualsManager.update();
 }
 
 //--------------------------------------------------------------
@@ -107,15 +113,21 @@ void ofApp::draw(){
 		else continue;
 	}
 
+
+	//------------------------------------- Particle Visuals Manager-------------------------------------
+	ParticleVisualsManager.draw();
+
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
 	VideoPlayerManager.setAlpha(a);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+
+
 }
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-
+	ParticleVisualsManager.keyPressed(key);
 	switch (key) {
 	case 'd':
 		debugMode = !debugMode;

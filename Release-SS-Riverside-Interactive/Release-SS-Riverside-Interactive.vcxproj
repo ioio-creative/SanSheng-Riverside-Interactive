@@ -187,6 +187,7 @@
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\KinectToFloorScreenMapper.cpp" />
+    <ClCompile Include="src\ParticleVisualsManager.cpp" />
     <ClCompile Include="src\VideoPlayerManager.cpp" />
     <ClCompile Include="..\..\..\addons\ofxCv\libs\CLD\src\ETF.cpp" />
     <ClCompile Include="..\..\..\addons\ofxCv\libs\CLD\src\fdog.cpp" />
@@ -240,8 +241,11 @@
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="src\FloorParticle.h" />
+    <ClInclude Include="src\FloorUser.h" />
     <ClInclude Include="src\ofApp.h" />
     <ClInclude Include="src\KinectToFloorScreenMapper.h" />
+    <ClInclude Include="src\ParticleVisualsManager.h" />
     <ClInclude Include="src\VideoPlayerManager.h" />
     <ClInclude Include="..\..\..\addons\ofxCv\src\ofxCv.h" />
     <ClInclude Include="..\..\..\addons\ofxCv\libs\CLD\include\CLD\ETF.h" />

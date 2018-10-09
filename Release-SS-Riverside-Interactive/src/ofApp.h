@@ -7,6 +7,7 @@
 #include "ofxCv.h"
 #include "ofxJSON.h"
 #include "VideoPlayerManager.h"
+#include "ParticleVisualsManager.h"
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 
@@ -16,7 +17,7 @@
 //Compiler Flags
 ======================================================*/
 //Use this flag to toggle window sizes for different usage
-#define IOIOTEST
+//#define IOIOTEST
 //#define EXHIBITION
 
 /* ======================================================
@@ -175,6 +176,10 @@ class ofApp : public ofBaseApp{
 		//------------------------------------- VideoPlayerManager -------------------------------------
 		VideoPlayerManager VideoPlayerManager;
 		bool drawVideoPlayerManager;
+
+		//------------------------------------- Particle Visuals Manager-------------------------------------
+		ParticleVisualsManager ParticleVisualsManager;
+		bool drawParticleVisualsManager;
 };
 
 
