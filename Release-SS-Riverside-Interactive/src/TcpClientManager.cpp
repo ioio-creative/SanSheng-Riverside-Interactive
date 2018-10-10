@@ -3,15 +3,15 @@
 
 
 //--------------------------------------------------------------
-void TcpClientManager::setup(){
+void TcpClientManager::setup() {
 
 	ofSetBackgroundColor(230);
 
 	//======================== Network ==========================
 
 	// our send and recieve strings
-	msgTx	= "";
-	msgRx	= "";
+	msgTx = "";
+	msgRx = "";
 
 	tcpMessageToSend = "";
 
@@ -23,11 +23,11 @@ void TcpClientManager::setup(){
 
 	//======================== GUI ==============================
 
-	
+
 	tcpGui.setup(); // most of the time you don't need a name
-	
+
 	//tcpGui.add(playBtn.setup(videoCommandsName[0]));
-	tcpGui.add(ip.set("IP : " , ip));
+	tcpGui.add(ip.set("IP : ", ip));
 	tcpGui.add(port.set("Port : ", port));
 	tcpGui.add(playBtn.setup(videoCommandsName[1]));
 	tcpGui.add(prevBtn.setup(videoCommandsName[2]));
@@ -43,9 +43,9 @@ void TcpClientManager::setup(){
 	stopBtn.addListener(this, &TcpClientManager::stopButtonPressed);
 	volumeUp.addListener(this, &TcpClientManager::volumeUpButtonPressed);
 	volumeDn.addListener(this, &TcpClientManager::volumeDnButtonPressed);
-	
 
-	tcpGui.setPosition(ofGetWidth()-410, 10);
+
+	tcpGui.setPosition(ofGetWidth() - 410, 10);
 	tcpGui.setWidthElements(400);
 
 	prevIp = ip;
@@ -79,37 +79,37 @@ void TcpClientManager::volumeDnButtonPressed() {
 //--------------------------------------------------------------
 void TcpClientManager::update() {
 	if (isSetup) {
-	if (prevIp.compare(ip) || prevPort.compare(port)) {
-		prevIp = ip;
-		prevPort = port;
-		tcpClient.close();
-		saveSettings();
-		tcpClient.setup(ip, ofToInt(port));
-		tcpClient.setMessageDelimiter(delimiter);
-		connectTime = ofGetElapsedTimeMillis();
-	}
-
-	//======================== Network ==========================
-	if (tcpClient.isConnected()) {
-		// we are connected - lets try to receive from the server
-		string str = tcpClient.receive();
-		if (str.length() > 0) {
-			msgRx = str;
-		}
-	}
-	else {
-		msgTx = "";
-		// if we are not connected lets try and reconnect every 5 seconds
-		deltaTime = ofGetElapsedTimeMillis() - connectTime;
-
-		if (deltaTime > 5000) {
+		if (prevIp.compare(ip) || prevPort.compare(port)) {
+			prevIp = ip;
+			prevPort = port;
+			tcpClient.close();
+			saveSettings();
 			tcpClient.setup(ip, ofToInt(port));
 			tcpClient.setMessageDelimiter(delimiter);
 			connectTime = ofGetElapsedTimeMillis();
 		}
 
+		//======================== Network ==========================
+		if (tcpClient.isConnected()) {
+			// we are connected - lets try to receive from the server
+			string str = tcpClient.receive();
+			if (str.length() > 0) {
+				msgRx = str;
+			}
+		}
+		else {
+			msgTx = "";
+			// if we are not connected lets try and reconnect every 5 seconds
+			deltaTime = ofGetElapsedTimeMillis() - connectTime;
+
+			if (deltaTime > 5000) {
+				tcpClient.setup(ip, ofToInt(port));
+				tcpClient.setMessageDelimiter(delimiter);
+				connectTime = ofGetElapsedTimeMillis();
+			}
+
+		}
 	}
-}
 }
 
 void TcpClientManager::exit() {
@@ -125,7 +125,7 @@ void TcpClientManager::exit() {
 
 
 //--------------------------------------------------------------
-void TcpClientManager::draw(){
+void TcpClientManager::draw() {
 	if (isSetup) {
 		stringstream ss;
 		ss << "ip : " << ip << " port : " << port << endl;
@@ -159,7 +159,7 @@ void TcpClientManager::draw(){
 
 
 //--------------------------------------------------------------
-void TcpClientManager::keyPressed(int key){
+void TcpClientManager::keyPressed(int key) {
 	if (isSetup) {
 		// you can only type if you're connected
 		// we accumulate 1 line of text and send every typed character
@@ -237,22 +237,22 @@ void TcpClientManager::loadSettings() {
 		// optionally set the delimiter to something else.  The delimiter in the client and the server have to be the same
 		delimiter = settings["message-delimiter"].asString();
 		tcpClient.setMessageDelimiter(delimiter);
-		
+
 		videoCommandsName.clear();
 		videoCommandsString.clear();
 
-		ofLog() << " settings['video-commands'].size(); "<< settings["video-commands"].size();
+		ofLog() << " settings['video-commands'].size(); " << settings["video-commands"].size();
 
 		for (int i = 0; i < settings["video-commands"].size(); i++) {
 			videoCommandsName.push_back(settings["video-commands"][i]["name"].asString());
 			videoCommandsString.push_back(settings["video-commands"][i]["string"].asString());
 		}
-	
+
 	}
 	else
 	{
 		ofLogError("TcpClientManager::setup") << "Failed to parse JSON" << endl;
 	}
 
-	
+
 }

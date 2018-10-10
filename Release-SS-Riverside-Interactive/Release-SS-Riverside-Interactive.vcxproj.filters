@@ -190,7 +190,7 @@
     <ClCompile Include="src\TcpClientManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="KinectManager.cpp">
+    <ClCompile Include="src\KinectManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
   </ItemGroup>
@@ -1673,7 +1673,7 @@
     <ClInclude Include="src\TcpClientManager.h">
       <Filter>src</Filter>
     </ClInclude>
-    <ClInclude Include="KinectManager.h">
+    <ClInclude Include="src\KinectManager.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>
