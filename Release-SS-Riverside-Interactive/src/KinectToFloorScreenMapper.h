@@ -14,6 +14,9 @@ class KinectToFloorScreenMapper {
 	public:
 
 		KinectToFloorScreenMapper(int width, int height);
+
+		KinectToFloorScreenMapper(const KinectToFloorScreenMapper& mapper);
+
 		~KinectToFloorScreenMapper();
 		//kinect 3D to 2D calibration
 
@@ -27,7 +30,7 @@ class KinectToFloorScreenMapper {
 
 		cv::Point2f canvasFourCorners[4];
 				
-		cv::Mat GetTransform();
+		cv::Mat GetTransform() const;
 		void refreshCamToScreenTransform();
 		
 		//ofxGui

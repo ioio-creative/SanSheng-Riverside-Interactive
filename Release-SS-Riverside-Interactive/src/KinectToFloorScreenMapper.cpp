@@ -4,14 +4,25 @@ KinectToFloorScreenMapper::KinectToFloorScreenMapper(int width, int height) {
 	canvasWidth = width;
 	canvasHeight = height;
 	canvasFourCorners[0] = cv::Point2f(100, 100);
-	canvasFourCorners[1] = cv::Point2f(canvasWidth - 100, 100),
-	canvasFourCorners[2] = cv::Point2f(canvasWidth - 100, canvasHeight - 100),
+	canvasFourCorners[1] = cv::Point2f(canvasWidth - 100, 100);
+	canvasFourCorners[2] = cv::Point2f(canvasWidth - 100, canvasHeight - 100);
+	canvasFourCorners[3] = cv::Point2f(100, canvasHeight - 100);
+
+}
+
+KinectToFloorScreenMapper::KinectToFloorScreenMapper(const KinectToFloorScreenMapper& mapper) {
+	canvasWidth = mapper.canvasWidth;
+	canvasHeight = mapper.canvasHeight;
+
+	canvasFourCorners[0] = cv::Point2f(100, 100);
+	canvasFourCorners[1] = cv::Point2f(canvasWidth - 100, 100);
+	canvasFourCorners[2] = cv::Point2f(canvasWidth - 100, canvasHeight - 100);
 	canvasFourCorners[3] = cv::Point2f(100, canvasHeight - 100);
 
 	CanvasCalibrateFbo.allocate(canvasWidth, canvasHeight, GL_RGBA);
 }
 
-cv::Mat KinectToFloorScreenMapper::GetTransform() {
+cv::Mat KinectToFloorScreenMapper::GetTransform() const {
 	return camToScreenTransform;
 }
 
@@ -29,6 +40,8 @@ void KinectToFloorScreenMapper::setupCavasCalibrateFbo() {
 	target.loadImage("images/target.png");
 	target.resize(128, 128);
 	target.setAnchorPercent(0.5, 0.5);
+
+	CanvasCalibrateFbo.allocate(canvasWidth, canvasHeight, GL_RGBA);
 	CanvasCalibrateFbo.begin();
 	ofClear(ofColor::slateGrey);
 	for (auto canvasCorner : canvasFourCorners)

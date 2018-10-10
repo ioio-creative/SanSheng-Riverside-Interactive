@@ -12,6 +12,7 @@
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 
+#include "KinectManager.h"
 #include "KinectToFloorScreenMapper.h"
 
 /* ======================================================
@@ -36,7 +37,6 @@
 #define COLOR_HEIGHT 1080
 
 #define MAX_PLAYERS 6
-#define REFJOINTTYPE JointType_SpineShoulder
 
 
 #ifdef EXHIBITION
@@ -61,7 +61,7 @@
 #define KINECTAREA_VERTICALOFFSET CANVAS_HEIGHT - KINECTAREA_HEIGHT
 
 
-#define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
+
 
 class ofApp : public ofBaseApp{
 
@@ -90,32 +90,31 @@ class ofApp : public ofBaseApp{
 		int w, h;
 
 		//kinect
-		ofxKFW2::Device kinect;
-		ICoordinateMapper* coordinateMapper;
+		//ofxKFW2::Device kinect;
+		//ICoordinateMapper* coordinateMapper;
 
-		Vector4 floorPlane;
-		float tiltAngle;
-		float rollAngle;
-		glm::mat4 floorTransform;
+		//Vector4 floorPlane;
+		//float tiltAngle;
+		//float rollAngle;
+		//glm::mat4 floorTransform;
 
-		vector<bool> bodyIdxTracked;
-		vector<glm::vec3> bodyPositions;
-		vector<cv::Point2f> bodyPosOnFloor;
-		vector<cv::Point2f> bodyPosOnScreen;
+		//vector<bool> bodyIdxTracked;
+		//vector<glm::vec3> bodyPositions;
+		//vector<cv::Point2f> bodyPosOnFloor;
+		//vector<cv::Point2f> bodyPosOnScreen;
 
-		ofTexture colorTex;
-		int numBodiesTracked;
-		bool bHaveAllStreams;
+		//ofTexture colorTex;
+		//int numBodiesTracked;
+		//bool bHaveAllStreams;
 
-		glm::vec3 projectedPointOntoPlane(glm::vec3 point, Vector4 plane);
-
-		void setupKinect2();
-		void updateKinect2();
-		void drawKinectFbo();
+		//void setupKinect2();
+		//void updateKinect2();
+		//void drawKinectFbo();
 
 		//------------------------------------- Kinect Mapping -------------------------------------
 		KinectToFloorScreenMapper KinectMapper = KinectToFloorScreenMapper(int(KINECTAREA_WIDTH), int(KINECTAREA_HEIGHT));
-		
+		KinectManager SanShengKinectManager = KinectManager(CANVAS_WIDTH, CANVAS_HEIGHT / 3, MAX_PLAYERS, KinectMapper);
+
 		ofxPanel calibrationGui;
 
 		ofParameterGroup bodyPosGuiGroup;
@@ -134,8 +133,8 @@ class ofApp : public ofBaseApp{
 
 		//fbo CG / video
 		ofFbo CGFbo;
-		ofFbo KinectVisionFbo;
-		ofEasyCam kinect3DCam;
+		//ofFbo KinectVisionFbo;
+		//ofEasyCam kinect3DCam;
 
 
 		//Settings
