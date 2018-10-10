@@ -319,22 +319,7 @@ void ofApp::setupCalibrationGui() {
 	calibrationGui.add(selectedBodyLabel.setup(bodyPosInspect[refBodyIdx], 250, 25));
 
 	KinectMapper.setupCalibrationParamGroup(calibrationGui);
-	//cornersGroup.setName("Corners");
-	//for (int i = 0; i < 4; i++)
-	//{
-	//	cornersGroup.add(kinectFourCorners[i].set("Corner#"+ ofToString(i), kinectFourCorners[i]));
-	//}
-	//calibrationGui.add(cornersGroup);
-	//calibrationGui.loadFromFile("settings.xml");
 
-	//cornerBtn0.addListener(this, &ofApp::corner0ButtonPressed);
-	//cornerBtn1.addListener(this, &ofApp::corner1ButtonPressed);
-	//cornerBtn2.addListener(this, &ofApp::corner2ButtonPressed);
-	//cornerBtn3.addListener(this, &ofApp::corner3ButtonPressed);
-	//calibrationGui.add(cornerBtn0.setup("Top Left: " + ofToString(kinectFourCorners[0])));
-	//calibrationGui.add(cornerBtn1.setup("Top Right: " + ofToString(kinectFourCorners[1])));
-	//calibrationGui.add(cornerBtn2.setup("Bottom Right: " + ofToString(kinectFourCorners[2])));
-	//calibrationGui.add(cornerBtn3.setup("Bottom Left: " + ofToString(kinectFourCorners[3])));
 }
 
 

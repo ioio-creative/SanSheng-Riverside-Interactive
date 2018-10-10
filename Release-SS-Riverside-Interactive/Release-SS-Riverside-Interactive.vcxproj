@@ -184,6 +184,7 @@
     <PostBuildEvent />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="KinectManager.cpp" />
     <ClCompile Include="src\main.cpp" />
     <ClCompile Include="src\ofApp.cpp" />
     <ClCompile Include="src\KinectToFloorScreenMapper.cpp" />
@@ -241,6 +242,7 @@
     <ClCompile Include="..\..\..\addons\ofxOpenCv\src\ofxCvShortImage.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="KinectManager.h" />
     <ClInclude Include="src\FloorParticle.h" />
     <ClInclude Include="src\FloorUser.h" />
     <ClInclude Include="src\ofApp.h" />

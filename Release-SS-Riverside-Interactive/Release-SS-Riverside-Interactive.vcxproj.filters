@@ -172,6 +172,9 @@
     <ClCompile Include="src\ParticleVisualsManager.cpp">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="KinectManager.cpp">
+      <Filter>src</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="src">
@@ -1617,6 +1620,9 @@
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="src\FloorUser.h">
+      <Filter>src</Filter>
+    </ClInclude>
+    <ClInclude Include="KinectManager.h">
       <Filter>src</Filter>
     </ClInclude>
   </ItemGroup>

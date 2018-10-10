@@ -14,7 +14,7 @@ class KinectToFloorScreenMapper {
 	public:
 
 		KinectToFloorScreenMapper(int width, int height);
-
+		~KinectToFloorScreenMapper();
 		//kinect 3D to 2D calibration
 
 		ofParameter<glm::vec2> kinectFourCorners[4] =
@@ -37,6 +37,8 @@ class KinectToFloorScreenMapper {
 		ofxButton cornerBtn2;
 		ofxButton cornerBtn3;
 		void updateRefBodyPosOnFloor(const cv::Point2f &bodyPos);
+
+		//ofxGui listeners
 		void corner0ButtonPressed();
 		void corner1ButtonPressed();
 		void corner2ButtonPressed();

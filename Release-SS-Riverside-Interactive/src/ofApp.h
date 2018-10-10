@@ -103,7 +103,6 @@ class ofApp : public ofBaseApp{
 		vector<cv::Point2f> bodyPosOnScreen;
 
 		ofTexture colorTex;
-		vector<ofVec2f> colorCoords;
 		int numBodiesTracked;
 		bool bHaveAllStreams;
 
