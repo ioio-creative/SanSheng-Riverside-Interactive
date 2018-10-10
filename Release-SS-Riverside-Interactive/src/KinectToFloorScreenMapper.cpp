@@ -86,3 +86,8 @@ void KinectToFloorScreenMapper::corner3ButtonPressed() {
 	refreshCamToScreenTransform();
 }
 
+KinectToFloorScreenMapper::~KinectToFloorScreenMapper() {
+	CanvasCalibrateFbo.destroy();
+	target.clear();
+}
+
