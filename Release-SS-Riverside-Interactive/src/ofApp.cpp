@@ -37,6 +37,9 @@ void ofApp::setup(){
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 	ParticleVisualsManager.setup(CANVAS_WIDTH, CANVAS_HEIGHT);
 	
+	//------------------------------------- TCP Client Manager-------------------------------------
+	//TcpClientManager.setup();
+
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
 	KinectVisionFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT / 3, GL_RGBA);
@@ -68,9 +71,11 @@ void ofApp::update(){
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	VideoPlayerManager.update();
-
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 	ParticleVisualsManager.update();
+	//------------------------------------- TCP Client Manager-------------------------------------
+	TcpClientManager.update();
+
 }
 
 //--------------------------------------------------------------
@@ -103,6 +108,9 @@ void ofApp::draw(){
 	VideoPlayerManager.setAlpha(a);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
+	//------------------------------------- TCP Client Manager-------------------------------------
+	TcpClientManager.draw();
+
 	if (calibrationMode)
 	{
 		KinectMapper.CanvasCalibrateFbo.draw(0, 0);
@@ -112,9 +120,11 @@ void ofApp::draw(){
 	calibrationGui.draw();
 }
 
+
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 	ParticleVisualsManager.keyPressed(key);
+	TcpClientManager.keyPressed(key);
 	switch (key) {
 	case 'd':
 		debugMode = !debugMode;
@@ -352,6 +362,8 @@ void ofApp::updateGuiInspectorValues() {
 void ofApp::exit() {
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	VideoPlayerManager.exit();
+	//------------------------------------- TCP Client Manager-------------------------------------
+	TcpClientManager.exit();
 }
 
 //--------------------------------------------------------------

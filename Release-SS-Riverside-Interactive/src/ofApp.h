@@ -8,6 +8,7 @@
 #include "ofxJSON.h"
 #include "VideoPlayerManager.h"
 #include "ParticleVisualsManager.h"
+#include "TcpClientManager.h"
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 
@@ -152,6 +153,9 @@ class ofApp : public ofBaseApp{
 		//------------------------------------- Particle Visuals Manager-------------------------------------
 		ParticleVisualsManager ParticleVisualsManager;
 		bool drawParticleVisualsManager;
+
+		//------------------------------------- TCP Client Manager-------------------------------------
+		TcpClientManager TcpClientManager;
 };
 
 
