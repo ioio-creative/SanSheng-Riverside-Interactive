@@ -92,10 +92,12 @@ class ofApp : public ofBaseApp{
 		//kinect
 		//ofxKFW2::Device kinect;
 		//ICoordinateMapper* coordinateMapper;
+		KinectManager* SanShengKinectManager = new KinectManager(int(CANVAS_WIDTH), int(CANVAS_HEIGHT / 3), int(MAX_PLAYERS));
 
-		//Vector4 floorPlane;
+				
 		//float tiltAngle;
 		//float rollAngle;
+		//Vector4 floorPlane;
 		//glm::mat4 floorTransform;
 
 		//vector<bool> bodyIdxTracked;
@@ -113,7 +115,6 @@ class ofApp : public ofBaseApp{
 
 		//------------------------------------- Kinect Mapping -------------------------------------
 		KinectToFloorScreenMapper KinectMapper = KinectToFloorScreenMapper(int(KINECTAREA_WIDTH), int(KINECTAREA_HEIGHT));
-		KinectManager SanShengKinectManager = KinectManager(CANVAS_WIDTH, CANVAS_HEIGHT / 3, MAX_PLAYERS, KinectMapper);
 
 		ofxPanel calibrationGui;
 

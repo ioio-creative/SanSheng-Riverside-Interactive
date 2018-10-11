@@ -12,14 +12,10 @@
 
 class KinectToFloorScreenMapper {
 	public:
-
 		KinectToFloorScreenMapper(int width, int height);
-
-		KinectToFloorScreenMapper(const KinectToFloorScreenMapper& mapper);
-
 		~KinectToFloorScreenMapper();
-		//kinect 3D to 2D calibration
 
+		//kinect 3D to 2D calibration
 		ofParameter<glm::vec2> kinectFourCorners[4] =
 		{
 			glm::vec2(0, 0),
@@ -57,7 +53,7 @@ class KinectToFloorScreenMapper {
 		int canvasWidth, canvasHeight;
 		cv::Mat camToScreenTransform;
 
-		const cv::Point2f *refBodyPosOnFloor;
+		const cv::Point2f* refBodyPosOnFloor;
 		ofImage target;
 };
 

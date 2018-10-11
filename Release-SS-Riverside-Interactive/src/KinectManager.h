@@ -26,17 +26,27 @@
 class KinectManager
 {
 public:
-	KinectManager(const int canvasWidth, const int canvasHeight, 
-		const int maxPlayers,
-		const KinectToFloorScreenMapper& _floorMapper);
+	KinectManager(int canvasWidth, int canvasHeight, int maxPlayers = MAX_BODIES);
+	/*KinectManager(const KinectManager& manager) {
+		kinect = manager.kinect;
+		coordinateMapper = manager.coordinateMapper;
+
+		monitorWidth = manager.monitorWidth;
+		monitorHeight = manager.monitorHeight;
+		players = manager.players;
+		bHaveAllStreams = false;
+
+		bodyIdxTracked.resize(players);
+		bodyPositions.resize(players);
+		bodyPosOnFloor.resize(players);
+		bodyPosOnScreen.resize(players);
+	};*/
 	~KinectManager();
 
 	//kinect
 	ofxKFW2::Device kinect;
 	ICoordinateMapper* coordinateMapper;
 
-	//kinect mapper to floor
-	const KinectToFloorScreenMapper* floorMapper;
 
 	Vector4 floorPlane;
 	glm::mat4 floorTransform;
@@ -46,16 +56,18 @@ public:
 	vector<cv::Point2f> bodyPosOnFloor;
 	vector<cv::Point2f> bodyPosOnScreen;
 
-	glm::vec3 projectedPointOntoPlane(glm::vec3& point, Vector4& plane) const;
+	glm::vec3 projectedPointOntoPlane(glm::vec3& point, const Vector4& plane) const;
 
 	ofFbo Kinect3dCamFbo;
 
 	void setup();
-	void update();
+	void update(const KinectToFloorScreenMapper& floorMapper);
 	void draw();
 
 
 private:
+	int monitorWidth, monitorHeight;
+	int players;
 	int numBodiesTracked;
 	bool bHaveAllStreams;
 

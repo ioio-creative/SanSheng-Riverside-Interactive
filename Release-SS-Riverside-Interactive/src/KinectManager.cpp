@@ -1,22 +1,15 @@
 #include "KinectManager.h"
 
-
-KinectManager::KinectManager(const int width, const int height, const int maxPlayers = MAX_BODIES, const KinectToFloorScreenMapper& _floorMapper = KinectToFloorScreenMapper(ofGetWidth(), ofGetHeight())) {
-	
+KinectManager::KinectManager(int width, int height, int maxPlayers) {
+	monitorWidth = width;
+	monitorHeight = height;
+	players = maxPlayers;
 	bHaveAllStreams = false;
 
-	bodyIdxTracked.resize(maxPlayers);
-	bodyPositions.resize(maxPlayers);
-	bodyPosOnFloor.resize(maxPlayers);
-	bodyPosOnScreen.resize(maxPlayers);
-
-	floorMapper = &_floorMapper;
-
-	Kinect3dCamFbo.allocate(width, height, GL_RGBA);
-	Kinect3dCamFbo.begin();
-	ofClear(ofColor::black);
-	Kinect3dCamFbo.end();
-	kinect3dCam.setControlArea(ofRectangle(0, KINECT3DVIEW_VERTICALDRAWOFFSET - height/2, width, height));
+	bodyIdxTracked.resize(players);
+	bodyPositions.resize(players);
+	bodyPosOnFloor.resize(players);
+	bodyPosOnScreen.resize(players);
 }
 
 void KinectManager::setup() {
@@ -31,9 +24,15 @@ void KinectManager::setup() {
 		ofLogError() << "Could not acquire CoordinateMapper!";
 	}
 	
+	Kinect3dCamFbo.allocate(monitorWidth, monitorHeight, GL_RGBA);
+	Kinect3dCamFbo.begin();
+	ofClear(ofColor::black);
+	Kinect3dCamFbo.end();
+	kinect3dCam.setControlArea(ofRectangle(0, KINECT3DVIEW_VERTICALDRAWOFFSET - monitorHeight / 2, monitorWidth, monitorHeight));
 }
 
-void KinectManager::update() {
+void KinectManager::update(const KinectToFloorScreenMapper& floorMapper) {
+
 	kinect.update();
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
 	string floorMsg = "[" + to_string(floorPlane.x) + "][" + to_string(floorPlane.y) + "][" + to_string(floorPlane.z) + "][" + to_string(floorPlane.w) + "]";
@@ -77,7 +76,7 @@ void KinectManager::update() {
 			bodyPosOnFloor[bodyIdx] = cv::Point2f(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.z);
 		}
 	}
-	cv::perspectiveTransform(bodyPosOnFloor, bodyPosOnScreen, floorMapper->GetTransform());
+	cv::perspectiveTransform(bodyPosOnFloor, bodyPosOnScreen, floorMapper.GetTransform());
 	colorTex = kinect.getColorSource()->getTexture();
 }
 
@@ -153,7 +152,7 @@ void KinectManager::draw() {
 	ofPopMatrix();
 }
 
-glm::vec3 KinectManager::projectedPointOntoPlane(glm::vec3& point, Vector4& plane) const {
+glm::vec3 KinectManager::projectedPointOntoPlane(glm::vec3& point, const Vector4& plane) const {
 	glm::vec3 n = glm::vec3(plane.x, plane.y, plane.z);
 	return (point - (glm::dot(n, point) + plane.w) * n);
 }
