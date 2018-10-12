@@ -107,7 +107,7 @@ void ofApp::draw(){
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
-	VideoPlayerManager.setAlpha(a);
+	VideoPlayerManager.setAlpha(255);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
 	//------------------------------------- TCP Client Manager-------------------------------------

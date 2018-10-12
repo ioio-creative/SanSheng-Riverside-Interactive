@@ -19,7 +19,7 @@
 //Compiler Flags
 ======================================================*/
 //Use this flag to toggle window sizes for different usage
-//#define IOIOTEST
+#define IOIOTEST
 //#define EXHIBITION
 
 /* ======================================================
