@@ -61,7 +61,7 @@ public:
 	ofFbo Kinect3dCamFbo;
 
 	void setup();
-	void update(const KinectToFloorScreenMapper& floorMapper);
+	void update(KinectToFloorScreenMapper& floorMapper, const int refBodyIdx);
 	void draw();
 
 

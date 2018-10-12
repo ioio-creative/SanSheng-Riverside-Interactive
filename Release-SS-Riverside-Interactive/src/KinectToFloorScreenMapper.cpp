@@ -88,7 +88,7 @@ void KinectToFloorScreenMapper::corner3ButtonPressed() {
 }
 
 KinectToFloorScreenMapper::~KinectToFloorScreenMapper() {
-	CanvasCalibrateFbo.destroy();
+	//CanvasCalibrateFbo.destroy();
 	target.clear();
 }
 

@@ -31,7 +31,7 @@ void KinectManager::setup() {
 	kinect3dCam.setControlArea(ofRectangle(0, KINECT3DVIEW_VERTICALDRAWOFFSET - monitorHeight / 2, monitorWidth, monitorHeight));
 }
 
-void KinectManager::update(const KinectToFloorScreenMapper& floorMapper) {
+void KinectManager::update(KinectToFloorScreenMapper& floorMapper, const int refBodyIdx) {
 
 	kinect.update();
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
@@ -76,6 +76,8 @@ void KinectManager::update(const KinectToFloorScreenMapper& floorMapper) {
 			bodyPosOnFloor[bodyIdx] = cv::Point2f(bodyPosOnHorizonOffset.x, bodyPosOnHorizonOffset.z);
 		}
 	}
+	floorMapper.updateRefBodyPosOnFloor(bodyPosOnFloor[refBodyIdx]);
+
 	cv::perspectiveTransform(bodyPosOnFloor, bodyPosOnScreen, floorMapper.GetTransform());
 	colorTex = kinect.getColorSource()->getTexture();
 }

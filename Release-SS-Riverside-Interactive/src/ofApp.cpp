@@ -66,7 +66,7 @@ void ofApp::update(){
 	//}
 
 	//kinect update
-	SanShengKinectManager->update(KinectMapper);
+	SanShengKinectManager->update(KinectMapper, refBodyIdx);
 
 	//update ofxGui
 	updateGuiInspectorValues();
@@ -90,16 +90,7 @@ void ofApp::draw(){
 	ofSetColor(255);
 	
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
-	{
-		if (SanShengKinectManager->bodyIdxTracked[i])
-		{
-			ofSetColor(ofColor::aqua);
-			ofFill();
-			ofDrawEllipse(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y, 100, 100);
-		}
-		else continue;
-	}
+	
 
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
@@ -121,6 +112,17 @@ void ofApp::draw(){
 
 	}
 	calibrationGui.draw();
+
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (SanShengKinectManager->bodyIdxTracked[i])
+		{
+			ofSetColor(ofColor::aqua);
+			ofFill();
+			ofDrawEllipse(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y, 100, 100);
+		}
+		else continue;
+	}
 }
 
 
