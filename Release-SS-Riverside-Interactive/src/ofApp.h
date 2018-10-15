@@ -19,7 +19,7 @@
 //Compiler Flags
 ======================================================*/
 //Use this flag to toggle window sizes for different usage
-#define IOIOTEST
+//#define IOIOTEST
 //#define EXHIBITION
 
 /* ======================================================
@@ -58,8 +58,6 @@
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT
 #endif
 
-#define KINECTAREA_VERTICALOFFSET CANVAS_HEIGHT - KINECTAREA_HEIGHT
-
 
 
 
@@ -81,7 +79,7 @@ class ofApp : public ofBaseApp{
 		void mouseReleased(int x, int y, int button) {};
 		void mouseEntered(int x, int y) {};
 		void mouseExited(int x, int y) {};
-		void windowResized(int w, int h) {};
+		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo) {};
 		void gotMessage(ofMessage msg) {};
 

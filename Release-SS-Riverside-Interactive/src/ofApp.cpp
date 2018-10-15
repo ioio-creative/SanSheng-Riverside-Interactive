@@ -88,18 +88,19 @@ void ofApp::draw(){
 		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
 	}
 	ofSetColor(255);
-	
+	ofEnableAlphaBlending();
 
 	
-
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
+	//ParticleVisualsManager.setAlpha(a);
 	ParticleVisualsManager.draw();
-
+	
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
-	VideoPlayerManager.setAlpha(255);
+	VideoPlayerManager.setAlpha(a);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+
 
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.draw();
@@ -162,6 +163,9 @@ void ofApp::keyReleased(int key){
 	}
 }
 
+void ofApp::windowResized(int w, int h) {
+	SanShengKinectManager->windowResized(w ,h);
+}
 
 //--------------------------------------------------------------
 //------------------------- Calibration GUI --------------------

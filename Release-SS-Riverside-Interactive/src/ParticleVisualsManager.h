@@ -21,6 +21,7 @@ public:
 	FloorUserManager floorUserManager;
 
 	ofFbo floorCanvas;
+	int canvasAlpha = 255;
 
 	int floorMode;  // 1 : repel | 2 : attract | 3 : emit
 	float floorCanvasClearRate;
@@ -30,7 +31,7 @@ public:
 	void updateEmitMode();
 	void prepareFloorCanvas();
 
-
+	void setAlpha(int alpha);
 
 };
 

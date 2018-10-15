@@ -18,15 +18,17 @@
 
 #define MAX_BODIES 6
 
+#define BODYCOLOR_Color ofColor::
+
 #define REFJOINTTYPE JointType_SpineShoulder
 #define KINECTNOTICELOG ofLogNotice() << "[KINECT_MSG]"
 
-#define KINECT3DVIEW_VERTICALDRAWOFFSET ofGetHeight() / 2
+#define KINECT3DVIEW_VERTICALDRAWOFFSET (ofGetHeight() / 2)
 
 class KinectManager
 {
 public:
-	KinectManager(int canvasWidth, int canvasHeight, int maxPlayers = MAX_BODIES);
+	KinectManager(int fboWidth, int fboHeight, int maxPlayers = MAX_BODIES);
 	/*KinectManager(const KinectManager& manager) {
 		kinect = manager.kinect;
 		coordinateMapper = manager.coordinateMapper;
@@ -46,7 +48,8 @@ public:
 	//kinect
 	ofxKFW2::Device kinect;
 	ICoordinateMapper* coordinateMapper;
-
+	//FBO
+	ofFbo Kinect3dCamFbo;
 
 	Vector4 floorPlane;
 	glm::mat4 floorTransform;
@@ -56,13 +59,19 @@ public:
 	vector<cv::Point2f> bodyPosOnFloor;
 	vector<cv::Point2f> bodyPosOnScreen;
 
-	glm::vec3 projectedPointOntoPlane(glm::vec3& point, const Vector4& plane) const;
+	ofParameterGroup bodyPosGuiGroup;
+	ofxLabel selectedBodyLabel;
+	ofParameter<int> refBodyIdx;
+	vector<ofParameter<string>> bodyPosInspect;
+	vector<ofParameter<bool>> refBodyIdxFlags;
 
-	ofFbo Kinect3dCamFbo;
+
+	glm::vec3 projectedPointOntoPlane(glm::vec3& point, const Vector4& plane) const;
 
 	void setup();
 	void update(KinectToFloorScreenMapper& floorMapper, const int refBodyIdx);
 	void draw();
+	void windowResized(int w, int h);
 
 
 private:

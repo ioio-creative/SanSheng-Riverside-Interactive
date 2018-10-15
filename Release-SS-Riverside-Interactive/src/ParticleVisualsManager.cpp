@@ -48,7 +48,6 @@ void ParticleVisualsManager::update() {
 void ParticleVisualsManager::prepareFloorCanvas()
 {
 	floorCanvas.begin();
-
 	//partially clear fbo, leaving trails
 	ofSetColor(0, floorCanvasClearRate * 255);
 	ofRect(0, 0, floorCanvas.getWidth(), floorCanvas.getHeight());
@@ -64,14 +63,14 @@ void ParticleVisualsManager::prepareFloorCanvas()
 
 //--------------------------------------------------------------
 void ParticleVisualsManager::draw() {
-	ofBackground(0);
-
+	ofBackground(0,0);
 	prepareFloorCanvas();
 
+	ofSetColor(255, 255, 255, canvasAlpha);
 	glPushMatrix();
-	float ss = ofGetHeight() / (float)floorCanvas.getHeight();        //scale floorCanvas for development
+	float ss = ofGetHeight() / (float)floorCanvas.getHeight();  
+	//scale floorCanvas for development
 	glScalef(ss, ss, ss);
-	ofSetColor(255);
 	floorCanvas.draw(0, 0);
 	glPopMatrix();
 }
@@ -185,4 +184,8 @@ void ParticleVisualsManager::keyPressed(int key) {
 	{
 		keyPressed(']');                //end mode 3
 	}
+}
+
+void ParticleVisualsManager::setAlpha(int alpha) {
+	canvasAlpha = alpha;
 }

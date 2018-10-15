@@ -26,12 +26,12 @@ void VideoPlayerManager::setup() {
 		vid[i].init(HPV::NewPlayer());
 		ofLog() << i;
 		/* Try to load file and start playback */
-		vid[i].load(ofToString(i) + ".hpv");
+		vid[i].load("videos/" + ofToString(i) + ".hpv");
 		vid[i].setLoopState(OF_LOOP_NONE);
 		vid[i].play();
 		vid[i].setPaused(true);
 #else
-	vid[i].load("1.hpv");
+	vid[i].load("videos/1.hpv");
 #endif
 	}
 videoFbo.allocate(screenW, screenH, GL_RGBA);

@@ -1,8 +1,8 @@
 #include "KinectManager.h"
 
-KinectManager::KinectManager(int width, int height, int maxPlayers) {
-	monitorWidth = width;
-	monitorHeight = height;
+KinectManager::KinectManager(int fboWidth, int fboHeight, int maxPlayers) {
+	monitorWidth = fboWidth;
+	monitorHeight = fboHeight;
 	players = maxPlayers;
 	bHaveAllStreams = false;
 
@@ -10,6 +10,9 @@ KinectManager::KinectManager(int width, int height, int maxPlayers) {
 	bodyPositions.resize(players);
 	bodyPosOnFloor.resize(players);
 	bodyPosOnScreen.resize(players);
+
+	bodyPosInspect.resize(players);
+	refBodyIdxFlags.resize(players);
 }
 
 void KinectManager::setup() {
@@ -28,7 +31,7 @@ void KinectManager::setup() {
 	Kinect3dCamFbo.begin();
 	ofClear(ofColor::black);
 	Kinect3dCamFbo.end();
-	kinect3dCam.setControlArea(ofRectangle(0, KINECT3DVIEW_VERTICALDRAWOFFSET - monitorHeight / 2, monitorWidth, monitorHeight));
+	windowResized(ofGetWidth(), ofGetHeight());
 }
 
 void KinectManager::update(KinectToFloorScreenMapper& floorMapper, const int refBodyIdx) {
@@ -152,6 +155,10 @@ void KinectManager::draw() {
 	ofTranslate(0, KINECT3DVIEW_VERTICALDRAWOFFSET - Kinect3dCamFbo.getHeight() / 2);
 	Kinect3dCamFbo.draw(0, 0);
 	ofPopMatrix();
+}
+
+void KinectManager::windowResized(int w, int h) {
+	kinect3dCam.setControlArea(ofRectangle(0, (h - Kinect3dCamFbo.getHeight())/2 , monitorWidth, monitorHeight));	
 }
 
 glm::vec3 KinectManager::projectedPointOntoPlane(glm::vec3& point, const Vector4& plane) const {
