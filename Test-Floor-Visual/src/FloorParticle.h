@@ -8,6 +8,8 @@
 #ifndef FloorParticle_h
 #define FloorParticle_h
 
+extern float PARTICLE_PATH_SCATTER;
+
 class FloorParticle
 {
 public:
@@ -36,18 +38,6 @@ public:
     
     void randomize(bool is2dRotation = true)
     {
-        life = (int)ofRandom(100,500);
-        blingSpeed = pow(0.1,ofRandom(1,2));
-        color.setHsb(ofRandom(255),255,255);
-        radius = 20;
-        
-        float range = 1000;
-        pos = ofVec3f(ofRandom(-range,range),ofRandom(-range,range),ofRandom(-range,range));
-        
-        float speedRange = 25;
-        posSpeed = ofVec3f(ofRandom(-speedRange,speedRange),ofRandom(-speedRange,speedRange),ofRandom(-speedRange,speedRange)) * 0.2;
-        
-        
         double rotRange = PI;
         double rotRange2 = 5;
         
@@ -60,15 +50,15 @@ public:
             rotSpeed = ofQuaternion(ofRandom(-rotRange2,rotRange2),ofVec3f(ofRandom(-rotRange,rotRange),ofRandom(-rotRange,rotRange),ofRandom(-rotRange,rotRange)));
         }
     }
-    
     void update()
     {
         life--;
+        posSpeed += ofVec3f(ofRandom(-PARTICLE_PATH_SCATTER, PARTICLE_PATH_SCATTER),ofRandom(-PARTICLE_PATH_SCATTER, PARTICLE_PATH_SCATTER),ofRandom(-PARTICLE_PATH_SCATTER, PARTICLE_PATH_SCATTER));
         pos += posSpeed;
         rot = rot * rotSpeed;
     }
     
-    void draw()
+    void draw(const ofImage& sprite)
     {
         glPushMatrix();
             glTranslatef(pos.x,pos.y,pos.z);
@@ -80,62 +70,24 @@ public:
             ofSetColor(color);
             ofFill();
             float rr = ofNoise(life*blingSpeed,blingSpeed)*(radius);
-            ofRectMode(OF_RECTMODE_CENTER);
-            ofRect(0,0, rr, rr);
         
+            sprite.draw(rr*-0.5,rr*-0.5,rr,rr);
         glPopMatrix();
     }
 };
 
+extern float EMITTER_EMIT_SPEED;
+extern float EMITTER_LIFE_MIN;
+extern float EMITTER_LIFE_MAX;
 
-class FloorParticleEmitterOrbit
-{
-public:
-    ofVec3f pos;
-    ofVec3f posSpeed;
-    
-    ofColor color;
-    int radius;
-    
-    int emitSpeed;
-    float orbitRadius;
-    float orbitOffsetX;
-    float orbitOffsetY;
-    float orbitSpeedX;
-    float orbitSpeedY;
-    ofVec3f origin;
-    FloorParticleEmitterOrbit()
-    {
-        orbitRadius = 100;
-        emitSpeed = 5;
-    }
-    
-    vector<FloorParticle> update(float capacity = 0)
-    {
-        orbitOffsetX += orbitSpeedX;
-        orbitOffsetY += orbitSpeedY;
-        pos = origin + ofVec3f(cos(orbitOffsetX)*orbitRadius, sin(orbitOffsetY)*orbitRadius, 0);
+extern float PARTICLE_HUE_MIN;
+extern float PARTICLE_HUE_MAX;
+extern float PARTICLE_SATUATION;
+extern float PARTICLE_BRIGHTNESS;
 
-        posSpeed = ofVec3f(ofRandom(-1,1),ofRandom(-1,1),ofRandom(-1,1)) * 0.2;
-        vector<FloorParticle> particles;
-        for(int i=0;i<emitSpeed;i++)
-        {
-            if(ofRandom(1)>capacity)
-            {
-                FloorParticle p;
-                p.randomize(true);
-                p.radius = radius;
-                p.pos = pos;
-                p.posSpeed = posSpeed;
-                p.color = color;
-                p.life = ofRandom(20,50);
-                particles.push_back(p);
-            }
-        }
-        return particles;
-    }
-    
-};
+extern float PARTICLE_RADIUS;
+extern float PARTICLE_RANGE;
+extern float PARTICLE_SPEED_RANGE;
 
 class FloorParticleEmitter
 {
@@ -154,43 +106,21 @@ public:
     
     ofRectangle boundingBox;
     
-    vector<FloorParticleEmitterOrbit> children;
-    
-    
     FloorParticleEmitter()
     {
     }
     
     void randomize(bool is2dRotation = true)
     {
-        emitSpeed = (int)ofRandom(1,4);
-        life = (int)ofRandom(300,1000);
-        color.setHsb(ofRandom(0,10)+160,230,255);
-        radius = 30;
+        emitSpeed = (int)ofRandom(1, EMITTER_EMIT_SPEED);
+        life = (int)ofRandom(EMITTER_LIFE_MIN, EMITTER_LIFE_MAX);
+        color.setHsb(ofRandom(PARTICLE_HUE_MIN,PARTICLE_HUE_MAX), PARTICLE_SATUATION, PARTICLE_BRIGHTNESS);
+        radius = PARTICLE_RADIUS;
         
-        float range = 400;
-        float speedRange = 5;
+        float range = PARTICLE_RANGE;
+        float speedRange = PARTICLE_SPEED_RANGE;
         pos = ofVec3f(ofRandom(-range,range),ofRandom(-range,range),ofRandom(-range,range));
         posSpeed = ofVec3f(ofRandom(-speedRange,speedRange),ofRandom(-speedRange,speedRange),ofRandom(-speedRange,speedRange)) * 0.2;
-        
-        int numOrbit = 0;//(int)ofRandom(2,6.99);
-        float orbitSpeedX = pow(0.1,ofRandom(1,2));
-        float orbitSpeedY = pow(0.1,ofRandom(1,2));
-        float orbitRadius = ofRandom(30,50);
-        for(int i=0;i<numOrbit;i++)
-        {
-            FloorParticleEmitterOrbit o;
-            o.orbitOffsetX = TWO_PI/numOrbit*i;
-            o.orbitOffsetY = TWO_PI/numOrbit*i;
-            o.orbitSpeedX = orbitSpeedX;
-            o.orbitSpeedY = orbitSpeedY;
-            o.orbitRadius = orbitRadius;
-            o.color = ofColor(color,50);
-            o.radius = radius*0.5;
-            o.posSpeed = posSpeed*0.3;
-            
-            children.push_back(o);
-        }
     }
     
     vector<FloorParticle> update(float capacity = 0)
@@ -208,17 +138,10 @@ public:
                 particles.push_back(p);
             }
         }
-        
-        for(int i=0;i<children.size();i++)
-        {
-            children[i].origin = pos;
-            vector<FloorParticle> newParticles = children[i].update(capacity);
-            particles.insert(particles.end(),newParticles.begin(),newParticles.end());
-        }
         return particles;
     }
     
-    void draw()
+    void drawDebug()
     {
         ofSetColor(255,0,0);
         ofNoFill();
@@ -230,7 +153,6 @@ public:
             ofRect(radius*-5, radius*-5, radius*10, radius*10);
         ofDrawBitmapString("x: "+ofToString(pos.x)+"\ny: "+ofToString(pos.y)+"\nz: "+ofToString(pos.z)+"\nradius: "+ofToString(radius),-radius*5,-radius*5+10);
         glPopMatrix();
-        
     }
     
     bool hitTest(float x, float y,ofEasyCam *cam)
@@ -243,11 +165,13 @@ public:
         
         return (x >= cur.x && x <= cur2.x && y >= cur.y && y <=cur2.y);
     }
-    
-    
 };
 
 
+extern string PARTICLE_SPRITE_PATH;
+extern int MAX_PARTICLES;
+
+extern float SCENE_GRAVITY;
 
 class FloorParticleManager
 {
@@ -261,15 +185,17 @@ public:
     
     vector<FloorParticle> particles;
     
+    ofImage flakeSprite;
+    
     
     FloorParticleManager()
     {
-        maxParticle = 8000;
+        maxParticle = MAX_PARTICLES;
+        flakeSprite.load(PARTICLE_SPRITE_PATH);
     }
     
     void update()
     {
-        
         for(int i=0;i<emitters.size();i++)
         {
             if(emitters[i].life>0)
@@ -284,7 +210,7 @@ public:
                 i--;
             }
         }
-        gravity(ofVec3f(0,0.2,0));
+        gravity(ofVec3f(0,SCENE_GRAVITY,0));
         
         for(int i=0;i<particles.size();i++)
         {
@@ -306,7 +232,7 @@ public:
     {
         for(int i=0;i<particles.size();i++)
         {
-            particles[i].draw();
+            particles[i].draw(flakeSprite);
         }
     }
     
@@ -314,7 +240,7 @@ public:
     {
         for(int i=0;i<emitters.size();i++)
         {
-            emitters[i].draw();
+            emitters[i].drawDebug();
         }
     }
     
@@ -330,7 +256,6 @@ public:
         
         glDisable(GL_BLEND);
         ofEnableAlphaBlending();
-
     }
     
     void addParticle(int num=1)
@@ -353,16 +278,20 @@ public:
         }
     }
     
-    void addTopEmitter(int num = 5)
+    void addTopEmitter(int num = 5, int duplicate = 1)
     {
         for(int i=0;i<num;i++)
         {
             float x = (canvasWidth / (float)num * (i+0.5) - canvasWidth/2);
             float y = -canvasHeight/2-200;
-            FloorParticleEmitter e;
-            e.randomize(true);
-            e.pos = ofVec3f(x,y,0);
-            emitters.push_back(e);
+            
+            for(int k=0;k<duplicate;k++)
+            {
+                FloorParticleEmitter e;
+                e.randomize(true);
+                e.pos = ofVec3f(x,y,0);
+                emitters.push_back(e);
+            }
         }
     }
     
@@ -400,7 +329,7 @@ public:
         {
             ofVec3f dd = repeller - particles[i].pos;
             ofVec2f dir = ofVec2f(dd.x,dd.y);
-            float mag = dir.length() + 30;
+            float mag = dir.length();
             dir.normalize();
             float f = -1 * G / (mag * mag);
             dir *= f;
@@ -424,8 +353,7 @@ public:
             ofVec3f diff = attractor - particles[i].pos + ofVec3f(ofRandom(-scatter,scatter),ofRandom(-scatter,scatter),ofRandom(-scatter,scatter));
             float mag = diff.length();
             diff.normalize();
-            diff = diff * (1/mag) * 100;
-//            diff = diff * diff;
+            diff = diff * (1/mag) * 300;
             diff.limit(5);
             diff *= force;
             particles[i].posSpeed += diff;
@@ -441,30 +369,27 @@ public:
                 ofVec3f diff = attractors[i] - particles[j].pos + ofVec3f(ofRandom(-scatter,scatter),ofRandom(-scatter,scatter),ofRandom(-scatter,scatter));
                 float mag = diff.length();
                 diff.normalize();
-                diff = diff * (1/mag) * 100;
-                diff.limit(5);
+                diff = diff * (1/(mag-100)) * 100;
+                diff.limit(0.03);
                 diff *= force;
                 if(particles[j].seed%attractors.size() == i)
                 {
                     diff *= 55;
+                    particles[j].posAcc += diff;
+                    particles[j].posSpeed += particles[j].posAcc;
                 }
-                else diff /= 100;
-                particles[j].posSpeed += diff;
             }
         }
     }
-    
-    
     
     void damp(float damping)
     {
         for(int i=0;i<particles.size();i++)
         {
+            particles[i].posAcc *= damping;
             particles[i].posSpeed *= damping;
         }
     }
 };
-
-
 
 #endif /* FloorParticle_h */
