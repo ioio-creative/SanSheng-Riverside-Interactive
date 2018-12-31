@@ -40,7 +40,7 @@ void ofApp::setup(){
 	drawVideoPlayerManager = true;
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
-	ParticleVisualsManager.setup(CANVAS_WIDTH, CANVAS_HEIGHT);
+	ParticleVisualsManager.setup(CANVAS_WIDTH*3, CANVAS_HEIGHT*3);
 	
 	//------------------------------------- TCP Client Manager-------------------------------------
 	//TcpClientManager.setup();
@@ -61,6 +61,16 @@ void ofApp::setup(){
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		bodyPos.push_back(ofVec2f(-100,-100));
 	}
+
+	// ===== scene settings ====
+
+	//init
+	num_of_trigger_scene = 5;
+	for (int i = 0; i < num_of_trigger_scene; i++) {
+		isTriggerScene.push_back(false);
+		triggerSceneTime.push_back(0.0f);
+	}
+	resetScene();
 
 }
 
@@ -107,6 +117,34 @@ void ofApp::draw(){
 //	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
 	VideoPlayerManager.setAlpha(255);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+	if (debugMode) {
+		ofLog() << VideoPlayerManager.getVideoTime();
+	}
+
+	for (int i = 0; i < num_of_trigger_scene; i++) {
+		if (VideoPlayerManager.getVideoTime() >= triggerSceneTime[i] && isTriggerScene[i] == false) {
+			isTriggerScene[i] = true;
+			ofLog() << "isTriggerScene" << i;
+			if (i == 1) {
+				ParticleVisualsManager.keyPressed('1');
+				VideoPlayerManager.keyReleased('1');
+			}
+			if (i == 2) {
+				ParticleVisualsManager.keyPressed('2');
+				VideoPlayerManager.keyReleased('2');
+			}
+			if (i == 3) {
+				ParticleVisualsManager.keyPressed('3');
+				VideoPlayerManager.keyReleased('3');
+			}
+			if (i == 4) {
+				ParticleVisualsManager.keyPressed('4');
+				VideoPlayerManager.keyReleased('4');
+			}
+
+		}
+	}
+
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 //ParticleVisualsManager.setAlpha(a);
@@ -176,7 +214,13 @@ void ofApp::keyReleased(int key){
 		ofLog() << "drawVideoPlayerManager : " << drawVideoPlayerManager;
 		drawVideoPlayerManager != drawVideoPlayerManager;
 		break;
+
+	case '0':
+		resetScene();
+	break;
 	}
+
+
 }
 
 void ofApp::windowResized(int w, int h) {
@@ -276,5 +320,17 @@ void ofApp::loadSettings() {
 
 	//img1.load("day" + ofToString(day) + "/3.jpg");
 	//img2.load("day" + ofToString(day) + "/4.jpg");
+
+}
+
+void ofApp::resetScene() {
+
+	for (int i = 0; i < num_of_trigger_scene; i++) {
+		isTriggerScene[i] = false;
+	}
+	//Time Settings
+	for (int i = 0; i < num_of_trigger_scene; i++) {
+		triggerSceneTime = {999.0f ,999.0f, 999.0f, 999.0f, 10.0f };
+	}
 
 }

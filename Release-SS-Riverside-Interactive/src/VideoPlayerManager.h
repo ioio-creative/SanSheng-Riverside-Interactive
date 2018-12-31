@@ -23,6 +23,8 @@ public:
 	void keyReleased(int k);
 	void exit();
 
+	float getVideoTime();
+
 	stringstream debugSS;
 
 	int vidAlpha;

@@ -345,40 +345,41 @@ void ParticleVisualsManager::keyPressed(int key) {
 	}
 
 	//sequencing for demo
+	if (key == '0')
+	{
+	//	keyPressed(OF_KEY_F4);          //start scene 0
+	}
 	if (key == '1')
 	{
-		keyPressed(OF_KEY_F4);          //start scene 1
+		//	keyPressed(OF_KEY_F4);        //end scene 0
 	}
 	if (key == '2')
 	{
-		keyPressed(OF_KEY_F5);          //start scene 1
+		keyPressed(OF_KEY_F4);          //start scene 1
 	}
 	if (key == '3')
 	{
-		keyPressed(OF_KEY_F2);          //start scene 2
+		keyPressed(OF_KEY_F5);          //end scene 1
 	}
 	if (key == '4')
+	{
+		keyPressed(OF_KEY_F2);          //start scene 2
+	}
+	if (key == '5')
 	{
 		keyPressed(OF_KEY_F1);
 		keyPressed(OF_KEY_BACKSPACE);   //end scene 2 (also burst effect)
 	}
-	if (key == '5')
+	if (key == '6')
 	{
 		keyPressed(OF_KEY_F1);          //start scene 3
 	}
-	if (key == '6')
+	if (key == '7')
 	{
 		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
 		keyPressed(']');                //remove user interactions
 	}
-	//    if(key == '7')
-	//    {
-	//        keyPressed(OF_KEY_F3);          //start scene 4 (particle emit effect, not using now?)
-	//    }
-	//    if(key == '8')
-	//    {
-	//        keyPressed(']');                //end scene 4
-	//    }
+
 }
 
 //--------------------------------------------------------------

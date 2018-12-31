@@ -148,12 +148,20 @@ class ofApp : public ofBaseApp{
 		VideoPlayerManager VideoPlayerManager;
 		bool drawVideoPlayerManager;
 
+		vector<bool> isTriggerScene;
+		vector<float> triggerSceneTime;
+		int num_of_trigger_scene;
+
+		void resetScene();
+
 		//------------------------------------- Particle Visuals Manager-------------------------------------
 		ParticleVisualsManager ParticleVisualsManager;
 		bool drawParticleVisualsManager;
 
 		//------------------------------------- TCP Client Manager-------------------------------------
 		TcpClientManager TcpClientManager;
+
+
 };
 
 
