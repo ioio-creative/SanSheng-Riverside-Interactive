@@ -72,7 +72,9 @@ public:
 	void update(KinectToFloorScreenMapper& floorMapper, const int refBodyIdx);
 	void draw();
 	void windowResized(int w, int h);
+	void keyReleased(int key);
 
+	bool debugMode;
 
 private:
 	int monitorWidth, monitorHeight;

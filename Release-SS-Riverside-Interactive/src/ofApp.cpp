@@ -8,7 +8,10 @@ void ofApp::setup(){
 	//debug
 	debugMode = false;
 	ofLogToConsole();
-	ofSetLogLevel(OF_LOG_ERROR);
+	//ofSetLogLevel(OF_LOG_ERROR);
+	ofSetLogLevel(OF_LOG_NOTICE);
+
+	ofSetFrameRate(TARGET_FRAMERATE);
 
 	//JSON - load settings
 	loadSettings();
@@ -20,7 +23,7 @@ void ofApp::setup(){
 
 	//init
 	ofSetVerticalSync(true);
-	ofSetFrameRate(60);
+
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
 	
@@ -33,7 +36,7 @@ void ofApp::setup(){
 	
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
-	VideoPlayerManager.setup();
+	VideoPlayerManager.setup(CANVAS_WIDTH,CANVAS_HEIGHT);
 	drawVideoPlayerManager = true;
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
@@ -52,18 +55,25 @@ void ofApp::setup(){
 	
 	KinectMapper.setupCavasCalibrateFbo();
 
+
+
+	VideoPlayerManager.keyReleased('d');
+	for (int i = 0; i < MAX_PLAYERS; i++) {
+		bodyPos.push_back(ofVec2f(-100,-100));
+	}
+
 }
 
 
 //--------------------------------------------------------------
 void ofApp::update(){
 
-	//if (!debugMode) {
-	//	ofHideCursor();
-	//}
-	//else {
-	//	ofShowCursor();
-	//}
+	if (!debugMode) {
+		ofHideCursor();
+	}
+	else {
+		ofShowCursor();
+	}
 
 	//kinect update
 	SanShengKinectManager->update(KinectMapper, refBodyIdx);
@@ -92,16 +102,16 @@ void ofApp::draw(){
 
 	
 
-	//------------------------------------- Particle Visuals Manager-------------------------------------
-	//ParticleVisualsManager.setAlpha(a);
-	ParticleVisualsManager.draw();
-	
+
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
-	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
-	VideoPlayerManager.setAlpha(a);
+//	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
+	VideoPlayerManager.setAlpha(255);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
-
+	//------------------------------------- Particle Visuals Manager-------------------------------------
+//ParticleVisualsManager.setAlpha(a);
+	ParticleVisualsManager.draw();
+	
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.draw();
 
@@ -110,20 +120,24 @@ void ofApp::draw(){
 	{
 		KinectMapper.CanvasCalibrateFbo.draw(0, 0);
 		SanShengKinectManager->draw();
-
+		calibrationGui.draw();
 	}
-	calibrationGui.draw();
+
 
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
 		if (SanShengKinectManager->bodyIdxTracked[i])
 		{
+			
+			bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
 			ofSetColor(ofColor::aqua);
 			ofFill();
-			ofDrawEllipse(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y, 100, 100);
+			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
 		}
 		else continue;
 	}
+
+	
 }
 
 
@@ -131,6 +145,8 @@ void ofApp::draw(){
 void ofApp::keyReleased(int key){
 	ParticleVisualsManager.keyPressed(key);
 	TcpClientManager.keyPressed(key);
+	VideoPlayerManager.keyReleased(key);
+	//SanShengKinectManager->keyReleased(key);
 	switch (key) {
 	case 'd':
 		debugMode = !debugMode;

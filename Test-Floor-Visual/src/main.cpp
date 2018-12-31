@@ -34,7 +34,7 @@ float MODE_REPEL_FORCE = 3500;
 float MODE_REPEL_SCATTER = 500;
 float MODE_REPEL_DAMP = 0.98;
 float PARTICLE_PATH_SCATTER = 0.8;
-float SCENE_GRAVITY = 0.2;
+float SCENE_GRAVITY = 0.5;
 
 //attract mode settings
 float MODE_ATTRACT_SCATTER = 0;
@@ -44,17 +44,17 @@ float MODE_ATTRACT_DAMP = 0.9;
 
 //emitter settings
 float EMITTER_EMIT_SPEED = 4;
-float EMITTER_LIFE_MIN = 300;
-float EMITTER_LIFE_MAX = 500;
+float EMITTER_LIFE_MIN = 50;
+float EMITTER_LIFE_MAX = 100;
 float PARTICLE_HUE_MIN = 30;
 float PARTICLE_HUE_MAX = 40;
 float PARTICLE_SATUATION = 180;
 float PARTICLE_BRIGHTNESS = 255;
-float PARTICLE_RADIUS = 50;
+float PARTICLE_RADIUS = 100;
 float PARTICLE_RANGE = 400;
 float PARTICLE_SPEED_RANGE = 5;
 string PARTICLE_SPRITE_PATH = "lightTexture/flake_sprite.png";
-int MAX_PARTICLES = 10000;
+int MAX_PARTICLES = 1500;
 
 //ring settings
 float RING_PARTICLE_RADIUS_MIN = 1;

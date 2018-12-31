@@ -25,8 +25,8 @@
 /* ======================================================
 //Settings
 ======================================================*/
-//Pls check final resolution in main.cpp
-#define NUM_OF_VID 2
+
+#define TARGET_FRAMERATE 25
 
 //Kinect sources dimensions
 #define DEPTH_WIDTH 512
@@ -37,7 +37,6 @@
 #define COLOR_HEIGHT 1080
 
 #define MAX_PLAYERS 6
-
 
 #ifdef EXHIBITION
 #define CANVAS_WIDTH 1200
@@ -121,6 +120,8 @@ class ofApp : public ofBaseApp{
 		ofParameter<int> refBodyIdx;
 		ofParameter<string> bodyPosInspect[MAX_PLAYERS];
 		ofParameter<bool> refBodyIdxFlags[MAX_PLAYERS];
+
+		vector<ofVec2f> bodyPos;
 
 		void refBodyIdxChanged(int& idx);
 

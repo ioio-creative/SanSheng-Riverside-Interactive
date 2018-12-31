@@ -32,6 +32,8 @@ void KinectManager::setup() {
 	ofClear(ofColor::black);
 	Kinect3dCamFbo.end();
 	windowResized(ofGetWidth(), ofGetHeight());
+
+	debugMode = false;
 }
 
 void KinectManager::update(KinectToFloorScreenMapper& floorMapper, const int refBodyIdx) {
@@ -39,7 +41,9 @@ void KinectManager::update(KinectToFloorScreenMapper& floorMapper, const int ref
 	kinect.update();
 	floorPlane = kinect.getBodySource()->getFloorClipPlane();
 	string floorMsg = "[" + to_string(floorPlane.x) + "][" + to_string(floorPlane.y) + "][" + to_string(floorPlane.z) + "][" + to_string(floorPlane.w) + "]";
-	KINECTNOTICELOG << "Floor Plane Vector: " << floorMsg << endl;
+	if (debugMode) {
+		KINECTNOTICELOG << "Floor Plane Vector: " << floorMsg << endl;
+	}
 	floorTransform = glm::mat4(kinect.getBodySource()->getFloorTransform());
 	tiltAngle = atan(floorPlane.z / floorPlane.y);
 	rollAngle = atan(floorPlane.x / floorPlane.y);
@@ -62,7 +66,9 @@ void KinectManager::update(KinectToFloorScreenMapper& floorMapper, const int ref
 	}
 
 	auto& bodies = bodySrc->getBodies();
-	KINECTNOTICELOG << "tracked body ID: ";
+	if (debugMode) {
+		KINECTNOTICELOG << "tracked body ID: ";
+	}
 	for (auto& body : bodies) {
 		if (body.tracked) {
 			numBodiesTracked++;
@@ -160,6 +166,13 @@ void KinectManager::draw() {
 void KinectManager::windowResized(int w, int h) {
 	kinect3dCam.setControlArea(ofRectangle(0, (h - Kinect3dCamFbo.getHeight())/2 , monitorWidth, monitorHeight));	
 }
+
+void KinectManager::keyReleased(int key){
+	if (key == 'd') {
+		debugMode = !debugMode;
+	}
+}
+
 
 glm::vec3 KinectManager::projectedPointOntoPlane(glm::vec3& point, const Vector4& plane) const {
 	glm::vec3 n = glm::vec3(plane.x, plane.y, plane.z);

@@ -45,7 +45,7 @@ void ofApp::setup(){
     sequenceGoing = false;
     sequenceStartTimestamp = -1;
     
-    ofSetFrameRate(60);
+    ofSetFrameRate(25);
     
     //init canvas
     floorCanvas.allocate(1200,3456);

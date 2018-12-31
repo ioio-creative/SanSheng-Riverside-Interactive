@@ -1,15 +1,16 @@
 #include "VideoPlayerManager.h"
 
-void VideoPlayerManager::setup() {
+void VideoPlayerManager::setup(int w, int h) {
 	//init
 	ofSetVerticalSync(true);
-	ofSetFrameRate(60);
+
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
 
-	screenW = ofGetScreenWidth();
-	screenW = ofGetScreenWidth();
-	screenH = ofGetScreenHeight();
+	debugMode = false;
+
+	screenW = w;
+	screenH = h;
 
 	//video
 	currVidID = 0;
@@ -27,7 +28,12 @@ void VideoPlayerManager::setup() {
 		ofLog() << i;
 		/* Try to load file and start playback */
 		vid[i].load("videos/" + ofToString(i) + ".hpv");
-		vid[i].setLoopState(OF_LOOP_NONE);
+		if (i == 0) {
+			vid[i].setLoopState(OF_LOOP_NORMAL);
+		}
+		else {
+			vid[i].setLoopState(OF_LOOP_NONE);
+		}
 		vid[i].play();
 		vid[i].setPaused(true);
 #else
@@ -36,12 +42,11 @@ void VideoPlayerManager::setup() {
 	}
 videoFbo.allocate(screenW, screenH, GL_RGBA);
 
-vid[currVidID].setPaused(false);
-vid[currVidID].play();
+vid[0].setPaused(false);
+vid[0].play();
 
-
+currScene = 0;
 }
-
 
 void VideoPlayerManager::update() {
 
@@ -53,24 +58,7 @@ void VideoPlayerManager::update() {
 #endif
 
 	if (vid[currVidID].getCurrentFrame() == vid[currVidID].getTotalNumFrames() - 1) {
-		vid[currVidID].setPaused(true);
-		vid[currVidID].seekToFrame(0);
-		if (debugMode) {
-			ofLog() << "Movie Done: " << currVidID;
-		}
-
-		currVidID++;
-
-		if (currVidID >= NUM_OF_VID) {
-			currVidID = 0;
-		}
-
-		if (debugMode) {
-			ofLog() << "Movie Play: " << currVidID;
-		}
-
-		vid[currVidID].setPaused(false);
-		vid[currVidID].play();
+		ofLog() << "Movie Done";
 	}
 
 }
@@ -83,14 +71,29 @@ void VideoPlayerManager::draw(int x, int y, int w, int h) {
 	videoFbo.begin();
 	ofClear(255, 255, 255, 0);
 	ofSetColor(255, 255, 255, vidAlpha);
-	vid[0].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
+	if (currScene == 0) {
+		vid[0].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
+	}
+	else if (currScene == 1) {
+		vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
+	}
+	else if (currScene == 2) {
+			vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
+			vid[2].draw(ofGetMouseX()-250, ofGetMouseY()-250, 500, 500);
+			vid[2].draw(ofGetMouseX() , ofGetMouseY() - 250, 500, 500);
+	}
+	if (debugMode) {
+		ofDrawBitmapStringHighlight(debugSS.str(), 10, ofGetHeight() / 2 * 3, ofColor(255, 255, 255), ofColor(0, 0, 0));
+		//ofLog() << debugSS.str();
+		debugSS.clear();
+	}
 	videoFbo.end();
 
 	//fbo - draw
 
 	ofSetColor(255, 255, 255, vidAlpha);
-		videoFbo.draw(x,y,w,h);
-	
+	videoFbo.draw(x, y, w, h);
+
 #endif // USE_HPVPLAYER
 
 }
@@ -98,6 +101,59 @@ void VideoPlayerManager::draw(int x, int y, int w, int h) {
 
 void VideoPlayerManager::setAlpha(int a) {
 	vidAlpha = a;
+}
+
+void VideoPlayerManager::keyReleased(int k) {
+	switch (k) {
+	case 'd':
+		debugMode = !debugMode;
+		break;
+
+	case '1':
+		currScene = 0;
+		currVidID = 0;
+		for (int i = 0; i < NUM_OF_VID; i++) {
+			vid[i].stop();
+		}
+		vid[0].setPaused(false);
+		vid[0].play();
+		break;
+
+	case '2':
+		break;
+
+	case '3':
+		currScene = 1;
+		vid[0].stop();
+		vid[2].stop();
+		vid[1].setPaused(false);
+		vid[1].play();
+		break;
+
+	case '4':
+		vid[0].stop();
+		vid[1].stop();
+		vid[2].stop();
+		break;
+
+	case '5':
+		currScene = 2;
+		vid[1].setPaused(false);
+		vid[2].setPaused(false);
+		vid[1].play();
+		vid[2].play();
+		break;
+
+	case '6':
+
+		break;
+
+
+	default:
+		break;
+	}
+
+	ofLog() << "Video Curr Scene" << currScene;
 }
 
 //--------------------------------------------------------------
