@@ -4,11 +4,15 @@
 //
 //  Created by mb9 on 7/9/2018.
 //
+
 #include "ofMain.h"
+
 #ifndef FloorParticle_h
 #define FloorParticle_h
 
 extern float PARTICLE_PATH_SCATTER;
+
+extern float PARTICLE_RAISE_Z_CLIPPING;
 
 class FloorParticle
 {
@@ -188,14 +192,36 @@ public:
 	ofImage flakeSprite;
 
 
+	GLfloat *vertices;
+	GLfloat *texs;
+	GLfloat *colors;
+
+
 	FloorParticleManager()
 	{
 		maxParticle = MAX_PARTICLES;
 		flakeSprite.load(PARTICLE_SPRITE_PATH);
+		vertices = new GLfloat[MAX_PARTICLES * 12];
+		texs = new GLfloat[MAX_PARTICLES * 8];
+		colors = new GLfloat[MAX_PARTICLES * 16];
+	}
+
+	void checkBoundary()
+	{
+		for (int i = 0; i < particles.size(); i++)
+		{
+			if (particles[i].pos.x < -canvasWidth * 0.5 || particles[i].pos.x > canvasWidth*0.5 || particles[i].pos.y > canvasHeight*0.5 || particles[i].pos.z > PARTICLE_RAISE_Z_CLIPPING)
+			{
+				//out of boundaries
+				particles.erase(particles.begin() + i);
+				i--;
+			}
+		}
 	}
 
 	void update()
 	{
+		checkBoundary();
 		for (int i = 0; i < emitters.size(); i++)
 		{
 			if (emitters[i].life > 0)
@@ -236,6 +262,83 @@ public:
 		}
 	}
 
+	void drawParticlesFast()
+	{
+
+		//prep arrays
+		for (int i = 0; i < particles.size(); i++)
+		{
+			float rr = particles[i].radius;    //removed noise radius function
+			ofVec3f p1 = ofVec3f(-rr * 0.5, -rr * 0.5);
+			ofVec3f p2 = ofVec3f(-rr * 0.5, rr*0.5);
+			ofVec3f p3 = ofVec3f(rr*0.5, rr*0.5);
+			ofVec3f p4 = ofVec3f(rr*0.5, -rr * 0.5);
+
+			p1 += particles[i].pos;
+			p2 += particles[i].pos;
+			p3 += particles[i].pos;
+			p4 += particles[i].pos;
+
+			vertices[i * 12 + 0] = p1.x;
+			vertices[i * 12 + 1] = p1.y;
+			vertices[i * 12 + 2] = p1.z;
+			vertices[i * 12 + 3] = p2.x;
+			vertices[i * 12 + 4] = p2.y;
+			vertices[i * 12 + 5] = p2.z;
+			vertices[i * 12 + 6] = p3.x;
+			vertices[i * 12 + 7] = p3.y;
+			vertices[i * 12 + 8] = p3.z;
+			vertices[i * 12 + 9] = p4.x;
+			vertices[i * 12 + 10] = p4.y;
+			vertices[i * 12 + 11] = p4.z;
+
+			texs[i * 8 + 0] = 0;
+			texs[i * 8 + 1] = 0;
+			texs[i * 8 + 2] = 0;
+			texs[i * 8 + 3] = flakeSprite.getHeight();
+			texs[i * 8 + 4] = flakeSprite.getWidth();
+			texs[i * 8 + 5] = flakeSprite.getHeight();
+			texs[i * 8 + 6] = flakeSprite.getWidth();
+			texs[i * 8 + 7] = 0;
+
+			colors[i * 16 + 0] = particles[i].color.r / 255.0;
+			colors[i * 16 + 1] = particles[i].color.g / 255.0;
+			colors[i * 16 + 2] = particles[i].color.b / 255.0;
+			colors[i * 16 + 3] = particles[i].color.a / 255.0;
+			colors[i * 16 + 4] = particles[i].color.r / 255.0;
+			colors[i * 16 + 5] = particles[i].color.g / 255.0;
+			colors[i * 16 + 6] = particles[i].color.b / 255.0;
+			colors[i * 16 + 7] = particles[i].color.a / 255.0;
+			colors[i * 16 + 8] = particles[i].color.r / 255.0;
+			colors[i * 16 + 9] = particles[i].color.g / 255.0;
+			colors[i * 16 + 10] = particles[i].color.b / 255.0;
+			colors[i * 16 + 11] = particles[i].color.a / 255.0;
+			colors[i * 16 + 12] = particles[i].color.r / 255.0;
+			colors[i * 16 + 13] = particles[i].color.g / 255.0;
+			colors[i * 16 + 14] = particles[i].color.b / 255.0;
+			colors[i * 16 + 15] = particles[i].color.a / 255.0;
+		}
+
+		flakeSprite.getTexture().bind();
+
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_FLOAT, 0, colors);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, texs);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+		glDrawArrays(GL_QUADS, 0, particles.size() * 4);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+		flakeSprite.getTexture().unbind();
+
+	}
+
 	void drawEmitters()
 	{
 		for (int i = 0; i < emitters.size(); i++)
@@ -251,7 +354,7 @@ public:
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		glPushMatrix();
 		glTranslatef(canvasWidth / 2, canvasHeight / 2, 0);
-		drawParticles();
+		drawParticlesFast();
 		glPopMatrix();
 
 		glDisable(GL_BLEND);
@@ -328,12 +431,11 @@ public:
 		for (int i = 0; i < particles.size(); i++)
 		{
 			ofVec3f dd = repeller - particles[i].pos;
-			ofVec2f dir = ofVec2f(dd.x, dd.y);
+			ofVec3f dir = ofVec3f(dd.x, dd.y);
 			float mag = dir.length();
 			dir.normalize();
 			float f = -1 * G / (mag * mag);
 			dir *= f;
-
 			particles[i].posSpeed += dir;
 		}
 	}
@@ -343,6 +445,15 @@ public:
 		for (int i = 0; i < repellers.size(); i++)
 		{
 			repel(repellers[i], force, scatter);
+		}
+	}
+
+	void raise(float min, float max)
+	{
+		for (int i = 0; i < particles.size(); i++)
+		{
+			ofVec3f dir = ofVec3f(0, 0, ofRandom(min, max));
+			particles[i].posSpeed += dir;
 		}
 	}
 

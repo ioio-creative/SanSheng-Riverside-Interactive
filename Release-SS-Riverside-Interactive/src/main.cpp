@@ -2,9 +2,11 @@
 #include "ofApp.h"
 
 
-//============================== FLOOR VISUAL ================================
-
 string BG_VIDEO_PATH = "ioio_testing_bg_3.mp4";
+
+
+int FLOOR_CANVAS_WIDTH = 1200;
+int FLOOR_CANVAS_HEIGHT = 3456;
 
 //dummy circle positions
 int P1X = 300;
@@ -37,7 +39,7 @@ float MODE_REPEL_FORCE = 3500;
 float MODE_REPEL_SCATTER = 500;
 float MODE_REPEL_DAMP = 0.98;
 float PARTICLE_PATH_SCATTER = 0.8;
-float SCENE_GRAVITY = 0.5;
+float SCENE_GRAVITY = 0.2;
 
 //attract mode settings
 float MODE_ATTRACT_SCATTER = 0;
@@ -47,17 +49,21 @@ float MODE_ATTRACT_DAMP = 0.9;
 
 //emitter settings
 float EMITTER_EMIT_SPEED = 4;
-float EMITTER_LIFE_MIN = 50;
-float EMITTER_LIFE_MAX = 100;
+float EMITTER_LIFE_MIN = 300;
+float EMITTER_LIFE_MAX = 500;
 float PARTICLE_HUE_MIN = 30;
 float PARTICLE_HUE_MAX = 40;
 float PARTICLE_SATUATION = 180;
-float PARTICLE_BRIGHTNESS = 255;
-float PARTICLE_RADIUS = 33;
+float PARTICLE_BRIGHTNESS = 155;
+float PARTICLE_RADIUS = 30;
 float PARTICLE_RANGE = 400;
 float PARTICLE_SPEED_RANGE = 5;
 string PARTICLE_SPRITE_PATH = "lightTexture/flake_sprite.png";
-int MAX_PARTICLES = 1500;
+int MAX_PARTICLES = 4000;
+
+float PARTICLE_MIN_RAISE_SPEED = 0.2;       //new parameter for raise
+float PARTICLE_MAX_RAISE_SPEED = 0.4;       //new parameter for raise
+float PARTICLE_RAISE_Z_CLIPPING = 1000;     //new parameter for raise
 
 //ring settings
 float RING_PARTICLE_RADIUS_MIN = 1;
@@ -78,6 +84,7 @@ float RING_PARTICLE_SATUATION = 180;
 float RING_PARTICLE_BRIGHTNESS = 255;
 float RING_PARTICLE_VIRTUAL_ALPHA = 355;
 string RING_PARTICLE_SPRITE_PATH = "lightTexture/ring_sprite.png";
+int MAX_USERS = 20;
 int MAX_PARTICLE_PER_RING = 300;
 bool FIRST_USER_FOLLOW_CURSOR = false;
 
@@ -86,22 +93,6 @@ bool FIRST_USER_FOLLOW_CURSOR = false;
 //========================================================================
 int main( ){
 
-	
-//	ofGLWindowSettings settings;
-//
-//
-//	settings.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);//<-- final resolution
-//
-//#ifdef EXHIBITION
-//	settings.windowMode = OF_FULLSCREEN;
-//#else
-//	settings.windowMode = OF_WINDOW;
-//#endif
-//
-//	settings.setGLVersion(4, 1);
-//
-//	ofCreateWindow(settings);
-	
 	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_WINDOW);
 
 	ofRunApp(new ofApp());

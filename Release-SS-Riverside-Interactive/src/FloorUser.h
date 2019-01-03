@@ -27,6 +27,7 @@ extern float RING_PARTICLE_BRIGHTNESS;
 extern float RING_PARTICLE_VIRTUAL_ALPHA;
 extern int MAX_PARTICLE_PER_RING;
 
+
 class FloorRingParticle {
 public:
 	float radius;
@@ -170,7 +171,7 @@ public:
 };
 
 extern string RING_PARTICLE_SPRITE_PATH;
-
+extern int MAX_USERS;
 class FloorUserManager
 {
 public:
@@ -180,8 +181,17 @@ public:
 	float canvasWidth;
 	float canvasHeight;
 
+
+	GLfloat *vertices;
+	GLfloat *texs;
+	GLfloat *colors;
+
 	FloorUserManager()
 	{
+		vertices = new GLfloat[MAX_USERS * MAX_PARTICLE_PER_RING * 12];
+		texs = new GLfloat[MAX_USERS * MAX_PARTICLE_PER_RING * 8];
+		colors = new GLfloat[MAX_USERS * MAX_PARTICLE_PER_RING * 16];
+
 	}
 
 	void loadTextures()
@@ -211,13 +221,111 @@ public:
 
 	void draw(int mode)
 	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		glPushMatrix();
 		glTranslatef(canvasWidth / 2, canvasHeight / 2, 0);
+
+		//old method
+//        for(int i=0;i<floorUsers.size();i++)
+//        {
+//            floorUsers[i].drawRing(ringSprite);
+//        }
+
+		drawRingFast();
+		glPopMatrix();
+	}
+
+
+	void drawRingFast()
+	{
+		int sumParticles = 0;
+
 		for (int i = 0; i < floorUsers.size(); i++)
 		{
-			floorUsers[i].drawRing(ringSprite);
+			sumParticles += floorUsers[i].ring.particles.size();
 		}
-		glPopMatrix();
+
+
+		int _particle = 0;
+
+		for (int j = 0; j < floorUsers.size(); j++)
+		{
+
+			//prep arrays
+			for (int i = 0; i < floorUsers[j].ring.particles.size(); i++)
+			{
+				float rr = floorUsers[j].ring.particles[i].radius;    //removed noise radius function
+				ofVec3f p1 = ofVec3f(-rr * 0.5, -rr * 0.5);
+				ofVec3f p2 = ofVec3f(-rr * 0.5, rr*0.5);
+				ofVec3f p3 = ofVec3f(rr*0.5, rr*0.5);
+				ofVec3f p4 = ofVec3f(rr*0.5, -rr * 0.5);
+
+				//no rotation for ring particles
+
+				p1 += floorUsers[j].ring.particles[i].pos;
+				p2 += floorUsers[j].ring.particles[i].pos;
+				p3 += floorUsers[j].ring.particles[i].pos;
+				p4 += floorUsers[j].ring.particles[i].pos;
+
+				vertices[(_particle + i) * 12 + 0] = p1.x;
+				vertices[(_particle + i) * 12 + 1] = p1.y;
+				vertices[(_particle + i) * 12 + 2] = p1.z;
+				vertices[(_particle + i) * 12 + 3] = p2.x;
+				vertices[(_particle + i) * 12 + 4] = p2.y;
+				vertices[(_particle + i) * 12 + 5] = p2.z;
+				vertices[(_particle + i) * 12 + 6] = p3.x;
+				vertices[(_particle + i) * 12 + 7] = p3.y;
+				vertices[(_particle + i) * 12 + 8] = p3.z;
+				vertices[(_particle + i) * 12 + 9] = p4.x;
+				vertices[(_particle + i) * 12 + 10] = p4.y;
+				vertices[(_particle + i) * 12 + 11] = p4.z;
+
+				texs[(_particle + i) * 8 + 0] = 0;
+				texs[(_particle + i) * 8 + 1] = 0;
+				texs[(_particle + i) * 8 + 2] = 0;
+				texs[(_particle + i) * 8 + 3] = ringSprite.getHeight();
+				texs[(_particle + i) * 8 + 4] = ringSprite.getWidth();
+				texs[(_particle + i) * 8 + 5] = ringSprite.getHeight();
+				texs[(_particle + i) * 8 + 6] = ringSprite.getWidth();
+				texs[(_particle + i) * 8 + 7] = 0;
+
+				colors[(_particle + i) * 16 + 0] = floorUsers[j].ring.particles[i].color.r / 255.0;
+				colors[(_particle + i) * 16 + 1] = floorUsers[j].ring.particles[i].color.g / 255.0;
+				colors[(_particle + i) * 16 + 2] = floorUsers[j].ring.particles[i].color.b / 255.0;
+				colors[(_particle + i) * 16 + 3] = floorUsers[j].ring.particles[i].color.a / 255.0;
+				colors[(_particle + i) * 16 + 4] = floorUsers[j].ring.particles[i].color.r / 255.0;
+				colors[(_particle + i) * 16 + 5] = floorUsers[j].ring.particles[i].color.g / 255.0;
+				colors[(_particle + i) * 16 + 6] = floorUsers[j].ring.particles[i].color.b / 255.0;
+				colors[(_particle + i) * 16 + 7] = floorUsers[j].ring.particles[i].color.a / 255.0;
+				colors[(_particle + i) * 16 + 8] = floorUsers[j].ring.particles[i].color.r / 255.0;
+				colors[(_particle + i) * 16 + 9] = floorUsers[j].ring.particles[i].color.g / 255.0;
+				colors[(_particle + i) * 16 + 10] = floorUsers[j].ring.particles[i].color.b / 255.0;
+				colors[(_particle + i) * 16 + 11] = floorUsers[j].ring.particles[i].color.a / 255.0;
+				colors[(_particle + i) * 16 + 12] = floorUsers[j].ring.particles[i].color.r / 255.0;
+				colors[(_particle + i) * 16 + 13] = floorUsers[j].ring.particles[i].color.g / 255.0;
+				colors[(_particle + i) * 16 + 14] = floorUsers[j].ring.particles[i].color.b / 255.0;
+				colors[(_particle + i) * 16 + 15] = floorUsers[j].ring.particles[i].color.a / 255.0;
+			}
+			_particle += floorUsers[j].ring.particles.size();
+		}
+		ringSprite.getTexture().bind();
+
+		glEnableClientState(GL_COLOR_ARRAY);
+		glColorPointer(4, GL_FLOAT, 0, colors);
+
+		glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+		glTexCoordPointer(2, GL_FLOAT, 0, texs);
+
+		glEnableClientState(GL_VERTEX_ARRAY);
+		glVertexPointer(3, GL_FLOAT, 0, vertices);
+
+		glDrawArrays(GL_QUADS, 0, sumParticles * 4);
+
+		glDisableClientState(GL_VERTEX_ARRAY);
+		glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+		glDisableClientState(GL_COLOR_ARRAY);
+		ringSprite.getTexture().unbind();
 	}
 };
 

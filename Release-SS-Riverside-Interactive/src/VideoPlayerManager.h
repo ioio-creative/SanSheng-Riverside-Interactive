@@ -24,7 +24,7 @@ public:
 	void exit();
 
 	float getVideoTime();
-
+	float getVideoEndTime();
 	stringstream debugSS;
 
 	int vidAlpha;

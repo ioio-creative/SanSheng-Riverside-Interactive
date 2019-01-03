@@ -109,7 +109,7 @@ void VideoPlayerManager::keyReleased(int k) {
 		debugMode = !debugMode;
 		break;
 
-	case '0':
+	case '0': //scene 0 begin
 		currScene = 0;
 		currVidID = 0;
 		for (int i = 0; i < NUM_OF_VID; i++) {
@@ -119,24 +119,26 @@ void VideoPlayerManager::keyReleased(int k) {
 		vid[0].play();
 		break;
 
-	case '1':
-		break;
+	case '1': //scene 0 end
 
-	case '2':
-		currScene = 1;
 		vid[0].stop();
 		vid[2].stop();
+
+		break;
+
+	case '2': //scene 1 begin
+		currScene = 1;
 		vid[1].setPaused(false);
 		vid[1].play();
 		break;
 
-	case '3':
+	case '3': //scene 1 end
 		vid[0].stop();
 		vid[1].stop();
 		vid[2].stop();
 		break;
 
-	case '4':
+	case '4': //scene 2 begin
 		currScene = 2;
 		vid[1].setPaused(false);
 		vid[2].setPaused(false);
@@ -145,15 +147,15 @@ void VideoPlayerManager::keyReleased(int k) {
 		ofLog() << "eye Scene triggered";
 		break;
 
-	case '5':
+	case '5': //scene 2 end
 
 		break;
 
-	case '6':
-
+	case '6': //scene 3 begin
+		currScene = 3;
 		break;
 
-	case '7':
+	case '7': //scene 3 end
 
 		break;
 
@@ -181,4 +183,8 @@ void VideoPlayerManager::exit() {
 float VideoPlayerManager::getVideoTime() {
 
 	return vid[1].getDuration() * vid[1].getPosition()/1.0f;
+}
+
+float VideoPlayerManager::getVideoEndTime(){
+	return vid[1].getDuration();
 }

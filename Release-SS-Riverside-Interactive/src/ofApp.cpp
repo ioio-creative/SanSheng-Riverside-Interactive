@@ -4,9 +4,14 @@
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+
+#ifdef EXHIBITION
+	ofHideCursor();
+#endif // EXHIBITION
+
 	ofLog() << "CANVAS_WIDTH : " << CANVAS_WIDTH << "CANVAS_HEIGHT : " << CANVAS_HEIGHT;
 	//debug
-	debugMode = false;
+	debugMode = true;
 	ofLogToConsole();
 	//ofSetLogLevel(OF_LOG_ERROR);
 	ofSetLogLevel(OF_LOG_NOTICE);
@@ -17,6 +22,7 @@ void ofApp::setup(){
 	loadSettings();
 
 	//misc
+
 	if (!debugMode) {
 		//ofHideCursor();
 	}
@@ -40,7 +46,7 @@ void ofApp::setup(){
 	drawVideoPlayerManager = true;
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
-	ParticleVisualsManager.setup(CANVAS_WIDTH*3, CANVAS_HEIGHT*3);
+	ParticleVisualsManager.setup(CANVAS_WIDTH, CANVAS_HEIGHT);
 	
 	//------------------------------------- TCP Client Manager-------------------------------------
 	//TcpClientManager.setup();
@@ -65,7 +71,7 @@ void ofApp::setup(){
 	// ===== scene settings ====
 
 	//init
-	num_of_trigger_scene = 5;
+	num_of_trigger_scene = 7;
 	for (int i = 0; i < num_of_trigger_scene; i++) {
 		isTriggerScene.push_back(false);
 		triggerSceneTime.push_back(0.0f);
@@ -79,7 +85,7 @@ void ofApp::setup(){
 void ofApp::update(){
 
 	if (!debugMode) {
-		ofHideCursor();
+		//ofHideCursor();
 	}
 	else {
 		ofShowCursor();
@@ -117,14 +123,16 @@ void ofApp::draw(){
 //	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
 	VideoPlayerManager.setAlpha(255);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-	if (debugMode) {
-		ofLog() << VideoPlayerManager.getVideoTime();
-	}
+
 
 	for (int i = 0; i < num_of_trigger_scene; i++) {
 		if (VideoPlayerManager.getVideoTime() >= triggerSceneTime[i] && isTriggerScene[i] == false) {
 			isTriggerScene[i] = true;
 			ofLog() << "isTriggerScene" << i;
+			if (i == 0) {
+				ParticleVisualsManager.keyPressed('0');
+				VideoPlayerManager.keyReleased('0');
+			}
 			if (i == 1) {
 				ParticleVisualsManager.keyPressed('1');
 				VideoPlayerManager.keyReleased('1');
@@ -141,7 +149,10 @@ void ofApp::draw(){
 				ParticleVisualsManager.keyPressed('4');
 				VideoPlayerManager.keyReleased('4');
 			}
-
+			if (i == 5) {
+				ParticleVisualsManager.keyPressed('5');
+				VideoPlayerManager.keyReleased('5');
+			}
 		}
 	}
 
@@ -328,9 +339,22 @@ void ofApp::resetScene() {
 	for (int i = 0; i < num_of_trigger_scene; i++) {
 		isTriggerScene[i] = false;
 	}
+	float scene1Start = 10.0f;
+	float scene1End = 20.0f;
+	float scene2Start = 35.0f;
+	float scene2End = 40.0f;
+	float scene3Start = 50.0f;
+	float scene3End = 60.0f;
+
+	float totalEndTime = VideoPlayerManager.getVideoEndTime();
 	//Time Settings
+	if (debugMode) {
+		ofLog() << "end time : " << totalEndTime;
+	}
+
+
 	for (int i = 0; i < num_of_trigger_scene; i++) {
-		triggerSceneTime = {999.0f ,999.0f, 999.0f, 999.0f, 10.0f };
+		triggerSceneTime = { totalEndTime, scene1Start , scene1End, scene2Start, scene2End, scene3Start, scene3End };
 	}
 
 }

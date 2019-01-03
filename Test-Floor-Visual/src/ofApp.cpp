@@ -37,18 +37,24 @@ extern float MODE_ATTRACT_DAMP;
 
 extern bool FIRST_USER_FOLLOW_CURSOR;
 
+extern float PARTICLE_MIN_RAISE_SPEED;
+extern float PARTICLE_MAX_RAISE_SPEED;
+
+extern int FLOOR_CANVAS_WIDTH;
+extern int FLOOR_CANVAS_HEIGHT;
+
 //--------------------------------------------------------------
 void ofApp::setup(){
     //default parameters
-    floorMode = 1; // 1 : repel | 2 : attract | 3 : emit
+    floorMode = 1; // 1 : repel | 2 : attract | 3 : emit | 4 : repel with float
     isRenderStaticRings = false;
     sequenceGoing = false;
     sequenceStartTimestamp = -1;
     
-    ofSetFrameRate(25);
+    ofSetFrameRate(60);
     
     //init canvas
-    floorCanvas.allocate(1200,3456);
+    floorCanvas.allocate(FLOOR_CANVAS_WIDTH, FLOOR_CANVAS_HEIGHT);
     floorCanvas.begin();
     glClearColor(0,0,0,0);
     glClear(GL_COLOR_BUFFER_BIT);
@@ -150,9 +156,10 @@ void ofApp::checkTimeTriggers()
 
 //--------------------------------------------------------------
 void ofApp::update(){
+	
     checkTimeTriggers();
     
-    bgPlayer.update();
+    //bgPlayer.update();
     
     for(int i=0;i<staticRings.size();i++)
     {
@@ -172,6 +179,11 @@ void ofApp::update(){
     else if(floorMode == 3) //convert users into particle emitters
     {
         updateEmitMode();
+    }
+    
+    else if(floorMode == 4)  //convert users into umbrella shape repellers
+    {
+        updateRepelModeWithRaise();   
     }
 
     particleManager.update();
@@ -212,7 +224,8 @@ void ofApp::prepareFloorCanvas()
 //--------------------------------------------------------------
 void ofApp::draw(){
     ofBackground(30);       //set dark grey background for visible boundary in full screen mode
-    
+	ofDisableAntiAliasing();
+	ofSetVerticalSync(false);
     prepareFloorCanvas();
     
     glPushMatrix();
@@ -230,11 +243,12 @@ void ofApp::draw(){
     glPopMatrix();
     
     ofSetColor(255,0,0);
-    ofDrawBitmapString("press SPACE to start sequence,\npress '[' to add user under cursor", 20, 20);    //show instructions
-    ofDrawBitmapString("FRAMERATE = " + ofToString(ofGetFrameRate()), 20, 60);       //show framerate
+    ofDrawBitmapString("press SPACE to start sequence,\npress '[' to add user under cursor, \ncycle F2 and F6 to call attract / repel modes", 20, 20);    //show instructions
+    ofDrawBitmapString("FRAMERATE = " + ofToString(ofGetFrameRate()), 20, 80);       //show framerate
+	ofDrawBitmapString("NUM PARTICLES = " + ofToString(particleManager.particles.size()), 20, 100);       //show num particles
     if(sequenceGoing)
     {
-        ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 80);       //show timecode
+        ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 100);       //show timecode
     }
 }
 
@@ -247,6 +261,20 @@ void ofApp::updateRepelMode()
         repellers.push_back(ofVec3f(floorUserManager.floorUsers[i].pos));
     }
     particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
+    particleManager.damp(MODE_REPEL_DAMP);
+}
+
+//--------------------------------------------------------------
+void ofApp::updateRepelModeWithRaise()
+{
+    vector <ofVec3f> repellers;
+    for(int i=0;i<floorUserManager.floorUsers.size();i++)
+    {
+        repellers.push_back(ofVec3f(floorUserManager.floorUsers[i].pos));
+    }
+    particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
+    
+    particleManager.raise(PARTICLE_MIN_RAISE_SPEED,PARTICLE_MAX_RAISE_SPEED);
     particleManager.damp(MODE_REPEL_DAMP);
 }
 
@@ -330,6 +358,12 @@ void ofApp::keyPressed(int key){
         //place dummy circles
         isRenderStaticRings = false;
     }
+    if(key == OF_KEY_F6)
+    {
+        //triggering repel mode with raise
+        floorMode = 4;
+        particleManager.clearEmitter();
+    }
     if(key == '[')          //add 1 floor user at cursor for development
     {
         float ss = ofGetHeight() / (float)floorCanvas.getHeight();
@@ -359,8 +393,7 @@ void ofApp::keyPressed(int key){
     }
     if(key == '4')
     {
-        keyPressed(OF_KEY_F1);
-        keyPressed(OF_KEY_BACKSPACE);   //end scene 2 (also burst effect)
+        keyPressed(OF_KEY_F6);
     }
     if(key == '5')
     {

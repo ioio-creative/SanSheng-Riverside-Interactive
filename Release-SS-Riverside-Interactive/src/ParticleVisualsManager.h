@@ -46,6 +46,7 @@ public:
 	void updateRepelMode();
 	void updateAttractMode();
 	void updateEmitMode();
+	void updateRepelModeWithRaise();
 	void prepareFloorCanvas();
 
 	//timecode related

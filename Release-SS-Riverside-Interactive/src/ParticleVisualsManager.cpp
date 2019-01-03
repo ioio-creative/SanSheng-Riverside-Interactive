@@ -1,6 +1,5 @@
 #include "ParticleVisualsManager.h"
 
-
 extern string BG_VIDEO_PATH;
 
 extern int P1X;
@@ -38,17 +37,24 @@ extern float MODE_ATTRACT_DAMP;
 
 extern bool FIRST_USER_FOLLOW_CURSOR;
 
+extern float PARTICLE_MIN_RAISE_SPEED;
+extern float PARTICLE_MAX_RAISE_SPEED;
+
+extern int FLOOR_CANVAS_WIDTH;
+extern int FLOOR_CANVAS_HEIGHT;
+
 //--------------------------------------------------------------
 void ParticleVisualsManager::setup(int w, int h) {
 	//default parameters
-	floorMode = 1; // 1 : repel | 2 : attract | 3 : emit
+	floorMode = 1; // 1 : repel | 2 : attract | 3 : emit | 4 : repel with float
 	isRenderStaticRings = false;
 	sequenceGoing = false;
 	sequenceStartTimestamp = -1;
 
+	ofSetFrameRate(60);
 
 	//init canvas
-	floorCanvas.allocate(w, h);
+	floorCanvas.allocate(FLOOR_CANVAS_WIDTH, FLOOR_CANVAS_HEIGHT);
 	floorCanvas.begin();
 	glClearColor(0, 0, 0, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
@@ -71,7 +77,7 @@ void ParticleVisualsManager::setup(int w, int h) {
 
 	//setup screenWidth and screenHeight variables instead of using ofGetWidth()/screenHeight, for testing in OF_FULLSCREEN
 	screenHeight = h;
-	screenWidth = w;
+	screenWidth = screenHeight / (float)floorCanvas.getHeight() * floorCanvas.getWidth();
 }
 
 //--------------------------------------------------------------
@@ -150,6 +156,7 @@ void ParticleVisualsManager::checkTimeTriggers()
 
 //--------------------------------------------------------------
 void ParticleVisualsManager::update() {
+
 	checkTimeTriggers();
 
 	//bgPlayer.update();
@@ -172,6 +179,11 @@ void ParticleVisualsManager::update() {
 	else if (floorMode == 3) //convert users into particle emitters
 	{
 		updateEmitMode();
+	}
+
+	else if (floorMode == 4)  //convert users into umbrella shape repellers
+	{
+		updateRepelModeWithRaise();
 	}
 
 	particleManager.update();
@@ -212,7 +224,8 @@ void ParticleVisualsManager::prepareFloorCanvas()
 //--------------------------------------------------------------
 void ParticleVisualsManager::draw() {
 	//ofBackground(30);       //set dark grey background for visible boundary in full screen mode
-
+	ofDisableAntiAliasing();
+	ofSetVerticalSync(false);
 	prepareFloorCanvas();
 
 	glPushMatrix();
@@ -222,7 +235,7 @@ void ParticleVisualsManager::draw() {
 	//////////////////////////////////
 	//  RENDERING BACKGROUND VIDEO  //
 	//////////////////////////////////
-	ofSetColor(255);
+	//ofSetColor(255);
 	//bgPlayer.draw(0, 0, floorCanvas.getWidth(), floorCanvas.getHeight());  //draw video background (stretching video to floor size, not maintaining aspect ratio)
 
 	ofSetColor(255);
@@ -230,11 +243,12 @@ void ParticleVisualsManager::draw() {
 	glPopMatrix();
 
 	ofSetColor(255, 0, 0);
-	ofDrawBitmapString("press SPACE to start sequence,\npress '[' to add user under cursor", 20, 20);    //show instructions
-	ofDrawBitmapString("FRAMERATE = " + ofToString(ofGetFrameRate()), 20, 60);       //show framerate
+	ofDrawBitmapString("press SPACE to start sequence,\npress '[' to add user under cursor, \ncycle F2 and F6 to call attract / repel modes", 20, 20);    //show instructions
+	ofDrawBitmapString("FRAMERATE = " + ofToString(ofGetFrameRate()), 20, 80);       //show framerate
+	ofDrawBitmapString("NUM PARTICLES = " + ofToString(particleManager.particles.size()), 20, 100);       //show num particles
 	if (sequenceGoing)
 	{
-		ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 80);       //show timecode
+		ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 100);       //show timecode
 	}
 }
 
@@ -247,6 +261,20 @@ void ParticleVisualsManager::updateRepelMode()
 		repellers.push_back(ofVec3f(floorUserManager.floorUsers[i].pos));
 	}
 	particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
+	particleManager.damp(MODE_REPEL_DAMP);
+}
+
+//--------------------------------------------------------------
+void ParticleVisualsManager::updateRepelModeWithRaise()
+{
+	vector <ofVec3f> repellers;
+	for (int i = 0; i < floorUserManager.floorUsers.size(); i++)
+	{
+		repellers.push_back(ofVec3f(floorUserManager.floorUsers[i].pos));
+	}
+	particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
+
+	particleManager.raise(PARTICLE_MIN_RAISE_SPEED, PARTICLE_MAX_RAISE_SPEED);
 	particleManager.damp(MODE_REPEL_DAMP);
 }
 
@@ -330,6 +358,12 @@ void ParticleVisualsManager::keyPressed(int key) {
 		//place dummy circles
 		isRenderStaticRings = false;
 	}
+	if (key == OF_KEY_F6)
+	{
+		//triggering repel mode with raise
+		floorMode = 4;
+		particleManager.clearEmitter();
+	}
 	if (key == '[')          //add 1 floor user at cursor for development
 	{
 		float ss = screenHeight / (float)floorCanvas.getHeight();
@@ -347,39 +381,37 @@ void ParticleVisualsManager::keyPressed(int key) {
 	//sequencing for demo
 	if (key == '0')
 	{
-	//	keyPressed(OF_KEY_F4);          //start scene 0
+		keyPressed(OF_KEY_F4);          //start scene 1
 	}
 	if (key == '1')
 	{
-		//	keyPressed(OF_KEY_F4);        //end scene 0
+		keyPressed(OF_KEY_F5);          //end scene 1
 	}
 	if (key == '2')
 	{
-		keyPressed(OF_KEY_F4);          //start scene 1
+		keyPressed(OF_KEY_F2);          //start scene 2
 	}
 	if (key == '3')
 	{
-		keyPressed(OF_KEY_F5);          //end scene 1
+		keyPressed(OF_KEY_F6);
 	}
 	if (key == '4')
 	{
-		keyPressed(OF_KEY_F2);          //start scene 2
-	}
-	if (key == '5')
-	{
-		keyPressed(OF_KEY_F1);
-		keyPressed(OF_KEY_BACKSPACE);   //end scene 2 (also burst effect)
-	}
-	if (key == '6')
-	{
 		keyPressed(OF_KEY_F1);          //start scene 3
 	}
-	if (key == '7')
+	if (key == '5')
 	{
 		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
 		keyPressed(']');                //remove user interactions
 	}
-
+	//    if(key == '7')
+	//    {
+	//        keyPressed(OF_KEY_F3);          //start scene 4 (particle emit effect, not using now?)
+	//    }
+	//    if(key == '8')
+	//    {
+	//        keyPressed(']');                //end scene 4
+	//    }
 }
 
 //--------------------------------------------------------------
