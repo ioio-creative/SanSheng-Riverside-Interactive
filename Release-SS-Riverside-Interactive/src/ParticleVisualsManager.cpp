@@ -243,12 +243,12 @@ void ParticleVisualsManager::draw() {
 	glPopMatrix();
 
 	ofSetColor(255, 0, 0);
-	ofDrawBitmapString("press SPACE to start sequence,\npress '[' to add user under cursor, \ncycle F2 and F6 to call attract / repel modes", 20, 20);    //show instructions
-	ofDrawBitmapString("FRAMERATE = " + ofToString(ofGetFrameRate()), 20, 80);       //show framerate
-	ofDrawBitmapString("NUM PARTICLES = " + ofToString(particleManager.particles.size()), 20, 100);       //show num particles
+	//ofDrawBitmapString("press SPACE to start sequence,\npress '[' to add user under cursor, \ncycle F2 and F6 to call attract / repel modes", 20, 20);    //show instructions
+	//ofDrawBitmapString("FRAMERATE = " + ofToString(ofGetFrameRate()), 20, 80);       //show framerate
+	//ofDrawBitmapString("NUM PARTICLES = " + ofToString(particleManager.particles.size()), 20, 100);       //show num particles
 	if (sequenceGoing)
 	{
-		ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 100);       //show timecode
+	//	ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 100);       //show timecode
 	}
 }
 

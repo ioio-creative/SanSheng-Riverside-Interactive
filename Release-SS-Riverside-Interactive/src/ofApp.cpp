@@ -71,7 +71,7 @@ void ofApp::setup(){
 	// ===== scene settings ====
 
 	//init
-	num_of_trigger_scene = 7;
+	num_of_trigger_scene = 6;
 	for (int i = 0; i < num_of_trigger_scene; i++) {
 		isTriggerScene.push_back(false);
 		triggerSceneTime.push_back(0.0f);
@@ -130,28 +130,28 @@ void ofApp::draw(){
 			isTriggerScene[i] = true;
 			ofLog() << "isTriggerScene" << i;
 			if (i == 0) {
-				ParticleVisualsManager.keyPressed('0');
-				VideoPlayerManager.keyReleased('0');
-			}
-			if (i == 1) {
-				ParticleVisualsManager.keyPressed('1');
-				VideoPlayerManager.keyReleased('1');
-			}
-			if (i == 2) {
 				ParticleVisualsManager.keyPressed('2');
 				VideoPlayerManager.keyReleased('2');
 			}
-			if (i == 3) {
+			if (i == 1) {
 				ParticleVisualsManager.keyPressed('3');
 				VideoPlayerManager.keyReleased('3');
 			}
-			if (i == 4) {
+			if (i == 2) {
 				ParticleVisualsManager.keyPressed('4');
 				VideoPlayerManager.keyReleased('4');
 			}
-			if (i == 5) {
+			if (i == 3) {
 				ParticleVisualsManager.keyPressed('5');
 				VideoPlayerManager.keyReleased('5');
+			}
+			if (i == 4) {
+				ParticleVisualsManager.keyPressed('6');
+				VideoPlayerManager.keyReleased('6');
+			}
+			if (i == 5) {
+				ParticleVisualsManager.keyPressed('7');
+				VideoPlayerManager.keyReleased('7');
 			}
 		}
 	}
@@ -182,6 +182,9 @@ void ofApp::draw(){
 			ofSetColor(ofColor::aqua);
 			ofFill();
 			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
+			
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x =ofGetMouseX();
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseY();
 		}
 		else continue;
 	}
@@ -339,22 +342,22 @@ void ofApp::resetScene() {
 	for (int i = 0; i < num_of_trigger_scene; i++) {
 		isTriggerScene[i] = false;
 	}
-	float scene1Start = 10.0f;
-	float scene1End = 20.0f;
-	float scene2Start = 35.0f;
-	float scene2End = 40.0f;
-	float scene3Start = 50.0f;
-	float scene3End = 60.0f;
+
 
 	float totalEndTime = VideoPlayerManager.getVideoEndTime();
 	//Time Settings
 	if (debugMode) {
 		ofLog() << "end time : " << totalEndTime;
 	}
-
+	float scene1Start = 149.0f;
+	float scene1End = 187.0f;
+	float scene2Start = 240.0f;
+	float scene2End = 274.0f;
+	float scene3Start = totalEndTime;
+	float scene3End = totalEndTime + 60.0f;
 
 	for (int i = 0; i < num_of_trigger_scene; i++) {
-		triggerSceneTime = { totalEndTime, scene1Start , scene1End, scene2Start, scene2End, scene3Start, scene3End };
+		triggerSceneTime = { scene1Start , scene1End, scene2Start, scene2End, scene3Start, scene3End };
 	}
 
 }

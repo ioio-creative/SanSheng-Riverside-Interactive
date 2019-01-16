@@ -79,8 +79,8 @@ void VideoPlayerManager::draw(int x, int y, int w, int h) {
 	}
 	else if (currScene == 2) {
 			vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
-			vid[2].draw(ofGetMouseX()-250, ofGetMouseY()-250, 500, 500);
-			vid[2].draw(ofGetMouseX() , ofGetMouseY() - 250, 500, 500);
+			vid[2].draw(ofGetMouseX()-100, ofGetMouseY()-100, 200,200);
+			vid[2].draw(ofGetMouseX() , ofGetMouseY() - 100, 200, 200);
 	}
 	if (debugMode) {
 		ofDrawBitmapStringHighlight(debugSS.str(), 10, ofGetHeight() / 2 * 3, ofColor(255, 255, 255), ofColor(0, 0, 0));
@@ -120,31 +120,33 @@ void VideoPlayerManager::keyReleased(int k) {
 		break;
 
 	case '1': //scene 0 end
-
+		currScene = 1;
 		vid[0].stop();
 		vid[2].stop();
-
-		break;
-
-	case '2': //scene 1 begin
-		currScene = 1;
 		vid[1].setPaused(false);
 		vid[1].play();
 		break;
 
+	case '2': //scene 1 begin
+		currScene = 2;
+
+		vid[2].setPaused(false);
+
+		vid[2].play();
+		ofLog() << "eye Scene triggered";
+
+		break;
+
 	case '3': //scene 1 end
-		vid[0].stop();
-		vid[1].stop();
+	//	vid[0].stop();
+	//	vid[1].stop();
 		vid[2].stop();
 		break;
 
 	case '4': //scene 2 begin
-		currScene = 2;
+		currScene = 1;
 		vid[1].setPaused(false);
-		vid[2].setPaused(false);
 		vid[1].play();
-		vid[2].play();
-		ofLog() << "eye Scene triggered";
 		break;
 
 	case '5': //scene 2 end

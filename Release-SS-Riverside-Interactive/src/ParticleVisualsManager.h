@@ -55,6 +55,8 @@ public:
 	float lastTimestamp;
 	void checkTimeTriggers();
 
+	bool debugMode;
+
 };
 
 

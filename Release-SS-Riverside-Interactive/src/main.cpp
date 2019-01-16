@@ -9,18 +9,18 @@ int FLOOR_CANVAS_WIDTH = 1200;
 int FLOOR_CANVAS_HEIGHT = 3456;
 
 //dummy circle positions
-int P1X = 300;
-int P1Y = 1200;
-int P2X = 900;
-int P2Y = 1200;
-int P3X = 300;
-int P3Y = 1800;
-int P4X = 900;
-int P4Y = 1800;
-int P5X = 300;
+int P1X = 150;
+int P1Y = 2100;
+int P2X = 300;
+int P2Y = 2400;
+int P3X = 450;
+int P3Y = 2700;
+int P4X = 750;
+int P4Y = 2700;
+int P5X = 900;
 int P5Y = 2400;
-int P6X = 900;
-int P6Y = 2400;
+int P6X = 1050;
+int P6Y = 2100;
 
 //time triggers
 float TRIGGER_SCENE_1_START = 0.1;
@@ -48,14 +48,14 @@ float MODE_ATTRACT_GRAVITY = -0.3;
 float MODE_ATTRACT_DAMP = 0.9;
 
 //emitter settings
-float EMITTER_EMIT_SPEED = 4;
+float EMITTER_EMIT_SPEED = 3;
 float EMITTER_LIFE_MIN = 300;
 float EMITTER_LIFE_MAX = 500;
 float PARTICLE_HUE_MIN = 30;
 float PARTICLE_HUE_MAX = 40;
 float PARTICLE_SATUATION = 180;
 float PARTICLE_BRIGHTNESS = 155;
-float PARTICLE_RADIUS = 30;
+float PARTICLE_RADIUS = 40;
 float PARTICLE_RANGE = 400;
 float PARTICLE_SPEED_RANGE = 5;
 string PARTICLE_SPRITE_PATH = "lightTexture/flake_sprite.png";
@@ -72,7 +72,7 @@ float RING_PARTICLE_RADIUS_GROW_SPEED = 0.01;
 float RING_PARTICLE_RADIUS_DECAY_SPEED = 0.995;
 float RING_ORBIT_SPEED_MIN = 0.001;
 float RING_ORBIT_SPEED_MAX = 0.01;
-float RING_ORBIT_RADIUS = 180;
+float RING_ORBIT_RADIUS = 100;
 float ORBIT_RADIUS_SCATTER = 2;
 float ORBIT_RADIUS_SCATTER_SPEED_MIN = 0.5;
 float ORBIT_RADIUS_SCATTER_SPEED_MAX = 2.5;
@@ -84,7 +84,7 @@ float RING_PARTICLE_SATUATION = 180;
 float RING_PARTICLE_BRIGHTNESS = 255;
 float RING_PARTICLE_VIRTUAL_ALPHA = 355;
 string RING_PARTICLE_SPRITE_PATH = "lightTexture/ring_sprite.png";
-int MAX_USERS = 20;
+int MAX_USERS = 6;
 int MAX_PARTICLE_PER_RING = 300;
 bool FIRST_USER_FOLLOW_CURSOR = false;
 
