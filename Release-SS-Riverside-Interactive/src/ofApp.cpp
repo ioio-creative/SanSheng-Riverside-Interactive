@@ -167,7 +167,7 @@ void ofApp::draw(){
 	//------------------------------------- Kinect 3D View (for calibration) -------------------------
 	if (calibrationMode)
 	{
-		KinectMapper.CanvasCalibrateFbo.draw(0, 0);
+		KinectMapper.CanvasCalibrateFbo.draw(0, ofGetHeight()-KINECTAREA_HEIGHT);
 		SanShengKinectManager->draw();
 		calibrationGui.draw();
 	}
