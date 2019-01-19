@@ -65,11 +65,11 @@ void ofApp::setup(){
 	
 	KinectMapper.setupCavasCalibrateFbo();
 
-
-
-	VideoPlayerManager.keyReleased('d');
 	for (int i = 0; i < MAX_PLAYERS; i++) {
 		bodyPos.push_back(ofVec2f(-100,-100));
+		ParticleVisualsManager.keyPressed('[');
+		ParticleVisualsManager.floorUserManager.floorUsers[i].pos.x =CANVAS_WIDTH/2;
+		ParticleVisualsManager.floorUserManager.floorUsers[i].pos.y = CANVAS_HEIGHT*2;
 	}
 
 	// ===== scene settings ====
@@ -83,7 +83,6 @@ void ofApp::setup(){
 	resetScene();
 
 }
-
 
 //--------------------------------------------------------------
 void ofApp::update(){
@@ -111,12 +110,8 @@ void ofApp::update(){
 }
 void ofApp::drawAll() {
 
-
-
 	ofSetColor(255);
 	ofEnableAlphaBlending();
-
-
 
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
@@ -183,6 +178,10 @@ void ofApp::drawAll() {
 
 	for (int i = 0; i < MAX_PLAYERS; i++)
 	{
+		if (debugMode) {
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x = ofGetMouseY();
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseX();
+		}
 		if (SanShengKinectManager->bodyIdxTracked[i])
 		{
 
@@ -192,15 +191,11 @@ void ofApp::drawAll() {
 				ofSetColor(ofColor::aqua);
 				ofFill();
 				ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
-
-				ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x = ofGetMouseX();
-				ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseY();
 			}
 			else {
 				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.x = bodyPos[i].x;
 				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.y = bodyPos[i].y;
 			}
-
 		}
 		else continue;
 	}

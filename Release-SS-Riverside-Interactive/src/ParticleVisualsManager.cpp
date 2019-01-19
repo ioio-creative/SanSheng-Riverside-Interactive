@@ -407,6 +407,7 @@ void ParticleVisualsManager::keyPressed(int key) {
 	//sequencing for demo
 	if (key == '0')
 	{
+		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
 		keyPressed(OF_KEY_F4);          //start scene 1
 	}
 	if (key == '1')
@@ -436,7 +437,7 @@ void ParticleVisualsManager::keyPressed(int key) {
 	    if(key == '7')
 	   {
 			keyPressed(OF_KEY_BACKSPACE);   //end scene 3
-			keyPressed(']');                //remove user interactions
+	//		keyPressed(']');                //remove user interactions
 	    }
 	    if(key == '8')
 	    {       
