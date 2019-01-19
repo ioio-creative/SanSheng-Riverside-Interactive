@@ -82,6 +82,11 @@ void VideoPlayerManager::draw(int x, int y, int w, int h) {
 			vid[2].draw(ofGetMouseX()-100, ofGetMouseY()-100, 200,200);
 			vid[2].draw(ofGetMouseX() , ofGetMouseY() - 100, 200, 200);
 	}
+	else if (currScene == 3) {
+		vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
+		vid[3].draw(ofGetMouseX() - 100, ofGetMouseY() - 100, 200, 200);
+		vid[3].draw(ofGetMouseX(), ofGetMouseY() - 100, 200, 200);
+	}
 	if (debugMode) {
 		ofDrawBitmapStringHighlight(debugSS.str(), 10, ofGetHeight() / 2 * 3, ofColor(255, 255, 255), ofColor(0, 0, 0));
 		//ofLog() << debugSS.str();
@@ -131,35 +136,39 @@ void VideoPlayerManager::keyReleased(int k) {
 		currScene = 2;
 
 		vid[2].setPaused(false);
-
 		vid[2].play();
 		ofLog() << "eye Scene triggered";
 
 		break;
 
 	case '3': //scene 1 end
-	//	vid[0].stop();
-	//	vid[1].stop();
-		vid[2].stop();
+
 		break;
 
 	case '4': //scene 2 begin
-		currScene = 1;
-		vid[1].setPaused(false);
-		vid[1].play();
+
 		break;
 
 	case '5': //scene 2 end
+		currScene = 1;
+		vid[2].stop();
+		break;
+
+	case '6': 
 
 		break;
 
-	case '6': //scene 3 begin
+	case '7':
+
+		break;
+
+	case '8': 
 		currScene = 3;
+
+		//vid[3].setPaused(false);
+		//vid[3].play();
 		break;
 
-	case '7': //scene 3 end
-
-		break;
 
 
 	default:

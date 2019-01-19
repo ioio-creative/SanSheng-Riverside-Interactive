@@ -210,7 +210,7 @@ public:
 	{
 		for (int i = 0; i < particles.size(); i++)
 		{
-			if (particles[i].pos.x < -canvasWidth * 0.5 || particles[i].pos.x > canvasWidth*0.5 || particles[i].pos.y > canvasHeight*0.5 || particles[i].pos.z > PARTICLE_RAISE_Z_CLIPPING)
+			if (particles[i].pos.x < -canvasWidth * 0.5 || particles[i].pos.x > canvasWidth*0.5 || particles[i].pos.y > canvasHeight*0.6 || particles[i].pos.z > PARTICLE_RAISE_Z_CLIPPING)
 			{
 				//out of boundaries
 				particles.erase(particles.begin() + i);
@@ -387,6 +387,23 @@ public:
 		{
 			float x = (canvasWidth / (float)num * (i + 0.5) - canvasWidth / 2);
 			float y = -canvasHeight / 2 - 200;
+
+			for (int k = 0; k < duplicate; k++)
+			{
+				FloorParticleEmitter e;
+				e.randomize(true);
+				e.pos = ofVec3f(x, y, 0);
+				emitters.push_back(e);
+			}
+		}
+	}
+
+	void addBottomEmitter(int num = 5, int duplicate = 1)
+	{
+		for (int i = 0; i < num; i++)
+		{
+			float x = (canvasWidth / (float)num * (i + 0.5) - canvasWidth / 2);
+			float y = canvasHeight*0.55;
 
 			for (int k = 0; k < duplicate; k++)
 			{

@@ -93,7 +93,22 @@ bool FIRST_USER_FOLLOW_CURSOR = false;
 //========================================================================
 int main( ){
 
+
+
+
+#ifdef	LANDSCAPE_MODE
+#ifdef	EXHIBITION
+	ofSetupOpenGL(CANVAS_HEIGHT, CANVAS_WIDTH, OF_FULLSCREEN);
+#endif
+	ofSetupOpenGL(CANVAS_HEIGHT, CANVAS_WIDTH, OF_WINDOW);
+#else
+#ifdef	EXHIBITION
+	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_FULLSCREEN);
+#endif
 	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_WINDOW);
+#endif
+
+
 
 	ofRunApp(new ofApp());
 }
