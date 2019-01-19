@@ -21,15 +21,9 @@
 //Use this flag to toggle window sizes for different usage
 //#define IOIOTEST
 //#define EXHIBITION
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 #define LANDSCAPE_MODE
-=======
 
->>>>>>> parent of 543fcaf... update
-=======
-
->>>>>>> parent of 543fcaf... update
 /* ======================================================
 //Settings
 ======================================================*/

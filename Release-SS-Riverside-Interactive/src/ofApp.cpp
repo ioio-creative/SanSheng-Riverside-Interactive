@@ -104,16 +104,6 @@ void ofApp::update(){
 	TcpClientManager.update();
 
 }
-<<<<<<< HEAD
-<<<<<<< HEAD
-void ofApp::drawAll() {
-
-	ofSetColor(255);
-	ofEnableAlphaBlending();
-
-=======
-=======
->>>>>>> parent of 543fcaf... update
 
 //--------------------------------------------------------------
 void ofApp::draw(){
@@ -127,10 +117,6 @@ void ofApp::draw(){
 
 	
 
-<<<<<<< HEAD
->>>>>>> parent of 543fcaf... update
-=======
->>>>>>> parent of 543fcaf... update
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 //	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
@@ -196,8 +182,7 @@ void ofApp::draw(){
 		{
 			
 			bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
-<<<<<<< HEAD
-<<<<<<< HEAD
+
 
 			if (debugMode) {
 				ofSetColor(ofColor::aqua);
@@ -208,19 +193,7 @@ void ofApp::draw(){
 				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.x = bodyPos[i].x;
 				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.y = bodyPos[i].y;
 			}
-=======
-=======
->>>>>>> parent of 543fcaf... update
-			ofSetColor(ofColor::aqua);
-			ofFill();
-			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
-			
-			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x =ofGetMouseX();
-			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseY();
-<<<<<<< HEAD
->>>>>>> parent of 543fcaf... update
-=======
->>>>>>> parent of 543fcaf... update
+
 		}
 		else continue;
 	}

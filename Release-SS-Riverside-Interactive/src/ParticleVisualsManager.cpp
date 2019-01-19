@@ -185,6 +185,10 @@ void ParticleVisualsManager::update() {
 	{
 		updateRepelModeWithRaise();
 	}
+	else if (floorMode == 5)  //convert users into umbrella shape repellers
+	{
+		updateRepelModeReverse();
+	}
 
 	particleManager.update();
 	floorUserManager.update();
@@ -248,7 +252,7 @@ void ParticleVisualsManager::draw() {
 	//ofDrawBitmapString("NUM PARTICLES = " + ofToString(particleManager.particles.size()), 20, 100);       //show num particles
 	if (sequenceGoing)
 	{
-	//	ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 100);       //show timecode
+		//	ofDrawBitmapString("TIMECODE = " + ofToString(ofGetElapsedTimef() - sequenceStartTimestamp), 20, 100);       //show timecode
 	}
 }
 
@@ -261,6 +265,22 @@ void ParticleVisualsManager::updateRepelMode()
 		repellers.push_back(ofVec3f(floorUserManager.floorUsers[i].pos));
 	}
 	particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
+
+	SCENE_GRAVITY = abs(SCENE_GRAVITY);
+	particleManager.damp(MODE_REPEL_DAMP);
+}
+
+//--------------------------------------------------------------
+void ParticleVisualsManager::updateRepelModeReverse()
+{
+	vector <ofVec3f> repellers;
+	for (int i = 0; i < floorUserManager.floorUsers.size(); i++)
+	{
+		repellers.push_back(ofVec3f(floorUserManager.floorUsers[i].pos));
+	}
+	particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
+	SCENE_GRAVITY = -abs(SCENE_GRAVITY);
+	//particleManager.gravity(ofVec3f(0, 0, 0));
 	particleManager.damp(MODE_REPEL_DAMP);
 }
 
@@ -307,8 +327,8 @@ void ParticleVisualsManager::updateEmitMode()    //unsed at the moment ?
 		particleManager.emitters[i].pos = floorUserManager.floorUsers[i].pos;
 	}
 
-	particleManager.gravity(ofVec3f(0, -0.5, 0));
-	particleManager.damp(0.98);
+	particleManager.gravity(ofVec3f(0, -0.2, 0));
+	particleManager.damp(1.05);
 }
 
 //--------------------------------------------------------------
@@ -364,6 +384,12 @@ void ParticleVisualsManager::keyPressed(int key) {
 		floorMode = 4;
 		particleManager.clearEmitter();
 	}
+	if (key == OF_KEY_F7)
+	{
+		floorMode = 5;
+		particleManager.clearEmitter();
+		particleManager.addBottomEmitter(5);
+	}
 	if (key == '[')          //add 1 floor user at cursor for development
 	{
 		float ss = screenHeight / (float)floorCanvas.getHeight();
@@ -381,7 +407,6 @@ void ParticleVisualsManager::keyPressed(int key) {
 	//sequencing for demo
 	if (key == '0')
 	{
-		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
 		keyPressed(OF_KEY_F4);          //start scene 1
 	}
 	if (key == '1')
@@ -390,52 +415,32 @@ void ParticleVisualsManager::keyPressed(int key) {
 	}
 	if (key == '2')
 	{
-		keyPressed(OF_KEY_F2);          //start scene 2
+
 	}
 	if (key == '3')
 	{
-		keyPressed(OF_KEY_F6);
+		keyPressed(OF_KEY_F3);          //start scene 2
 	}
 	if (key == '4')
 	{
-		keyPressed(OF_KEY_F1);          //start scene 3
+		keyPressed(OF_KEY_F6);
 	}
 	if (key == '5')
 	{
-<<<<<<< HEAD
-<<<<<<< HEAD
-		keyPressed(OF_KEY_F1);          
+		keyPressed(OF_KEY_F1);
 	}
 	if (key == '6')
 	{
 		keyPressed(OF_KEY_F7);   //end scene 3
 	}
-	    if(key == '7')
-	   {
-			keyPressed(OF_KEY_BACKSPACE);   //end scene 3
-	//		keyPressed(']');                //remove user interactions
-	    }
-	    if(key == '8')
-	    {       
-	    }
-=======
-=======
->>>>>>> parent of 543fcaf... update
+	if (key == '7')
+	{
 		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
 		keyPressed(']');                //remove user interactions
 	}
-	//    if(key == '7')
-	//    {
-	//        keyPressed(OF_KEY_F3);          //start scene 4 (particle emit effect, not using now?)
-	//    }
-	//    if(key == '8')
-	//    {
-	//        keyPressed(']');                //end scene 4
-	//    }
-<<<<<<< HEAD
->>>>>>> parent of 543fcaf... update
-=======
->>>>>>> parent of 543fcaf... update
+	if (key == '8')
+	{
+	}
 }
 
 //--------------------------------------------------------------
