@@ -115,7 +115,7 @@ void ofApp::draw(){
 	ofSetColor(255);
 	ofEnableAlphaBlending();
 
-
+	
 
 
 	//------------------------------------- VideoPlayerManager -------------------------------------
@@ -159,7 +159,7 @@ void ofApp::draw(){
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 //ParticleVisualsManager.setAlpha(a);
 	ParticleVisualsManager.draw();
-
+	
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.draw();
 
@@ -180,19 +180,27 @@ void ofApp::draw(){
 		}
 		if (SanShengKinectManager->bodyIdxTracked[i])
 		{
-
+			
 			bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
 			ofSetColor(ofColor::aqua);
 			ofFill();
 			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> parent of 543fcaf... update
 			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x =ofGetMouseX();
 			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseY();
 		}
 		else continue;
 	}
 
+<<<<<<< HEAD
 
+=======
+	
+>>>>>>> parent of 543fcaf... update
 }
 
 
