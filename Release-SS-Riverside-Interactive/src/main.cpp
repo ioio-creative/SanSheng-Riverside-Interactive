@@ -93,7 +93,7 @@ bool FIRST_USER_FOLLOW_CURSOR = false;
 //========================================================================
 int main( ){
 
-	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_WINDOW);
+	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_FULLSCREEN);
 
 	ofRunApp(new ofApp());
 }

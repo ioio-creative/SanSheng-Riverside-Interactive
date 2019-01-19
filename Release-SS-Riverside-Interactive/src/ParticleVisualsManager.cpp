@@ -261,12 +261,11 @@ void ParticleVisualsManager::updateRepelMode()
 		repellers.push_back(ofVec3f(floorUserManager.floorUsers[i].pos));
 	}
 	particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
-<<<<<<< HEAD
 
 	SCENE_GRAVITY = abs(SCENE_GRAVITY);
 	particleManager.damp(MODE_REPEL_DAMP);
 }
-
+/*x
 //--------------------------------------------------------------
 void ParticleVisualsManager::updateRepelModeReverse()
 {
@@ -278,11 +277,9 @@ void ParticleVisualsManager::updateRepelModeReverse()
 	particleManager.massRepel(repellers, MODE_REPEL_FORCE, MODE_REPEL_SCATTER);
 	SCENE_GRAVITY = -abs(SCENE_GRAVITY);
 	//particleManager.gravity(ofVec3f(0, 0, 0));
-=======
->>>>>>> parent of 543fcaf... update
 	particleManager.damp(MODE_REPEL_DAMP);
 }
-
+*/
 //--------------------------------------------------------------
 void ParticleVisualsManager::updateRepelModeWithRaise()
 {
@@ -420,7 +417,6 @@ void ParticleVisualsManager::keyPressed(int key) {
 	}
 	if (key == '5')
 	{
-<<<<<<< HEAD
 		keyPressed(OF_KEY_F1);
 	}
 	if (key == '6')
@@ -435,19 +431,6 @@ void ParticleVisualsManager::keyPressed(int key) {
 	if (key == '8')
 	{
 	}
-=======
-		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
-		keyPressed(']');                //remove user interactions
-	}
-	//    if(key == '7')
-	//    {
-	//        keyPressed(OF_KEY_F3);          //start scene 4 (particle emit effect, not using now?)
-	//    }
-	//    if(key == '8')
-	//    {
-	//        keyPressed(']');                //end scene 4
-	//    }
->>>>>>> parent of 543fcaf... update
 }
 
 //--------------------------------------------------------------
