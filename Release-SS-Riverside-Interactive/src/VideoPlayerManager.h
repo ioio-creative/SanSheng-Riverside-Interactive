@@ -3,7 +3,7 @@
 
 #define USE_HPVPLAYER
 
-#define NUM_OF_VID 4
+#define NUM_OF_VID 3
 
 #ifdef USE_HPVPLAYER
 #include "ofxHPVPlayer.h"

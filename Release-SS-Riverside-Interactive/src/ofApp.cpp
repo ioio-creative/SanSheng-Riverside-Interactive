@@ -5,17 +5,13 @@
 //--------------------------------------------------------------
 void ofApp::setup(){
 
-
-#ifdef	LANDSCAPE_MODE
-	landscapeFbo.allocate(CANVAS_HEIGHT, CANVAS_WIDTH, GL_RGBA);
-#endif 
 #ifdef EXHIBITION
 	ofHideCursor();
 #endif // EXHIBITION
 
 	ofLog() << "CANVAS_WIDTH : " << CANVAS_WIDTH << "CANVAS_HEIGHT : " << CANVAS_HEIGHT;
 	//debug
-	debugMode = false;
+	debugMode = true;
 	ofLogToConsole();
 	//ofSetLogLevel(OF_LOG_ERROR);
 	ofSetLogLevel(OF_LOG_NOTICE);
@@ -108,16 +104,32 @@ void ofApp::update(){
 	TcpClientManager.update();
 
 }
+<<<<<<< HEAD
 void ofApp::drawAll() {
 
 	ofSetColor(255);
 	ofEnableAlphaBlending();
 
+=======
+
+//--------------------------------------------------------------
+void ofApp::draw(){
+
+	if (debugMode) {
+		ofSetColor(255, 0, 0);
+		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
+	}
+	ofSetColor(255);
+	ofEnableAlphaBlending();
+
+	
+
+>>>>>>> parent of 543fcaf... update
 
 	//------------------------------------- VideoPlayerManager ------------------------------------- 
 //	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
 	VideoPlayerManager.setAlpha(255);
-	VideoPlayerManager.draw(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
 
 
 	for (int i = 0; i < num_of_trigger_scene; i++) {
@@ -128,33 +140,25 @@ void ofApp::drawAll() {
 				ParticleVisualsManager.keyPressed('2');
 				VideoPlayerManager.keyReleased('2');
 			}
-			if (i == 1 || i == 3 || i == 5) {
+			if (i == 1) {
 				ParticleVisualsManager.keyPressed('3');
 				VideoPlayerManager.keyReleased('3');
 			}
-			if (i == 2 || i == 4 || i == 6) {
+			if (i == 2) {
 				ParticleVisualsManager.keyPressed('4');
 				VideoPlayerManager.keyReleased('4');
 			}
-			if (i == 7) {
+			if (i == 3) {
 				ParticleVisualsManager.keyPressed('5');
 				VideoPlayerManager.keyReleased('5');
 			}
-			if (i == 8) {
+			if (i == 4) {
 				ParticleVisualsManager.keyPressed('6');
 				VideoPlayerManager.keyReleased('6');
 			}
-			if (i == 9) {
+			if (i == 5) {
 				ParticleVisualsManager.keyPressed('7');
 				VideoPlayerManager.keyReleased('7');
-			}
-			if (i == 10) {
-				ParticleVisualsManager.keyPressed('8');
-				VideoPlayerManager.keyReleased('8');
-			}
-			if (i == 11) {
-				ParticleVisualsManager.keyPressed('0');
-				VideoPlayerManager.keyReleased('0');
 			}
 		}
 	}
@@ -163,14 +167,14 @@ void ofApp::drawAll() {
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 //ParticleVisualsManager.setAlpha(a);
 	ParticleVisualsManager.draw();
-
+	
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.draw();
 
 	//------------------------------------- Kinect 3D View (for calibration) -------------------------
 	if (calibrationMode)
 	{
-		KinectMapper.CanvasCalibrateFbo.draw(0, ofGetHeight() - KINECTAREA_HEIGHT);
+		KinectMapper.CanvasCalibrateFbo.draw(0, ofGetHeight()-KINECTAREA_HEIGHT);
 		SanShengKinectManager->draw();
 		calibrationGui.draw();
 	}
@@ -184,8 +188,9 @@ void ofApp::drawAll() {
 		}
 		if (SanShengKinectManager->bodyIdxTracked[i])
 		{
-
+			
 			bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
+<<<<<<< HEAD
 
 			if (debugMode) {
 				ofSetColor(ofColor::aqua);
@@ -196,37 +201,19 @@ void ofApp::drawAll() {
 				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.x = bodyPos[i].x;
 				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.y = bodyPos[i].y;
 			}
+=======
+			ofSetColor(ofColor::aqua);
+			ofFill();
+			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
+			
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x =ofGetMouseX();
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseY();
+>>>>>>> parent of 543fcaf... update
 		}
 		else continue;
 	}
 
-	if (debugMode) {
-		ofSetColor(255, 0, 0);
-		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
-
-		ofDrawEllipse(mouseX, mouseY, 10, 10);
-	}
-}
-//--------------------------------------------------------------
-void ofApp::draw(){
-
-#ifdef	LANDSCAPE_MODE
-	landscapeFbo.begin();
-	ofPushMatrix();
-	ofTranslate(CANVAS_HEIGHT, 0);
-	ofRotate(90);
-
-	drawAll();
-	ofPopMatrix();
-
-	landscapeFbo.end();
-
-	landscapeFbo.draw(0,0);
-#else
-	drawAll();
-#endif 
-
-
+	
 }
 
 
@@ -386,21 +373,15 @@ void ofApp::resetScene() {
 	if (debugMode) {
 		ofLog() << "end time : " << totalEndTime;
 	}
-	float sceneEyeVidStart = 144.0f;  //2
-	float sceneEyeExplode1Start = 157.0f;  //3
-	float sceneEyeExplode1End = sceneEyeExplode1Start + 1.5f;  //4
-	float sceneEyeExplode2Start = 173.0f;  //3
-	float sceneEyeExplode2End = sceneEyeExplode2Start + 1.5f; //4
-	float sceneEyeExplode3Start = 185.0f; //3
-	float sceneEyeExplode3End = sceneEyeExplode3Start + 1.5f; //4
-	float sceneRainfallStart = 245.0f; //5
-	float sceneRainfallReverse = 271.0f; //6
-	float sceneRainfallEnd = 276.0f; //7
-	float sceneLastInteractiveStart = 294.0f;  //8
-	float sceneAllEnd = totalEndTime; //9
+	float scene1Start = 149.0f;
+	float scene1End = 187.0f;
+	float scene2Start = 240.0f;
+	float scene2End = 274.0f;
+	float scene3Start = totalEndTime;
+	float scene3End = totalEndTime + 60.0f;
 
 	for (int i = 0; i < num_of_trigger_scene; i++) {
-		triggerSceneTime = { sceneEyeVidStart, sceneEyeExplode1Start , sceneEyeExplode1End, sceneEyeExplode2Start , sceneEyeExplode2End,sceneEyeExplode3Start , sceneEyeExplode3End,sceneRainfallStart, sceneRainfallReverse, sceneRainfallEnd, sceneLastInteractiveStart, sceneAllEnd };
+		triggerSceneTime = { scene1Start , scene1End, scene2Start, scene2End, scene3Start, scene3End };
 	}
 
 }

@@ -21,7 +21,11 @@
 //Use this flag to toggle window sizes for different usage
 //#define IOIOTEST
 //#define EXHIBITION
+<<<<<<< HEAD
 #define LANDSCAPE_MODE
+=======
+
+>>>>>>> parent of 543fcaf... update
 /* ======================================================
 //Settings
 ======================================================*/
@@ -161,9 +165,7 @@ class ofApp : public ofBaseApp{
 		//------------------------------------- TCP Client Manager-------------------------------------
 		TcpClientManager TcpClientManager;
 
-		ofFbo landscapeFbo;
 
-		void drawAll();
 };
 
 
