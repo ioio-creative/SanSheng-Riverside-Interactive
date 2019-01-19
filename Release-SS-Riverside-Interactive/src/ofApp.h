@@ -22,7 +22,11 @@
 //#define IOIOTEST
 //#define EXHIBITION
 <<<<<<< HEAD
+<<<<<<< HEAD
 #define LANDSCAPE_MODE
+=======
+
+>>>>>>> parent of 543fcaf... update
 =======
 
 >>>>>>> parent of 543fcaf... update

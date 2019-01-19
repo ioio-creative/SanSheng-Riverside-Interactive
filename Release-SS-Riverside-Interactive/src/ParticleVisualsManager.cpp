@@ -403,6 +403,7 @@ void ParticleVisualsManager::keyPressed(int key) {
 	if (key == '5')
 	{
 <<<<<<< HEAD
+<<<<<<< HEAD
 		keyPressed(OF_KEY_F1);          
 	}
 	if (key == '6')
@@ -418,6 +419,8 @@ void ParticleVisualsManager::keyPressed(int key) {
 	    {       
 	    }
 =======
+=======
+>>>>>>> parent of 543fcaf... update
 		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
 		keyPressed(']');                //remove user interactions
 	}
@@ -429,6 +432,9 @@ void ParticleVisualsManager::keyPressed(int key) {
 	//    {
 	//        keyPressed(']');                //end scene 4
 	//    }
+<<<<<<< HEAD
+>>>>>>> parent of 543fcaf... update
+=======
 >>>>>>> parent of 543fcaf... update
 }
 
