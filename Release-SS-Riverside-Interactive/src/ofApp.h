@@ -22,8 +22,6 @@
 //#define IOIOTEST
 //#define EXHIBITION
 
-#define LANDSCAPE_MODE
-
 /* ======================================================
 //Settings
 ======================================================*/
@@ -93,7 +91,7 @@ class ofApp : public ofBaseApp{
 		//ICoordinateMapper* coordinateMapper;
 		KinectManager* SanShengKinectManager = new KinectManager(int(CANVAS_WIDTH), int(CANVAS_HEIGHT / 3), int(MAX_PLAYERS));
 
-				
+
 		//float tiltAngle;
 		//float rollAngle;
 		//Vector4 floorPlane;

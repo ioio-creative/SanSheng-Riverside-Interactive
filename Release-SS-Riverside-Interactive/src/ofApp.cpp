@@ -32,22 +32,22 @@ void ofApp::setup(){
 
 	ofEnableAntiAliasing();
 	ofEnableSmoothing();
-	
+
 	//kinect
 	//SanShengKinectManager = KinectManager(CANVAS_WIDTH, CANVAS_HEIGHT / 3, MAX_PLAYERS);
 	SanShengKinectManager->setup();
 	KinectMapper.refreshCamToScreenTransform();
 	//calibration gui
 	setupCalibrationGui();
-	
 
-	//------------------------------------- VideoPlayerManager ------------------------------------- 
+
+	//------------------------------------- VideoPlayerManager -------------------------------------
 	VideoPlayerManager.setup(CANVAS_WIDTH,CANVAS_HEIGHT);
 	drawVideoPlayerManager = true;
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 	ParticleVisualsManager.setup(CANVAS_WIDTH, CANVAS_HEIGHT);
-	
+
 	//------------------------------------- TCP Client Manager-------------------------------------
 	//TcpClientManager.setup();
 
@@ -58,7 +58,7 @@ void ofApp::setup(){
 	ofClear(ofColor::black);
 	KinectVisionFbo.end();
 	kinect3DCam.setControlArea(ofRectangle(0, CANVAS_HEIGHT * 1/3, CANVAS_WIDTH, CANVAS_HEIGHT /3));*/
-	
+
 	KinectMapper.setupCavasCalibrateFbo();
 
 	for (int i = 0; i < MAX_PLAYERS; i++) {
@@ -96,7 +96,7 @@ void ofApp::update(){
 	//update ofxGui
 	updateGuiInspectorValues();
 
-	//------------------------------------- VideoPlayerManager ------------------------------------- 
+	//------------------------------------- VideoPlayerManager -------------------------------------
 	VideoPlayerManager.update();
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 	ParticleVisualsManager.update();
@@ -115,10 +115,10 @@ void ofApp::draw(){
 	ofSetColor(255);
 	ofEnableAlphaBlending();
 
-	
 
 
-	//------------------------------------- VideoPlayerManager ------------------------------------- 
+
+	//------------------------------------- VideoPlayerManager -------------------------------------
 //	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
 	VideoPlayerManager.setAlpha(255);
 	VideoPlayerManager.draw(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
@@ -159,7 +159,7 @@ void ofApp::draw(){
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 //ParticleVisualsManager.setAlpha(a);
 	ParticleVisualsManager.draw();
-	
+
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.draw();
 
@@ -180,25 +180,19 @@ void ofApp::draw(){
 		}
 		if (SanShengKinectManager->bodyIdxTracked[i])
 		{
-			
+
 			bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
+			ofSetColor(ofColor::aqua);
+			ofFill();
+			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
 
-
-			if (debugMode) {
-				ofSetColor(ofColor::aqua);
-				ofFill();
-				ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
-			}
-			else {
-				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.x = bodyPos[i].x;
-				ParticleVisualsManager.floorUserManager.floorUsers[i].pos.y = bodyPos[i].y;
-			}
-
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x =ofGetMouseX();
+			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseY();
 		}
 		else continue;
 	}
 
-	
+
 }
 
 
@@ -285,7 +279,7 @@ void ofApp::updateGuiInspectorValues() {
 
 
 void ofApp::exit() {
-	//------------------------------------- VideoPlayerManager ------------------------------------- 
+	//------------------------------------- VideoPlayerManager -------------------------------------
 	VideoPlayerManager.exit();
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.exit();

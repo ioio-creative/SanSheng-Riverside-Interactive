@@ -185,10 +185,6 @@ void ParticleVisualsManager::update() {
 	{
 		updateRepelModeWithRaise();
 	}
-	else if (floorMode == 5)  //convert users into umbrella shape repellers
-	{
-		updateRepelModeReverse();
-	}
 
 	particleManager.update();
 	floorUserManager.update();
@@ -312,7 +308,7 @@ void ParticleVisualsManager::updateAttractMode()
 }
 
 //--------------------------------------------------------------
-void ParticleVisualsManager::updateEmitMode()    //unsed at the moment ? 
+void ParticleVisualsManager::updateEmitMode()    //unsed at the moment ?
 {
 	if (particleManager.emitters.size() != floorUserManager.floorUsers.size())
 	{
@@ -327,8 +323,8 @@ void ParticleVisualsManager::updateEmitMode()    //unsed at the moment ?
 		particleManager.emitters[i].pos = floorUserManager.floorUsers[i].pos;
 	}
 
-	particleManager.gravity(ofVec3f(0, -0.2, 0));
-	particleManager.damp(1.05);
+	particleManager.gravity(ofVec3f(0, -0.5, 0));
+	particleManager.damp(0.98);
 }
 
 //--------------------------------------------------------------
@@ -384,12 +380,6 @@ void ParticleVisualsManager::keyPressed(int key) {
 		floorMode = 4;
 		particleManager.clearEmitter();
 	}
-	if (key == OF_KEY_F7)
-	{
-		floorMode = 5;
-		particleManager.clearEmitter();
-		particleManager.addBottomEmitter(5);
-	}
 	if (key == '[')          //add 1 floor user at cursor for development
 	{
 		float ss = screenHeight / (float)floorCanvas.getHeight();
@@ -415,15 +405,15 @@ void ParticleVisualsManager::keyPressed(int key) {
 	}
 	if (key == '2')
 	{
-
+		keyPressed(OF_KEY_F2);          //start scene 2
 	}
 	if (key == '3')
 	{
-		keyPressed(OF_KEY_F3);          //start scene 2
+		keyPressed(OF_KEY_F6);
 	}
 	if (key == '4')
 	{
-		keyPressed(OF_KEY_F6);
+		keyPressed(OF_KEY_F1);          //start scene 3
 	}
 	if (key == '5')
 	{
