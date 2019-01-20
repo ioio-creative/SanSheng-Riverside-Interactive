@@ -45,7 +45,7 @@ void TcpClientManager::setup() {
 	volumeDn.addListener(this, &TcpClientManager::volumeDnButtonPressed);
 
 
-	tcpGui.setPosition(ofGetWidth() - 210, 10);
+	tcpGui.setPosition(ofGetWidth() - 210, ofGetHeight() - 100);
 	tcpGui.setWidthElements(200);
 
 	prevIp = ip;
@@ -132,7 +132,6 @@ void TcpClientManager::draw(bool debug) {
 			ss << "ip : " << ip << " port : " << port << endl;
 			ofSetColor(20);
 			ofDrawBitmapString(ss.str(), 15, 30);
-
 
 			//======================== Network ==========================
 
