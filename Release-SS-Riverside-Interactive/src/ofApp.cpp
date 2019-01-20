@@ -13,7 +13,7 @@ void ofApp::setup(){
 
 	ofLog() << "CANVAS_WIDTH : " << CANVAS_WIDTH << "CANVAS_HEIGHT : " << CANVAS_HEIGHT;
 	//debug
-	debugMode = true;
+	debugMode = false;
 	ofLogToConsole();
 	//ofSetLogLevel(OF_LOG_ERROR);
 	ofSetLogLevel(OF_LOG_NOTICE);
@@ -51,7 +51,7 @@ void ofApp::setup(){
 	ParticleVisualsManager.setup(CANVAS_WIDTH, CANVAS_HEIGHT);
 
 	//------------------------------------- TCP Client Manager-------------------------------------
-	//TcpClientManager.setup();
+	TcpClientManager.setup();
 
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
@@ -63,12 +63,6 @@ void ofApp::setup(){
 
 	KinectMapper.setupCavasCalibrateFbo();
 
-	for (int i = 0; i < MAX_PLAYERS; i++) {
-		bodyPos.push_back(ofVec2f(-100,-100));
-		ParticleVisualsManager.keyPressed('[');
-		ParticleVisualsManager.floorUserManager.floorUsers[i].pos.x =CANVAS_WIDTH/2;
-		ParticleVisualsManager.floorUserManager.floorUsers[i].pos.y = CANVAS_HEIGHT*2;
-	}
 
 	// ===== scene settings ====
 
@@ -103,27 +97,40 @@ void ofApp::update(){
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 	ParticleVisualsManager.update();
 	//------------------------------------- TCP Client Manager-------------------------------------
-	TcpClientManager.update();
+	//TcpClientManager.update();
 
 }
 void ofApp::drawAll() {
 
-
-	if (debugMode) {
-		ofSetColor(255, 0, 0);
-		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
-	}
 	ofSetColor(255);
 	ofEnableAlphaBlending();
 
+	//------------------------------------- Kinect Position -------------------------------------
+	for (int i = 0; i < MAX_PLAYERS; i++)
+	{
+		if (debugMode) {
+			if (i == 0) {
+				bodyPos[i] = ofVec2f(ofGetMouseX(), ofGetMouseY());
+			}
+		}
+		else {
+			if (SanShengKinectManager->bodyIdxTracked[i])
+			{
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
 
-
+			}
+			else {
+				//continue;
+				bodyPos[i] = ofVec2f(CANVAS_WIDTH / 2, CANVAS_HEIGHT * 2);
+			}
+		}
+	}
+	ParticleVisualsManager.setBodyPos(bodyPos);
 
 	//------------------------------------- VideoPlayerManager -------------------------------------
 //	int a = ofMap(mouseY, 0, ofGetScreenHeight(), 0, 255);
 	VideoPlayerManager.setAlpha(255);
-	VideoPlayerManager.draw(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-
+	VideoPlayerManager.draw(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT, bodyPos);
 
 	for (int i = 0; i < num_of_trigger_scene; i++) {
 		if (VideoPlayerManager.getVideoTime() >= triggerSceneTime[i] && isTriggerScene[i] == false) {
@@ -169,7 +176,7 @@ void ofApp::drawAll() {
 	ParticleVisualsManager.draw();
 
 	//------------------------------------- TCP Client Manager-------------------------------------
-	TcpClientManager.draw();
+	TcpClientManager.draw(debugMode);
 
 	//------------------------------------- Kinect 3D View (for calibration) -------------------------
 	if (calibrationMode)
@@ -179,25 +186,15 @@ void ofApp::drawAll() {
 		calibrationGui.draw();
 	}
 
+	if (debugMode) {
+		ofSetColor(255, 0, 0);
+		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
 
-	for (int i = 0; i < MAX_PLAYERS; i++)
-	{
-		if (debugMode) {
-			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x = ofGetMouseY();
-			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseX();
+		ofSetColor(ofColor::aqua);
+		ofFill();
+		for (int i = 0; i < MAX_PLAYERS; i++) {
+			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 15, 15);
 		}
-		if (SanShengKinectManager->bodyIdxTracked[i])
-		{
-
-			bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
-			ofSetColor(ofColor::aqua);
-			ofFill();
-			ofDrawEllipse(bodyPos[i].x, bodyPos[i].y, 100, 100);
-
-			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.x = ofGetMouseX();
-			ParticleVisualsManager.floorUserManager.floorUsers[0].pos.y = ofGetMouseY();
-		}
-		else continue;
 	}
 
 }
@@ -397,4 +394,12 @@ void ofApp::resetScene() {
 	float sceneAllEnd = totalEndTime; //9
 
 		triggerSceneTime = { sceneEyeVidStart, sceneEyeExplode1Start , sceneEyeExplode1End, sceneEyeExplode2Start , sceneEyeExplode2End,sceneEyeExplode3Start , sceneEyeExplode3End,sceneRainfallStart, sceneRainfallReverse, sceneRainfallEnd, sceneLastInteractiveStart, sceneAllEnd };
+		ParticleVisualsManager.keyPressed(']');
+		for (int i = 0; i < MAX_PLAYERS; i++) {
+			bodyPos.push_back(ofVec2f(CANVAS_WIDTH / 2, CANVAS_HEIGHT * 2));
+			ParticleVisualsManager.keyPressed('[');
+		}
+		ParticleVisualsManager.setBodyPos(bodyPos);
+
+
 }

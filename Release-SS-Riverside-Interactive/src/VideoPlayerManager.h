@@ -3,7 +3,7 @@
 
 #define USE_HPVPLAYER
 
-#define NUM_OF_VID 3
+#define NUM_OF_VID 4
 
 #ifdef USE_HPVPLAYER
 #include "ofxHPVPlayer.h"
@@ -18,7 +18,7 @@ class VideoPlayerManager
 public:
 	void setup(int w, int h);
 	void update();
-	void draw(int x, int y, int w, int h);
+	void draw(int x1, int y1, int w1, int h1, vector<ofVec2f> bodyPos);
 	void setAlpha(int a);
 	void keyReleased(int k);
 	void exit();

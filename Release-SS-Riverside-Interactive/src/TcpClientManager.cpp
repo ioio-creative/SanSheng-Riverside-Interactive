@@ -45,8 +45,8 @@ void TcpClientManager::setup() {
 	volumeDn.addListener(this, &TcpClientManager::volumeDnButtonPressed);
 
 
-	tcpGui.setPosition(ofGetWidth() - 410, 10);
-	tcpGui.setWidthElements(400);
+	tcpGui.setPosition(ofGetWidth() - 210, 10);
+	tcpGui.setWidthElements(200);
 
 	prevIp = ip;
 	prevPort = port;
@@ -125,35 +125,37 @@ void TcpClientManager::exit() {
 
 
 //--------------------------------------------------------------
-void TcpClientManager::draw() {
-	if (isSetup) {
-		stringstream ss;
-		ss << "ip : " << ip << " port : " << port << endl;
-		ofSetColor(20);
-		ofDrawBitmapString(ss.str(), 15, 30);
+void TcpClientManager::draw(bool debug) {
+	if (debug) {
+		if (isSetup) {
+			stringstream ss;
+			ss << "ip : " << ip << " port : " << port << endl;
+			ofSetColor(20);
+			ofDrawBitmapString(ss.str(), 15, 30);
 
 
-		//======================== Network ==========================
+			//======================== Network ==========================
 
-		if (tcpClient.isConnected()) {
-			if (!msgTx.empty()) {
-				status = "sending : " + msgTx;
-				ofDrawBitmapString("sending:", 15, 55);
-				ofDrawBitmapString(msgTx, 85, 55);
+			if (tcpClient.isConnected()) {
+				if (!msgTx.empty()) {
+					status = "sending : " + msgTx;
+					ofDrawBitmapString("sending:", 15, 55);
+					ofDrawBitmapString(msgTx, 85, 55);
+				}
+				else {
+					ofDrawBitmapString("status: type something to send data to port " + ofToInt(port), 15, 55);
+				}
+				ofDrawBitmapString("from server: \n" + msgRx, 15, 270);
 			}
 			else {
-				ofDrawBitmapString("status: type something to send data to port " + ofToInt(port), 15, 55);
+				ofDrawBitmapString("status: server not found. launch server app and check ports!\n\nreconnecting in " + ofToString((5000 - deltaTime) / 1000) + " seconds", 15, 55);
 			}
-			ofDrawBitmapString("from server: \n" + msgRx, 15, 270);
-		}
-		else {
-			ofDrawBitmapString("status: server not found. launch server app and check ports!\n\nreconnecting in " + ofToString((5000 - deltaTime) / 1000) + " seconds", 15, 55);
-		}
 
-		//======================== JSON =============================
+			//======================== JSON =============================
 
-		//======================== GUI ==============================
-		tcpGui.draw();
+			//======================== GUI ==============================
+			tcpGui.draw();
+		}
 	}
 }
 
@@ -253,6 +255,5 @@ void TcpClientManager::loadSettings() {
 	{
 		ofLogError("TcpClientManager::setup") << "Failed to parse JSON" << endl;
 	}
-
 
 }

@@ -185,6 +185,12 @@ void ParticleVisualsManager::update() {
 	{
 		updateRepelModeWithRaise();
 	}
+	else if (floorMode == 5)  //repel reverse
+	{
+		updateRepelModeReverse();
+	}
+
+
 
 
 	particleManager.update();
@@ -266,7 +272,7 @@ void ParticleVisualsManager::updateRepelMode()
 	SCENE_GRAVITY = abs(SCENE_GRAVITY);
 	particleManager.damp(MODE_REPEL_DAMP);
 }
-/*x
+
 //--------------------------------------------------------------
 void ParticleVisualsManager::updateRepelModeReverse()
 {
@@ -280,7 +286,7 @@ void ParticleVisualsManager::updateRepelModeReverse()
 	//particleManager.gravity(ofVec3f(0, 0, 0));
 	particleManager.damp(MODE_REPEL_DAMP);
 }
-*/
+
 //--------------------------------------------------------------
 void ParticleVisualsManager::updateRepelModeWithRaise()
 {
@@ -323,9 +329,9 @@ void ParticleVisualsManager::updateEmitMode()    //unsed at the moment ?
 	{
 		particleManager.emitters[i].pos = floorUserManager.floorUsers[i].pos;
 	}
-
-	particleManager.gravity(ofVec3f(0, -0.5, 0));
-	particleManager.damp(0.98);
+	SCENE_GRAVITY = abs(SCENE_GRAVITY);
+	particleManager.gravity(ofVec3f(0, -0.2, 0));
+	particleManager.damp(1.05);
 }
 
 //--------------------------------------------------------------
@@ -381,6 +387,14 @@ void ParticleVisualsManager::keyPressed(int key) {
 		floorMode = 4;
 		particleManager.clearEmitter();
 	}
+	if (key == OF_KEY_F7)
+	{
+		//triggering repel mode with raise
+		floorMode = 5;
+		particleManager.clearEmitter();
+		particleManager.addBottomEmitter(5);
+
+	}
 	if (key == '[')          //add 1 floor user at cursor for development
 	{
 		float ss = screenHeight / (float)floorCanvas.getHeight();
@@ -398,8 +412,9 @@ void ParticleVisualsManager::keyPressed(int key) {
 	//sequencing for demo
 	if (key == '0')
 	{
+		keyPressed(OF_KEY_F6);          
 		keyPressed(OF_KEY_BACKSPACE);
-		keyPressed(OF_KEY_F4);          //start scene 1
+		keyPressed(OF_KEY_F4);       
 	}
 	if (key == '1')
 	{
@@ -434,6 +449,17 @@ void ParticleVisualsManager::keyPressed(int key) {
 	}
 }
 
+void ParticleVisualsManager::setBodyPos(vector<ofVec2f> bodyPos) {
+
+	for (int i = 0; i < floorUserManager.floorUsers.size(); i++)
+	{
+		if (bodyPos.size() > i ) {
+			float ss = screenHeight / (float)floorCanvas.getHeight();        //scale floorCanvas for development
+			floorUserManager.floorUsers[i].pos.x = (bodyPos[i].x - screenWidth / 2) / ss;
+			floorUserManager.floorUsers[i].pos.y = (bodyPos[i].y - screenHeight / 2) / ss;
+		}
+	}
+}
 //--------------------------------------------------------------
 void ParticleVisualsManager::keyReleased(int key) {
 

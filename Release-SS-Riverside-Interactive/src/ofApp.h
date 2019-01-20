@@ -20,8 +20,8 @@
 ======================================================*/
 //Use this flag to toggle window sizes for different usage
 //#define IOIOTEST
-#define EXHIBITION
-#define LANDSCAPE_MODE
+//#define EXHIBITION
+//#define LANDSCAPE_MODE
 /* ======================================================
 //Settings
 ======================================================*/

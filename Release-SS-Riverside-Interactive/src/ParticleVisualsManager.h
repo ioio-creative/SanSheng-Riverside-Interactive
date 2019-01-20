@@ -44,6 +44,7 @@ public:
 	FloorUserManager floorUserManager;
 	ofFbo floorCanvas;
 	void updateRepelMode();
+	void updateRepelModeReverse();
 	void updateAttractMode();
 	void updateEmitMode();
 	void updateRepelModeWithRaise();
@@ -56,6 +57,9 @@ public:
 	void checkTimeTriggers();
 
 	bool debugMode;
+
+	void setBodyPos(vector<ofVec2f> bodyPos);
+	vector<ofVec2f> dynamicRingPos;
 
 };
 

@@ -9,7 +9,7 @@
 #include "ofxGui.h"
 
 
-#define RECONNECT_TIME 4000
+#define RECONNECT_TIME 5000
 
 class TcpClientManager : public ofBaseApp {
 
@@ -17,7 +17,7 @@ class TcpClientManager : public ofBaseApp {
 
 		void setup();
 		void update();
-		void draw();
+		void draw(bool debug);
 		void keyPressed(int key);
 		void exit();
 

@@ -60,11 +60,8 @@ void VideoPlayerManager::update() {
 	if (vid[currVidID].getCurrentFrame() == vid[currVidID].getTotalNumFrames() - 1) {
 		ofLog() << "Movie Done";
 	}
-
 }
-
-
-void VideoPlayerManager::draw(int x, int y, int w, int h) {
+void VideoPlayerManager::draw(int x1, int y1, int w1, int h1, vector<ofVec2f> bodyPos) {
 
 #ifdef USE_HPVPLAYER
 	//fbo - Video
@@ -79,8 +76,16 @@ void VideoPlayerManager::draw(int x, int y, int w, int h) {
 	}
 	else if (currScene == 2) {
 			vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
-			vid[2].draw(ofGetMouseX()-100, ofGetMouseY()-100, 200,200);
-			vid[2].draw(ofGetMouseX() , ofGetMouseY() - 100, 200, 200);
+			for (int i = 0; i < bodyPos.size(); i++) {
+				vid[2].draw(bodyPos[i].x - 100, bodyPos[i].y - 100, 200, 200);
+			}
+
+	}
+	else if (currScene == 3) {
+		vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
+		for (int i = 0; i < bodyPos.size(); i++) {
+		//	vid[3].draw(bodyPos[i].x - 100, bodyPos[i].y - 100, 200, 200);
+		}
 	}
 	if (debugMode) {
 		ofDrawBitmapStringHighlight(debugSS.str(), 10, ofGetHeight() / 2 * 3, ofColor(255, 255, 255), ofColor(0, 0, 0));
@@ -92,7 +97,7 @@ void VideoPlayerManager::draw(int x, int y, int w, int h) {
 	//fbo - draw
 
 	ofSetColor(255, 255, 255, vidAlpha);
-	videoFbo.draw(x, y, w, h);
+	videoFbo.draw(x1, y1, w1, h1);
 
 #endif // USE_HPVPLAYER
 
@@ -131,39 +136,41 @@ void VideoPlayerManager::keyReleased(int k) {
 		currScene = 2;
 
 		vid[2].setPaused(false);
-
 		vid[2].play();
 		ofLog() << "eye Scene triggered";
 
 		break;
 
 	case '3': //scene 1 end
-	//	vid[0].stop();
-	//	vid[1].stop();
-		vid[2].stop();
+
 		break;
 
 	case '4': //scene 2 begin
-		currScene = 1;
-		vid[1].setPaused(false);
-		vid[1].play();
+
 		break;
 
 	case '5': //scene 2 end
+		currScene = 1;
+		vid[2].stop();
+		break;
+
+	case '6':
 
 		break;
 
-	case '6': //scene 3 begin
+	case '7':
+
+		break;
+
+	case '8':
 		currScene = 3;
+
+		//vid[3].setPaused(false);
+		//vid[3].play();
 		break;
 
-	case '7': 
 
-		break;
 
-	case '8': 
-
-		break;
 	default:
 		break;
 	}
