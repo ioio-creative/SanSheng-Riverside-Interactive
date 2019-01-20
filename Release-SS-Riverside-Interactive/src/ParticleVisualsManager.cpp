@@ -186,6 +186,7 @@ void ParticleVisualsManager::update() {
 		updateRepelModeWithRaise();
 	}
 
+
 	particleManager.update();
 	floorUserManager.update();
 
@@ -397,6 +398,7 @@ void ParticleVisualsManager::keyPressed(int key) {
 	//sequencing for demo
 	if (key == '0')
 	{
+		keyPressed(OF_KEY_BACKSPACE);
 		keyPressed(OF_KEY_F4);          //start scene 1
 	}
 	if (key == '1')
@@ -405,15 +407,15 @@ void ParticleVisualsManager::keyPressed(int key) {
 	}
 	if (key == '2')
 	{
-		keyPressed(OF_KEY_F2);          //start scene 2
+		//keyPressed(OF_KEY_F2);          //start scene 2
 	}
 	if (key == '3')
 	{
-		keyPressed(OF_KEY_F6);
+		keyPressed(OF_KEY_F3);
 	}
 	if (key == '4')
 	{
-		keyPressed(OF_KEY_F1);          //start scene 3
+		keyPressed(OF_KEY_F6);          //start scene 3
 	}
 	if (key == '5')
 	{
@@ -426,7 +428,6 @@ void ParticleVisualsManager::keyPressed(int key) {
 	if (key == '7')
 	{
 		keyPressed(OF_KEY_BACKSPACE);   //end scene 3
-		keyPressed(']');                //remove user interactions
 	}
 	if (key == '8')
 	{

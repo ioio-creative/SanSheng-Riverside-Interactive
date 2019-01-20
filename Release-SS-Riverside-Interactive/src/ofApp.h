@@ -21,7 +21,7 @@
 //Use this flag to toggle window sizes for different usage
 //#define IOIOTEST
 #define EXHIBITION
-
+#define LANDSCAPE_MODE
 /* ======================================================
 //Settings
 ======================================================*/
@@ -40,12 +40,12 @@
 
 #ifdef EXHIBITION
 #define CANVAS_WIDTH 1200
-#define CANVAS_HEIGHT 3456
+#define CANVAS_HEIGHT 3840
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT 1548
 #else
 #define CANVAS_WIDTH 1200/3
-#define CANVAS_HEIGHT 3456/3
+#define CANVAS_HEIGHT 3840/3
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT 1548/3
 #endif
@@ -161,7 +161,11 @@ class ofApp : public ofBaseApp{
 		//------------------------------------- TCP Client Manager-------------------------------------
 		TcpClientManager TcpClientManager;
 
+#ifdef LANDSCAPE_MODE
+		ofFbo landscapeFbo;
+#endif
 
+		void drawAll();
 };
 
 

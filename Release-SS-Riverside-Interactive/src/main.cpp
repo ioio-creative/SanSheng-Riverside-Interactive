@@ -6,7 +6,7 @@ string BG_VIDEO_PATH = "ioio_testing_bg_3.mp4";
 
 
 int FLOOR_CANVAS_WIDTH = 1200;
-int FLOOR_CANVAS_HEIGHT = 3456;
+int FLOOR_CANVAS_HEIGHT = 3840;
 
 //dummy circle positions
 int P1X = 150;
@@ -92,8 +92,25 @@ bool FIRST_USER_FOLLOW_CURSOR = false;
 
 //========================================================================
 int main( ){
+#ifdef LANDSCAPE_MODE
+#ifdef EXHIBITION
+	ofSetupOpenGL(CANVAS_HEIGHT,CANVAS_WIDTH,  OF_FULLSCREEN);
+#else
+	ofSetupOpenGL(CANVAS_HEIGHT, CANVAS_WIDTH, OF_WINDOW);
+#endif
 
-	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_FULLSCREEN);
+#else
+	#ifdef EXHIBITION
+ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_FULLSCREEN);
+#else
+	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_WINDOW);
+#endif
+
+#endif
+
+
+
+
 
 	ofRunApp(new ofApp());
 }

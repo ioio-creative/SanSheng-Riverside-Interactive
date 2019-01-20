@@ -157,11 +157,13 @@ void VideoPlayerManager::keyReleased(int k) {
 		currScene = 3;
 		break;
 
-	case '7': //scene 3 end
+	case '7': 
 
 		break;
 
+	case '8': 
 
+		break;
 	default:
 		break;
 	}
