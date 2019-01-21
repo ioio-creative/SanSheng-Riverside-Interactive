@@ -11,6 +11,7 @@
 #include "TcpClientManager.h"
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
+#include "ofxSerial.h"
 
 #include "KinectManager.h"
 #include "KinectToFloorScreenMapper.h"
@@ -57,8 +58,28 @@
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT
 #endif
 
+#define BAUD 9600 //Serial Settings
 
+class SerialMessage
+{
+public:
+	SerialMessage() : fade(0)
+	{
+	}
 
+	SerialMessage(const std::string& _message,
+		const std::string& _exception,
+		int _fade) :
+		message(_message),
+		exception(_exception),
+		fade(_fade)
+	{
+	}
+
+	std::string message;
+	std::string exception;
+	int fade;
+};
 
 class ofApp : public ofBaseApp{
 
@@ -160,6 +181,26 @@ class ofApp : public ofBaseApp{
 
 		//------------------------------------- TCP Client Manager-------------------------------------
 		TcpClientManager TcpClientManager;
+
+		//------------------------------------- Serial ----------------------------------------------------
+
+
+		void serialSetup();
+		string serialUpdate();
+		void serialDraw();
+
+		string receivedString;
+
+		ofxIO::BufferedSerialDevice arduino; 
+
+		std::vector<SerialMessage> serialMessages;
+
+		void sendChar(int a);
+		void sendCommand(string s);
+
+		void onSerialBuffer(const ofxIO::SerialBufferEventArgs& args);
+		void onSerialError(const ofxIO::SerialBufferErrorEventArgs& args);
+
 
 #ifdef LANDSCAPE_MODE
 		ofFbo landscapeFbo;

@@ -53,6 +53,10 @@ void ofApp::setup(){
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.setup();
 
+	//------------------------------------- Serial-------------------------------------
+	serialSetup();
+
+
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
 	/*KinectVisionFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT / 3, GL_RGBA);
@@ -98,6 +102,9 @@ void ofApp::update(){
 	ParticleVisualsManager.update();
 	//------------------------------------- TCP Client Manager-------------------------------------
 	//TcpClientManager.update();
+//------------------------------------- Serial ---------------------------------
+
+	receivedString = serialUpdate();
 
 }
 void ofApp::drawAll() {
@@ -262,6 +269,7 @@ void ofApp::keyReleased(int key){
 
 	case '0':
 		resetScene();
+		sendCommand("4444");
 	break;
 	}
 
@@ -311,6 +319,9 @@ void ofApp::exit() {
 	VideoPlayerManager.exit();
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.exit();
+	//------------------------------------- Serial -------------------------------------
+
+	arduino.unregisterAllEvents(this);
 }
 
 //--------------------------------------------------------------
@@ -402,4 +413,186 @@ void ofApp::resetScene() {
 		ParticleVisualsManager.setBodyPos(bodyPos);
 
 
+}
+
+
+
+//======================Serial=====================================
+
+
+
+void ofApp::serialSetup() {
+
+	int a = 0;
+
+	//================== Serial ==================
+
+	vector<ofxIO::SerialDeviceInfo> devicesInfo = ofx::IO::SerialDeviceUtils::listDevices();
+
+	ofLogNotice("ofApp::setup") << "Connected Devices: ";
+
+	for (std::size_t i = 0; i < devicesInfo.size(); ++i)
+	{
+		ofLogNotice("ofApp::setup") << "\t" << devicesInfo[i];
+	}
+
+	if (!devicesInfo.empty())
+	{
+
+		for (std::size_t i = 0; i < devicesInfo.size(); ++i)
+		{
+			string portDesc = devicesInfo[i].getHardwareId();
+			ofLog() << "devicesInfo[i].getHardwareId() : " << devicesInfo[i].getHardwareId();
+			bool success = false;
+			if (a == 0) {
+				success = arduino.setup(devicesInfo[i], BAUD);
+			}
+
+			if (success)
+			{
+				if (a == 0) {
+					arduino.unregisterAllEvents(this);
+					arduino.registerAllEvents(this);
+				}
+
+
+				ofLogNotice("ofApp::setup") << "Successfully setup " << devicesInfo[i];
+
+				a++;
+
+			}
+			else
+			{
+				ofLogNotice("ofApp::setup") << "Unable to setup " << devicesInfo[i];
+			}
+
+		}
+	}
+	else
+	{
+		ofLogNotice("ofApp::setup") << "No devices connected.";
+	}
+
+	ofLog() << "Serial Setup Done";
+}
+
+
+
+string ofApp::serialUpdate() {
+
+	string currString;
+
+	std::vector<SerialMessage>::iterator iter = serialMessages.begin();
+
+	string receivedMsg = "";
+
+	while (iter != serialMessages.end())
+	{
+
+		iter->fade -= 99;
+
+		if (iter->fade < 0)
+		{
+			iter = serialMessages.erase(iter);  //may need this to maintain performance
+		}
+		else
+		{
+
+			receivedMsg = iter->message;
+
+			if (!iter->exception.empty())
+			{
+				// y += height;
+			}
+
+			++iter;
+		}
+	}
+
+	bool isAccelVal = false;
+	bool isDiscVal = false;
+	bool isScreenVal = false;
+	for (int i = 0; i < receivedMsg.size(); i++) {
+		if (receivedMsg.find("0000") != std::string::npos) {
+
+		}
+		else if (receivedMsg.find("1111") != std::string::npos) {
+		
+		}
+		else if (receivedMsg.find("2222") != std::string::npos) {
+		
+		}
+		else {
+		
+		}
+
+	}
+
+	string s(receivedMsg);
+	istringstream iss(s);
+
+	do
+	{
+		string sub;
+		iss >> sub;
+
+		currString.push_back(ofToFloat(sub));
+		//cout << "Substring: " << sub << endl;
+
+	} while (iss);
+
+	return currString;
+
+}
+
+
+
+
+void ofApp::serialDraw() {
+
+	ofSetColor(255);
+
+	std::stringstream ss;
+
+	ss << "Connected to: " << arduino.port() << endl;
+	ss << "Received String: " << receivedString << endl;
+
+
+	ofDrawBitmapString(ss.str(), ofVec2f(20, 200));
+
+}
+
+
+
+
+void ofApp::onSerialBuffer(const ofx::IO::SerialBufferEventArgs& args)
+{
+	// Buffers will show up here when the marker character is found.
+	SerialMessage message(args.getBuffer().toString(), "", 500);
+	serialMessages.push_back(message);
+	ofLog() << "SERIALLLLLLLL : " << message.message;
+}
+
+//--------------------------------------------------------------
+
+void ofApp::onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args)
+{
+	// Errors and their corresponding buffer (if any) will show up here.
+	SerialMessage message(args.getBuffer().toString(),
+		args.getException().displayText(),
+		500);
+	serialMessages.push_back(message);
+}
+
+
+
+void ofApp::sendCommand(string s) {
+
+
+	ofx::IO::ByteBuffer textBuffer(s);
+
+		arduino.writeBytes(textBuffer);
+		arduino.writeByte('\n');
+	
+	ofLog() << "send " << s << " to arduino ";
 }

@@ -1,6 +1,9 @@
 ofxCv
 ofxGui
 ofxHPVPlayer
+ofxIO
 ofxJSON
 ofxNetwork
 ofxOpenCv
+ofxPoco
+ofxSerial
