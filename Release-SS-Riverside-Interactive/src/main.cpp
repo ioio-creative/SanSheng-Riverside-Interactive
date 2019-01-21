@@ -5,22 +5,22 @@
 string BG_VIDEO_PATH = "ioio_testing_bg_3.mp4";
 
 
-int FLOOR_CANVAS_WIDTH = 1200;
-int FLOOR_CANVAS_HEIGHT = 3840;
+int FLOOR_CANVAS_WIDTH = 1165;
+int FLOOR_CANVAS_HEIGHT = 3828;
 
 //dummy circle positions
 int P1X = 150;
-int P1Y = 3100;
+int P1Y = 2800;
 int P2X = 300;
-int P2Y = 3400;
+int P2Y = 3100;
 int P3X = 450;
-int P3Y = 3700;
+int P3Y = 3400;
 int P4X = 750;
-int P4Y = 3700;
+int P4Y = 3400;
 int P5X = 900;
-int P5Y = 3400;
+int P5Y = 3100;
 int P6X = 1050;
-int P6Y = 3100;
+int P6Y = 2800;
 
 //time triggers
 float TRIGGER_SCENE_1_START = 0.1;
@@ -48,14 +48,14 @@ float MODE_ATTRACT_GRAVITY = -0.3;
 float MODE_ATTRACT_DAMP = 0.9;
 
 //emitter settings
-float EMITTER_EMIT_SPEED = 3;
+float EMITTER_EMIT_SPEED = 4;
 float EMITTER_LIFE_MIN = 300;
 float EMITTER_LIFE_MAX = 500;
 float PARTICLE_HUE_MIN = 30;
 float PARTICLE_HUE_MAX = 40;
 float PARTICLE_SATUATION = 180;
 float PARTICLE_BRIGHTNESS = 155;
-float PARTICLE_RADIUS = 40;
+float PARTICLE_RADIUS = 30;
 float PARTICLE_RANGE = 400;
 float PARTICLE_SPEED_RANGE = 5;
 string PARTICLE_SPRITE_PATH = "lightTexture/flake_sprite.png";
@@ -72,7 +72,7 @@ float RING_PARTICLE_RADIUS_GROW_SPEED = 0.01;
 float RING_PARTICLE_RADIUS_DECAY_SPEED = 0.995;
 float RING_ORBIT_SPEED_MIN = 0.001;
 float RING_ORBIT_SPEED_MAX = 0.01;
-float RING_ORBIT_RADIUS = 100;
+float RING_ORBIT_RADIUS = 140;
 float ORBIT_RADIUS_SCATTER = 2;
 float ORBIT_RADIUS_SCATTER_SPEED_MIN = 0.5;
 float ORBIT_RADIUS_SCATTER_SPEED_MAX = 2.5;
@@ -96,8 +96,6 @@ int main( ){
 	ofGLFWWindowSettings settings;
 
 	settings.multiMonitorFullScreen = false;
-
-
 
 
 

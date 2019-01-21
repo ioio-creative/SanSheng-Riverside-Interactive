@@ -79,7 +79,7 @@ void ofApp::setup(){
 		triggerSceneTime.push_back(0.0f);
 	}
 	resetScene();
-	keyReleased('0');
+
 }
 
 //--------------------------------------------------------------
@@ -114,15 +114,18 @@ void ofApp::update(){
 
 	//------ Control Room -------
 	string sTemp = serialReadCtrlrm();
-	if (sTemp.find("3") != std::string::npos) {
+	if (sTemp.find("3333") != std::string::npos) {
 
 		ofLog() << "Show Done, Reset";
-		keyReleased('0');
+		resetScene();
+		ParticleVisualsManager.keyPressed('0');
+		VideoPlayerManager.keyReleased('0');
 		isCmdFromPanel = true;
 
-	}else if (sTemp.find("4") != std::string::npos) {
+	}else if (sTemp.find("4444") != std::string::npos) {
 		ofLog() << "Show Begin";
-		keyReleased('1');
+		ParticleVisualsManager.keyPressed('1');
+		VideoPlayerManager.keyReleased('1');
 		isCmdFromPanel = true;
 	}
 
@@ -144,7 +147,7 @@ void ofApp::drawAll() {
 		else {
 			if (SanShengKinectManager->bodyIdxTracked[i])
 			{
-				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.6);
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.5);
 
 			}
 			else {
@@ -247,6 +250,7 @@ void ofApp::draw(){
 	if (debugMode) {
 		serialDraw();
 		debugDraw();
+		ofSetColor(255);
 	}
 }
 //--------------------------------------------------------------
@@ -296,19 +300,11 @@ void ofApp::keyReleased(int key){
 
 	case '0':
 		resetScene();
-		if (!isCmdFromPanel) {
-			sendCommand("0000");
-			isCmdFromPanel = false;
-		}
-
+		sendCommand("0000");
 	break;
 
 	case '1':
-		if (!isCmdFromPanel) {
-			VideoPlayerManager.isDelayTrigger = true;
-			sendCommand("1111");
-			isCmdFromPanel = false;
-		}
+		sendCommand("1111");
 	break;
 
 	case 's':
@@ -325,11 +321,9 @@ void ofApp::keyReleased(int key){
 #ifdef USE_TCP_COMMUNICATION
 	TcpClientManager.keyPressed(key);
 #endif
-
+	ParticleVisualsManager.keyPressed(key);
 	VideoPlayerManager.keyReleased(key);
 	//SanShengKinectManager->keyReleased(key);
-
-
 
 }
 

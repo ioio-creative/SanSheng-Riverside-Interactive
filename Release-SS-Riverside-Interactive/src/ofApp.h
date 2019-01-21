@@ -33,7 +33,7 @@
 ======================================================*/
 #define VIDEO_TRIGGER_DELAY 500 //millis
 
-#define TARGET_FRAMERATE 60
+#define TARGET_FRAMERATE 25
 //Serial
 #define BAUD 115200
 //Kinect sources dimensions
@@ -47,8 +47,8 @@
 #define MAX_PLAYERS 6
 
 #ifdef EXHIBITION
-#define CANVAS_WIDTH 1200
-#define CANVAS_HEIGHT 3840
+#define CANVAS_WIDTH 1165
+#define CANVAS_HEIGHT 3828
 #define KINECTAREA_WIDTH CANVAS_WIDTH
 #define KINECTAREA_HEIGHT 1548
 #else

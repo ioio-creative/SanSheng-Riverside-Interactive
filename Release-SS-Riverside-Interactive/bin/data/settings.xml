@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <Kinect_Calibration>
 	<group>
-		<Selected_Body_Index>5</Selected_Body_Index>
-		<Body_0_>1.11185, -0.958455, 1.85235</Body_0_>
-		<Body_1_>1.10568, -0.91657, 1.85482</Body_1_>
-		<Body_2_>2.0506, -1.30436, 3.278</Body_2_>
+		<Selected_Body_Index>0</Selected_Body_Index>
+		<Body_0_>1.10994, -0.702863, 1.93723</Body_0_>
+		<Body_1_>0, 0, 0</Body_1_>
+		<Body_2_>0, 0, 0</Body_2_>
 		<Body_3_>0, 0, 0</Body_3_>
 		<Body_4_>0, 0, 0</Body_4_>
-		<Body_5_>0.553483, -0.164081, 2.78382</Body_5_>
+		<Body_5_>0, 0, 0</Body_5_>
 	</group>
-	<Body_0_>1.11185, -0.958455, 1.85235</Body_0_>
+	<Body_0_>1.10994, -0.702863, 1.93723</Body_0_>
 	<Corners>
-		<Corner_0>-0.791879, 1.57293</Corner_0>
-		<Corner_1>0.936762, 1.61085</Corner_1>
-		<Corner_2>1.23993, 3.8089</Corner_2>
-		<Corner_3>-0.496934, 3.9687</Corner_3>
+		<Corner_0>-0.982987, 1.45657</Corner_0>
+		<Corner_1>1.12674, 1.23675</Corner_1>
+		<Corner_2>1.35743, 3.93167</Corner_2>
+		<Corner_3>-0.836185, 3.99747</Corner_3>
 	</Corners>
 </Kinect_Calibration>
