@@ -35,7 +35,7 @@
 
 #define TARGET_FRAMERATE 60
 //Serial
-#define BAUD 115200 
+#define BAUD 115200
 //Kinect sources dimensions
 #define DEPTH_WIDTH 512
 #define DEPTH_HEIGHT 424
@@ -202,7 +202,7 @@ class ofApp : public ofBaseApp{
 
 		string receivedString;
 
-		ofxIO::BufferedSerialDevice arduino; 
+		ofxIO::BufferedSerialDevice arduino;
 
 		std::vector<SerialMessage> serialMessages;
 		void sendCommandDelay();
@@ -215,13 +215,12 @@ class ofApp : public ofBaseApp{
 		//FROM Control Room
 		string serialReadCtrlrm();
 		string ctrlrmReceivedString;
-		
+
 		bool isCmdFromPanel;
 
-		long nextTrigger;
-		string currCmd;
+		bool isSkippingSerialCommand;
 
-		//------------------------------------- MISC ----------------------------------------------------
+
 #ifdef LANDSCAPE_MODE
 		ofFbo landscapeFbo;
 #endif

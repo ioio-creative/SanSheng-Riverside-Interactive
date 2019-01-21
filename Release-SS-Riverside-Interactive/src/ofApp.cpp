@@ -36,7 +36,7 @@ void ofApp::setup(){
 	//kinect
 	//SanShengKinectManager = KinectManager(CANVAS_WIDTH, CANVAS_HEIGHT / 3, MAX_PLAYERS);
 	SanShengKinectManager->setup();
-	
+
 	//calibration gui
 	setupCalibrationGui();
 	//!! refresh after setupCalibrationGui() to retreive xml data
@@ -57,6 +57,7 @@ void ofApp::setup(){
 
 	//------------------------------------- Serial-------------------------------------
 	serialSetup();
+	isSkippingSerialCommand = false;
 
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
@@ -65,7 +66,6 @@ void ofApp::setup(){
 	ofClear(ofColor::black);
 	KinectVisionFbo.end();
 	kinect3DCam.setControlArea(ofRectangle(0, CANVAS_HEIGHT * 1/3, CANVAS_WIDTH, CANVAS_HEIGHT /3));*/
-
 	KinectMapper.setupCavasCalibrateFbo();
 
 
@@ -114,15 +114,15 @@ void ofApp::update(){
 	//------ Control Room -------
 	string sTemp = serialReadCtrlrm();
 	if (sTemp.find("3") != std::string::npos) {
-		if (sTemp.find("0") != std::string::npos ) {
-			ofLog() << "Show Done, Reset";
-			keyPressed('0');
 
-		}
-		if (sTemp.find("4") != std::string::npos) {
-			ofLog() << "Show Begin";
-			keyPressed('1');
-		}
+		ofLog() << "Show Done, Reset";
+		keyReleased('0');
+		isSkippingSerialCommand = true;
+
+	}else if (sTemp.find("4") != std::string::npos) {
+		ofLog() << "Show Begin";
+		keyReleased('1');
+		isSkippingSerialCommand = true;
 	}
 
 }
@@ -234,7 +234,7 @@ void ofApp::draw(){
 	landscapeFbo.draw(0, 0);
 #else
 	drawAll();
-#endif 
+#endif
 	//------------------------------------- Kinect 3D View (for calibration) -------------------------
 	if (calibrationMode)
 	{
@@ -300,21 +300,15 @@ void ofApp::keyReleased(int key){
 
 	case '0':
 		resetScene();
-		if (!isCmdFromPanel) {
-			currCmd = "0000";
-			nextTrigger = ofGetElapsedTimeMillis() + VIDEO_TRIGGER_DELAY;
-		//	sendCommand("0000");
+		if (!isSkippingSerialCommand) {
+			sendCommand("0000");
 		}
-		isCmdFromPanel = false;
 	break;
 
 	case '1':
-		if (!isCmdFromPanel) {
-			currCmd = "1111";
-		//	sendCommand("1111");
-			nextTrigger = ofGetElapsedTimeMillis() + VIDEO_TRIGGER_DELAY;
+		if (!isSkippingSerialCommand) {
+			sendCommand("1111");
 		}
-		isCmdFromPanel = false;
 	break;
 
 	case 's':
@@ -328,7 +322,7 @@ void ofApp::keyReleased(int key){
 		break;
 	}
 
-
+	isSkippingSerialCommand = false;
 }
 
 void ofApp::windowResized(int w, int h) {
@@ -644,7 +638,7 @@ void ofApp::sendCommand(string s) {
 
 		arduino.writeBytes(textBuffer);
 		arduino.writeByte('\n');
-	
+
 	ofLog() << "send " << s << " to arduino ";
 }
 
@@ -659,9 +653,7 @@ void ofApp::sendCommandDelay() {
 string ofApp::serialReadCtrlrm() {
 
 	string combinedStr = "";
-	// for(int i=0; i< arduino.size(); i++){
 
-	// The serial device can throw exeptions.
 
 	try
 	{
@@ -675,15 +667,13 @@ string ofApp::serialReadCtrlrm() {
 			// ofLog() << "CTRL buffer size: " << sz;
 			for (std::size_t j = 0; j < sz; ++j)
 			{
-				std::cout << buffer[j];
+				std::cout <<"Buffer : "<< buffer[j];
 				//  ofLog() << "CTRL buf: " << buffer[j];
-				if (buffer[j] == '1' || buffer[j] == '0') {
+				if (buffer[j] == '3' || buffer[j] == '4' || buffer[j] == '5') {
 					finalBuffer.push_back(buffer[j]);
+
 				}
-				/*   if(isalnum(buffer[j]) || buffer[j] == '|' || buffer[j] == '-' ){
-				 finalBuffer.push_back(buffer[j]);
-				 }
-				 */
+
 
 			}
 			for (int i = 0; i < finalBuffer.size(); i++) {
@@ -699,8 +689,10 @@ string ofApp::serialReadCtrlrm() {
 		ofLogError("ofApp::update") << exc.what();
 	}
 	//  }
+	if (combinedStr.size() > 0) {
+		std::cout << "has Buffer : " << combinedStr;
+	}
 
 	return combinedStr;
 
 }
-
