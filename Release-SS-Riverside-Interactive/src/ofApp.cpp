@@ -38,9 +38,11 @@ void ofApp::setup(){
 	//kinect
 	//SanShengKinectManager = KinectManager(CANVAS_WIDTH, CANVAS_HEIGHT / 3, MAX_PLAYERS);
 	SanShengKinectManager->setup();
-	KinectMapper.refreshCamToScreenTransform();
+	
 	//calibration gui
 	setupCalibrationGui();
+	//!! refresh after setupCalibrationGui() to retreive xml data
+	KinectMapper.refreshCamToScreenTransform();
 
 
 	//------------------------------------- VideoPlayerManager -------------------------------------
@@ -275,6 +277,12 @@ void ofApp::keyReleased(int key){
 ;
 		sendCommand("0000");
 	break;
+	case 's':
+		calibrationGui.saveToFile("settings.xml");
+		break;
+	case 'l':
+		calibrationGui.loadFromFile("settings.xml");
+		break;
 	}
 
 
