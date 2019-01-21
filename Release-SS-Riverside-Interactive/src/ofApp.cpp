@@ -150,7 +150,7 @@ void ofApp::drawAll() {
 		else {
 			if (SanShengKinectManager->bodyIdxTracked[i])
 			{
-				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.55);
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.45);
 
 			}
 			else {
@@ -199,8 +199,10 @@ void ofApp::drawAll() {
 				VideoPlayerManager.keyReleased('8');
 			}
 			if (i == 11) {
+				resetScene();
 				ParticleVisualsManager.keyPressed('0');
 				VideoPlayerManager.keyReleased('0');
+
 			}
 		}
 	}
