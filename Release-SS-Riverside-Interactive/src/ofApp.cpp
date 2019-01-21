@@ -125,7 +125,7 @@ void ofApp::drawAll() {
 		else {
 			if (SanShengKinectManager->bodyIdxTracked[i])
 			{
-				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.5);
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.6);
 
 			}
 			else {
