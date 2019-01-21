@@ -21,8 +21,8 @@
 ======================================================*/
 //Use this flag to toggle window sizes for different usage
 //#define IOIOTEST
-#define EXHIBITION
-#define LANDSCAPE_MODE
+//#define EXHIBITION
+//#define LANDSCAPE_MODE
 /* ======================================================
 //Settings
 ======================================================*/
@@ -58,7 +58,7 @@
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT
 #endif
 
-#define BAUD 9600 //Serial Settings
+#define BAUD 115200 //Serial Settings
 
 class SerialMessage
 {

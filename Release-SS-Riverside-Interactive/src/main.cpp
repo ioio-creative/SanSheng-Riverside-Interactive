@@ -10,17 +10,17 @@ int FLOOR_CANVAS_HEIGHT = 3840;
 
 //dummy circle positions
 int P1X = 150;
-int P1Y = 2100;
+int P1Y = 3100;
 int P2X = 300;
-int P2Y = 2400;
+int P2Y = 3400;
 int P3X = 450;
-int P3Y = 2700;
+int P3Y = 3700;
 int P4X = 750;
-int P4Y = 2700;
+int P4Y = 3700;
 int P5X = 900;
-int P5Y = 2400;
+int P5Y = 3400;
 int P6X = 1050;
-int P6Y = 2100;
+int P6Y = 3100;
 
 //time triggers
 float TRIGGER_SCENE_1_START = 0.1;
@@ -98,11 +98,36 @@ int main( ){
 	settings.multiMonitorFullScreen = false;
 
 
+
+
+
+#ifdef LANDSCAPE_MODE
+	#ifdef EXHIBITION
+	//ofSetupOpenGL(CANVAS_HEIGHT,CANVAS_WIDTH,OF_WINDOW);
 	settings.setSize(CANVAS_HEIGHT, CANVAS_WIDTH);
+	#else
+	//ofSetupOpenGL(CANVAS_HEIGHT, CANVAS_WIDTH, OF_WINDOW);
+	settings.setSize(CANVAS_HEIGHT, CANVAS_WIDTH);
+	#endif
+
+#else
+	#ifdef EXHIBITION
+//ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_FULLSCREEN);
+	settings.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+	#else
+//	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_WINDOW);
+	settings.setSize(CANVAS_WIDTH, CANVAS_HEIGHT);
+	#endif
+
+#endif
+
+	//settings.setSize(CANVAS_HEIGHT, CANVAS_WIDTH);
 	settings.setPosition(ofVec2f(0, 0));
 	settings.resizable = true;
 	settings.windowMode = OF_WINDOW;
 	//settings.windowMode = OF_FULLSCREEN;
+
+
 	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
 
 	shared_ptr<ofApp> mainApp(new ofApp);
@@ -110,21 +135,6 @@ int main( ){
 	ofRunApp(mainWindow, mainApp);
 	ofRunMainLoop();
 
-#ifdef LANDSCAPE_MODE
-	#ifdef EXHIBITION
-	//ofSetupOpenGL(CANVAS_HEIGHT,CANVAS_WIDTH,OF_WINDOW);
-	#else
-	ofSetupOpenGL(CANVAS_HEIGHT, CANVAS_WIDTH, OF_WINDOW);
-	#endif
 
-#else
-	#ifdef EXHIBITION
-ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_FULLSCREEN);
-	#else
-	ofSetupOpenGL(CANVAS_WIDTH, CANVAS_HEIGHT, OF_WINDOW);
-	#endif
-
-#endif
-
-	ofRunApp(new ofApp());
+	//ofRunApp(new ofApp());
 }

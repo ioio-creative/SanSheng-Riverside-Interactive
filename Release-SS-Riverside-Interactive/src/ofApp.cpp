@@ -228,6 +228,7 @@ void ofApp::draw(){
 		SanShengKinectManager->draw();
 		calibrationGui.draw();
 	}
+	serialDraw();
 }
 
 
@@ -269,11 +270,10 @@ void ofApp::keyReleased(int key){
 
 	case '0':
 		resetScene();
-		sendCommand("4444");
-	break;
-	case 'p':
-;
 		sendCommand("0000");
+	break;
+	case '1':
+		sendCommand("1111");
 	break;
 	}
 
@@ -511,9 +511,6 @@ string ofApp::serialUpdate() {
 		}
 	}
 
-	bool isAccelVal = false;
-	bool isDiscVal = false;
-	bool isScreenVal = false;
 	for (int i = 0; i < receivedMsg.size(); i++) {
 		if (receivedMsg.find("0000") != std::string::npos) {
 			ofLog() << "0000";
