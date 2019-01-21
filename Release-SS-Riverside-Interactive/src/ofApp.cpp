@@ -423,7 +423,6 @@ void ofApp::resetScene() {
 
 void ofApp::serialSetup() {
 
-	int a = 0;
 
 	//================== Serial ==================
 
@@ -443,29 +442,28 @@ void ofApp::serialSetup() {
 		{
 			string portDesc = devicesInfo[i].getHardwareId();
 			ofLog() << "devicesInfo[i].getHardwareId() : " << devicesInfo[i].getHardwareId();
+
 			bool success = false;
-			if (a == 0) {
+			if (portDesc.find("FDTI") != std::string::npos) {
+
 				success = arduino.setup(devicesInfo[i], BAUD);
-			}
 
-			if (success)
-			{
-				if (a == 0) {
-					arduino.unregisterAllEvents(this);
-					arduino.registerAllEvents(this);
+				if (success)
+				{
+
+						arduino.unregisterAllEvents(this);
+						arduino.registerAllEvents(this);
+
+
+					ofLogNotice("ofApp::setup") << "Successfully setup " << devicesInfo[i];
+
+
 				}
-
-
-				ofLogNotice("ofApp::setup") << "Successfully setup " << devicesInfo[i];
-
-				a++;
-
+				else
+				{
+					ofLogNotice("ofApp::setup") << "Unable to setup " << devicesInfo[i];
+				}
 			}
-			else
-			{
-				ofLogNotice("ofApp::setup") << "Unable to setup " << devicesInfo[i];
-			}
-
 		}
 	}
 	else
@@ -514,16 +512,16 @@ string ofApp::serialUpdate() {
 	bool isScreenVal = false;
 	for (int i = 0; i < receivedMsg.size(); i++) {
 		if (receivedMsg.find("0000") != std::string::npos) {
-
+			ofLog() << "0000";
 		}
 		else if (receivedMsg.find("1111") != std::string::npos) {
-		
+			ofLog() << "1111";
 		}
 		else if (receivedMsg.find("2222") != std::string::npos) {
-		
+			ofLog() << "2222";
 		}
 		else {
-		
+			ofLog() << "other serial signal" << receivedMsg;
 		}
 
 	}
