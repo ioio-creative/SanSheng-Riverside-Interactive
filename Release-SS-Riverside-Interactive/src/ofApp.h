@@ -213,8 +213,6 @@ class ofApp : public ofBaseApp{
 		string serialReadCtrlrm();
 		string ctrlrmReceivedString;
 
-		bool isCmdFromPanel;
-
 
 #ifdef LANDSCAPE_MODE
 		ofFbo landscapeFbo;

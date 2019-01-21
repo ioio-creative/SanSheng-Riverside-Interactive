@@ -58,7 +58,7 @@ void ofApp::setup(){
 
 	//------------------------------------- Serial-------------------------------------
 	serialSetup();
-	isCmdFromPanel = false;
+
 
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
@@ -120,16 +120,17 @@ void ofApp::update(){
 		receivedString = sTemp;
 		ofLog() << "Show Done, Reset";
 		resetScene();
+
 		ParticleVisualsManager.keyPressed('0');
 		VideoPlayerManager.keyReleased('0');
-		isCmdFromPanel = true;
 
 	}else if (sTemp.find("4444") != std::string::npos) {
 		receivedString = sTemp;
 		ofLog() << "Show Begin";
 		ParticleVisualsManager.keyPressed('1');
+		VideoPlayerManager.isDelayTrigger = true;
+		VideoPlayerManager.showDelayMillis = VIDEO_PANEL_TRIGGER_DELAY;
 		VideoPlayerManager.keyReleased('1');
-		isCmdFromPanel = true;
 	}
 
 
@@ -308,6 +309,8 @@ void ofApp::keyReleased(int key){
 
 	case '1':
 		sendCommand("1111");
+		VideoPlayerManager.isDelayTrigger = true;
+		VideoPlayerManager.showDelayMillis = VIDEO_FLOOR_TRIGGER_DELAY;
 	break;
 
 	case 's':
