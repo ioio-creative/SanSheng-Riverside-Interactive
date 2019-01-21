@@ -21,7 +21,7 @@
 ======================================================*/
 //Use this flag to toggle window sizes for different usage
 //#define IOIOTEST
-//#define EXHIBITION
+#define EXHIBITION
 #define LANDSCAPE_MODE
 /* ======================================================
 //Settings
@@ -205,7 +205,7 @@ class ofApp : public ofBaseApp{
 		string serialReadCtrlrm();
 		string ctrlrmReceivedString;
 
-
+		bool isSkippingSerialCommand;
 
 
 #ifdef LANDSCAPE_MODE
