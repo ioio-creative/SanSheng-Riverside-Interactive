@@ -271,6 +271,10 @@ void ofApp::keyReleased(int key){
 		resetScene();
 		sendCommand("4444");
 	break;
+	case 'p':
+;
+		sendCommand("0000");
+	break;
 	}
 
 
@@ -444,7 +448,7 @@ void ofApp::serialSetup() {
 			ofLog() << "devicesInfo[i].getHardwareId() : " << devicesInfo[i].getHardwareId();
 
 			bool success = false;
-			if (portDesc.find("FDTI") != std::string::npos) {
+			if (portDesc.find("FTDI") != std::string::npos) {
 
 				success = arduino.setup(devicesInfo[i], BAUD);
 
