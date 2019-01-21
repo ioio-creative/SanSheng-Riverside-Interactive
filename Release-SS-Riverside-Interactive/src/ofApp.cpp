@@ -116,7 +116,7 @@ void ofApp::drawAll() {
 		else {
 			if (SanShengKinectManager->bodyIdxTracked[i])
 			{
-				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y);
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.5);
 
 			}
 			else {
@@ -178,13 +178,7 @@ void ofApp::drawAll() {
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.draw(debugMode);
 
-	//------------------------------------- Kinect 3D View (for calibration) -------------------------
-	if (calibrationMode)
-	{
-		KinectMapper.CanvasCalibrateFbo.draw(0, ofGetHeight() - KINECTAREA_HEIGHT);
-		SanShengKinectManager->draw();
-		calibrationGui.draw();
-	}
+
 
 	if (debugMode) {
 		ofSetColor(255, 0, 0);
@@ -220,7 +214,13 @@ void ofApp::draw(){
 #else
 	drawAll();
 #endif 
-
+	//------------------------------------- Kinect 3D View (for calibration) -------------------------
+	if (calibrationMode)
+	{
+		KinectMapper.CanvasCalibrateFbo.draw(0, ofGetHeight() - KINECTAREA_HEIGHT);
+		SanShengKinectManager->draw();
+		calibrationGui.draw();
+	}
 }
 
 

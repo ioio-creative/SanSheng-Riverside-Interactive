@@ -92,9 +92,27 @@ bool FIRST_USER_FOLLOW_CURSOR = false;
 
 //========================================================================
 int main( ){
+
+	ofGLFWWindowSettings settings;
+
+	settings.multiMonitorFullScreen = false;
+
+
+	settings.setSize(CANVAS_HEIGHT, CANVAS_WIDTH);
+	settings.setPosition(ofVec2f(0, 0));
+	settings.resizable = true;
+	settings.windowMode = OF_WINDOW;
+	//settings.windowMode = OF_FULLSCREEN;
+	shared_ptr<ofAppBaseWindow> mainWindow = ofCreateWindow(settings);
+
+	shared_ptr<ofApp> mainApp(new ofApp);
+
+	ofRunApp(mainWindow, mainApp);
+	ofRunMainLoop();
+
 #ifdef LANDSCAPE_MODE
 	#ifdef EXHIBITION
-	ofSetupOpenGL(CANVAS_HEIGHT,CANVAS_WIDTH,  OF_FULLSCREEN);
+	//ofSetupOpenGL(CANVAS_HEIGHT,CANVAS_WIDTH,OF_WINDOW);
 	#else
 	ofSetupOpenGL(CANVAS_HEIGHT, CANVAS_WIDTH, OF_WINDOW);
 	#endif

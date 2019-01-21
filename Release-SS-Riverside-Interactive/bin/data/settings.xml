@@ -1,19 +1,19 @@
 <?xml version="1.0"?>
 <Kinect_Calibration>
 	<group>
-		<Selected_Body_Index>0</Selected_Body_Index>
-		<Body_0_>-0.0270361, 0.165624, 1.39232</Body_0_>
+		<Selected_Body_Index>3</Selected_Body_Index>
+		<Body_0_>2.25304, 0.896579, 4.50254</Body_0_>
 		<Body_1_>0, 0, 0</Body_1_>
-		<Body_2_>2.05447, 0.832159, 4.44005</Body_2_>
+		<Body_2_>1.80129, 0.72203, 4.56191</Body_2_>
 		<Body_3_>0, 0, 0</Body_3_>
-		<Body_4_>0, 0, 0</Body_4_>
+		<Body_4_>1.53208, -0.610631, 2.27623</Body_4_>
 		<Body_5_>0, 0, 0</Body_5_>
 	</group>
-	<Body_0_>-0.0270361, 0.165624, 1.39232</Body_0_>
+	<Body_0_>2.25304, 0.896579, 4.50254</Body_0_>
 	<Corners>
-		<Corner_0>-0.378039, 3.12589</Corner_0>
-		<Corner_1>-1.23352, 2.60933</Corner_1>
-		<Corner_2>-0.100079, 1.31639</Corner_2>
-		<Corner_3>0.749437, 1.87176</Corner_3>
+		<Corner_0>-0.693079, 1.63596</Corner_0>
+		<Corner_1>1.24254, 1.69592</Corner_1>
+		<Corner_2>1.42641, 3.96699</Corner_2>
+		<Corner_3>-0.784441, 3.98805</Corner_3>
 	</Corners>
 </Kinect_Calibration>
