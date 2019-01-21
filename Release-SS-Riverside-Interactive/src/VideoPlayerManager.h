@@ -34,6 +34,11 @@ public:
 
 	int currScene;
 
+	bool isDelayTrigger;
+	long nextTrigger;
+	long showDelayMillis;
+	void showBegin();
+
 	//video
 #ifdef USE_HPVPLAYER
 	vector<ofxHPVPlayer> vid;

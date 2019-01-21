@@ -45,6 +45,7 @@ void ofApp::setup(){
 
 	//------------------------------------- VideoPlayerManager -------------------------------------
 	VideoPlayerManager.setup(CANVAS_WIDTH,CANVAS_HEIGHT);
+	VideoPlayerManager.showDelayMillis = VIDEO_TRIGGER_DELAY;
 	drawVideoPlayerManager = true;
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
@@ -57,7 +58,7 @@ void ofApp::setup(){
 
 	//------------------------------------- Serial-------------------------------------
 	serialSetup();
-	isSkippingSerialCommand = false;
+	isCmdFromPanel = false;
 
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
@@ -117,13 +118,14 @@ void ofApp::update(){
 
 		ofLog() << "Show Done, Reset";
 		keyReleased('0');
-		isSkippingSerialCommand = true;
+		isCmdFromPanel = true;
 
 	}else if (sTemp.find("4") != std::string::npos) {
 		ofLog() << "Show Begin";
 		keyReleased('1');
-		isSkippingSerialCommand = true;
+		isCmdFromPanel = true;
 	}
+
 
 }
 void ofApp::drawAll() {
@@ -261,13 +263,7 @@ void ofApp::debugDraw() {
 }
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
-	ParticleVisualsManager.keyPressed(key);
-#ifdef USE_TCP_COMMUNICATION
-	TcpClientManager.keyPressed(key);
-#endif
 
-	VideoPlayerManager.keyReleased(key);
-	//SanShengKinectManager->keyReleased(key);
 	switch (key) {
 	case 'd':
 		debugMode = !debugMode;
@@ -300,14 +296,18 @@ void ofApp::keyReleased(int key){
 
 	case '0':
 		resetScene();
-		if (!isSkippingSerialCommand) {
+		if (!isCmdFromPanel) {
 			sendCommand("0000");
+			isCmdFromPanel = false;
 		}
+
 	break;
 
 	case '1':
-		if (!isSkippingSerialCommand) {
+		if (!isCmdFromPanel) {
+			VideoPlayerManager.isDelayTrigger = true;
 			sendCommand("1111");
+			isCmdFromPanel = false;
 		}
 	break;
 
@@ -321,8 +321,16 @@ void ofApp::keyReleased(int key){
 	default:
 		break;
 	}
+	ParticleVisualsManager.keyPressed(key);
+#ifdef USE_TCP_COMMUNICATION
+	TcpClientManager.keyPressed(key);
+#endif
 
-	isSkippingSerialCommand = false;
+	VideoPlayerManager.keyReleased(key);
+	//SanShengKinectManager->keyReleased(key);
+
+
+
 }
 
 void ofApp::windowResized(int w, int h) {
@@ -642,12 +650,6 @@ void ofApp::sendCommand(string s) {
 	ofLog() << "send " << s << " to arduino ";
 }
 
-void ofApp::sendCommandDelay() {
-	if (ofGetElapsedTimeMillis() > nextTrigger) {
-		sendCommand(currCmd);
-	}
-
-}
 
 
 string ofApp::serialReadCtrlrm() {

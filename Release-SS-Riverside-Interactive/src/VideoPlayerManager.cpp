@@ -45,6 +45,7 @@ videoFbo.allocate(screenW, screenH, GL_RGBA);
 vid[0].setPaused(false);
 vid[0].play();
 
+isDelayTrigger = false;
 currScene = 0;
 }
 
@@ -100,7 +101,10 @@ void VideoPlayerManager::draw(int x1, int y1, int w1, int h1, vector<ofVec2f> bo
 	videoFbo.draw(x1, y1, w1, h1);
 
 #endif // USE_HPVPLAYER
-
+	if (isDelayTrigger && ofGetElapsedTimeMillis() >= nextTrigger) {
+		showBegin();
+		isDelayTrigger = false;
+	}
 }
 
 
@@ -125,11 +129,12 @@ void VideoPlayerManager::keyReleased(int k) {
 		break;
 
 	case '1': //scene 0 end
-		currScene = 1;
-		vid[0].stop();
-		vid[2].stop();
-		vid[1].setPaused(false);
-		vid[1].play();
+		if (isDelayTrigger) {
+			nextTrigger = ofGetElapsedTimeMillis() + showDelayMillis;
+		}
+		else {
+			showBegin();
+		}
 		break;
 
 	case '2': //scene 1 begin
@@ -199,3 +204,12 @@ float VideoPlayerManager::getVideoTime() {
 float VideoPlayerManager::getVideoEndTime(){
 	return vid[1].getDuration();
 }
+
+void VideoPlayerManager::showBegin() {
+	currScene = 1;
+	vid[0].stop();
+	vid[2].stop();
+	vid[1].setPaused(false);
+	vid[1].play();
+}
+

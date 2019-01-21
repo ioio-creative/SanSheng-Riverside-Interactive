@@ -176,8 +176,6 @@ class ofApp : public ofBaseApp{
 		VideoPlayerManager VideoPlayerManager;
 		bool drawVideoPlayerManager;
 
-
-
 		vector<bool> isTriggerScene;
 		vector<float> triggerSceneTime;
 		int num_of_trigger_scene;
@@ -195,7 +193,6 @@ class ofApp : public ofBaseApp{
 
 		//------------------------------------- Serial ----------------------------------------------------
 
-
 		void serialSetup();
 		string serialUpdate();
 		void serialDraw();
@@ -205,7 +202,7 @@ class ofApp : public ofBaseApp{
 		ofxIO::BufferedSerialDevice arduino;
 
 		std::vector<SerialMessage> serialMessages;
-		void sendCommandDelay();
+
 		bool isCommandDelay;
 		void sendCommand(string s);
 
@@ -217,8 +214,6 @@ class ofApp : public ofBaseApp{
 		string ctrlrmReceivedString;
 
 		bool isCmdFromPanel;
-
-		bool isSkippingSerialCommand;
 
 
 #ifdef LANDSCAPE_MODE
