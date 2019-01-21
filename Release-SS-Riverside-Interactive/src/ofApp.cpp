@@ -108,6 +108,22 @@ void ofApp::update(){
 
 	receivedString = serialUpdate();
 
+
+	//------ Control Room -------
+	string sTemp = serialReadCtrlrm();
+	if (sTemp.find("3") != std::string::npos) {
+		if (sTemp.find("0") != std::string::npos ) {
+			ofLog() << "Show Done, Reset";
+			keyPressed('0');
+
+		}
+		if (sTemp.find("4") != std::string::npos) {
+			ofLog() << "Show Begin";
+			keyPressed('1');
+		}
+	}
+
+
 }
 void ofApp::drawAll() {
 
@@ -608,3 +624,57 @@ void ofApp::sendCommand(string s) {
 	
 	ofLog() << "send " << s << " to arduino ";
 }
+
+
+
+
+string ofApp::serialReadCtrlrm() {
+
+	string combinedStr = "";
+	// for(int i=0; i< arduino.size(); i++){
+
+	// The serial device can throw exeptions.
+
+	try
+	{
+		// Read all bytes from the device;
+		uint8_t buffer[1024];
+		vector<uint8_t> finalBuffer;
+		finalBuffer.clear();
+		while (arduino.available() > 0)
+		{
+			std::size_t sz = arduino.readBytes(buffer, 1024);
+			// ofLog() << "CTRL buffer size: " << sz;
+			for (std::size_t j = 0; j < sz; ++j)
+			{
+				std::cout << buffer[j];
+				//  ofLog() << "CTRL buf: " << buffer[j];
+				if (buffer[j] == '1' || buffer[j] == '0') {
+					finalBuffer.push_back(buffer[j]);
+				}
+				/*   if(isalnum(buffer[j]) || buffer[j] == '|' || buffer[j] == '-' ){
+				 finalBuffer.push_back(buffer[j]);
+				 }
+				 */
+
+			}
+			for (int i = 0; i < finalBuffer.size(); i++) {
+				//  ofLog() << "CTRL New Buf : " << finalBuffer[i];
+				//  ofLog() << "CTRL New Buf SIZE : " << finalBuffer.size();
+				combinedStr += ofToString(finalBuffer[i]);
+			}
+		}
+
+	}
+	catch (const std::exception& exc)
+	{
+		ofLogError("ofApp::update") << exc.what();
+	}
+	//  }
+
+	return combinedStr;
+
+
+
+}
+

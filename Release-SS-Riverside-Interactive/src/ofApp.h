@@ -195,11 +195,17 @@ class ofApp : public ofBaseApp{
 
 		std::vector<SerialMessage> serialMessages;
 
-		void sendChar(int a);
 		void sendCommand(string s);
 
 		void onSerialBuffer(const ofxIO::SerialBufferEventArgs& args);
 		void onSerialError(const ofxIO::SerialBufferErrorEventArgs& args);
+
+		//FROM Control Room
+		//ofx::IO::BufferedSerialDevice ctrlrm;
+		string serialReadCtrlrm();
+		string ctrlrmReceivedString;
+
+
 
 
 #ifdef LANDSCAPE_MODE
