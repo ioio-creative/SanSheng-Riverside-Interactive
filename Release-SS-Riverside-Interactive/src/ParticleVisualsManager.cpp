@@ -51,7 +51,6 @@ void ParticleVisualsManager::setup(int w, int h) {
 	sequenceGoing = false;
 	sequenceStartTimestamp = -1;
 
-	ofSetFrameRate(60);
 
 	//init canvas
 	floorCanvas.allocate(FLOOR_CANVAS_WIDTH, FLOOR_CANVAS_HEIGHT);

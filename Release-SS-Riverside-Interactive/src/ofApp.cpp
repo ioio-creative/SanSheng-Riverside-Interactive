@@ -1,7 +1,5 @@
 #include "ofApp.h"
 
-
-
 //--------------------------------------------------------------
 void ofApp::setup(){
 #ifdef LANDSCAPE_MODE
@@ -52,12 +50,13 @@ void ofApp::setup(){
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 	ParticleVisualsManager.setup(CANVAS_WIDTH, CANVAS_HEIGHT);
 
+#ifdef USE_TCP_COMMUNICATION
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.setup();
+#endif
 
 	//------------------------------------- Serial-------------------------------------
 	serialSetup();
-
 
 	//fbo
 	CGFbo.allocate(CANVAS_WIDTH, CANVAS_HEIGHT, GL_RGBA);
@@ -79,7 +78,7 @@ void ofApp::setup(){
 		triggerSceneTime.push_back(0.0f);
 	}
 	resetScene();
-
+	keyReleased('0');
 }
 
 //--------------------------------------------------------------
@@ -102,12 +101,15 @@ void ofApp::update(){
 	VideoPlayerManager.update();
 	//------------------------------------- Particle Visuals Manager-------------------------------------
 	ParticleVisualsManager.update();
+
+#ifdef USE_TCP_COMMUNICATION
 	//------------------------------------- TCP Client Manager-------------------------------------
-	//TcpClientManager.update();
+	TcpClientManager.update();
+#endif
+
 //------------------------------------- Serial ---------------------------------
 
 	receivedString = serialUpdate();
-
 
 	//------ Control Room -------
 	string sTemp = serialReadCtrlrm();
@@ -122,7 +124,6 @@ void ofApp::update(){
 			keyPressed('1');
 		}
 	}
-
 
 }
 void ofApp::drawAll() {
@@ -200,14 +201,13 @@ void ofApp::drawAll() {
 //ParticleVisualsManager.setAlpha(a);
 	ParticleVisualsManager.draw();
 
+#ifdef USE_TCP_COMMUNICATION
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.draw(debugMode);
-
+#endif
 
 
 	if (debugMode) {
-		ofSetColor(255, 0, 0);
-		ofDrawBitmapString("FPS: " + ofToString(ofGetFrameRate()), 20, 20);
 
 		ofSetColor(ofColor::aqua);
 		ofFill();
@@ -219,10 +219,6 @@ void ofApp::drawAll() {
 }
 //--------------------------------------------------------------
 void ofApp::draw(){
-
-
-
-
 
 #ifdef	LANDSCAPE_MODE
 	landscapeFbo.begin();
@@ -246,14 +242,30 @@ void ofApp::draw(){
 		SanShengKinectManager->draw();
 		calibrationGui.draw();
 	}
-	serialDraw();
+	if (debugMode) {
+		serialDraw();
+		debugDraw();
+	}
 }
+//--------------------------------------------------------------
+void ofApp::debugDraw() {
 
+	ofSetColor(255, 0, 0);
+	std::stringstream ss;
 
+	ss << "framerate : " << ofGetFrameRate();
+	ss << "window resolution : " << ofGetWindowWidth() << " x " << ofGetWindowHeight()<< endl;
+
+	ofDrawBitmapString(ss.str(), ofVec2f(20, 400));
+
+}
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 	ParticleVisualsManager.keyPressed(key);
+#ifdef USE_TCP_COMMUNICATION
 	TcpClientManager.keyPressed(key);
+#endif
+
 	VideoPlayerManager.keyReleased(key);
 	//SanShengKinectManager->keyReleased(key);
 	switch (key) {
@@ -288,11 +300,21 @@ void ofApp::keyReleased(int key){
 
 	case '0':
 		resetScene();
-		sendCommand("0000");
+		if (!isCmdFromPanel) {
+			currCmd = "0000";
+			nextTrigger = ofGetElapsedTimeMillis() + VIDEO_TRIGGER_DELAY;
+		//	sendCommand("0000");
+		}
+		isCmdFromPanel = false;
 	break;
 
 	case '1':
-		sendCommand("1111");
+		if (!isCmdFromPanel) {
+			currCmd = "1111";
+		//	sendCommand("1111");
+			nextTrigger = ofGetElapsedTimeMillis() + VIDEO_TRIGGER_DELAY;
+		}
+		isCmdFromPanel = false;
 	break;
 
 	case 's':
@@ -334,7 +356,6 @@ void ofApp::setupCalibrationGui() {
 
 }
 
-
 void ofApp::refBodyIdxChanged(int& idx) {
 	selectedBodyLabel.setup(bodyPosInspect[refBodyIdx], 250, 25);
 }
@@ -350,8 +371,12 @@ void ofApp::updateGuiInspectorValues() {
 void ofApp::exit() {
 	//------------------------------------- VideoPlayerManager -------------------------------------
 	VideoPlayerManager.exit();
+
+#ifdef USE_TCP_COMMUNICATION
 	//------------------------------------- TCP Client Manager-------------------------------------
 	TcpClientManager.exit();
+#endif
+
 	//------------------------------------- Serial -------------------------------------
 
 	arduino.unregisterAllEvents(this);
@@ -612,8 +637,6 @@ void ofApp::onSerialError(const ofx::IO::SerialBufferErrorEventArgs& args)
 	serialMessages.push_back(message);
 }
 
-
-
 void ofApp::sendCommand(string s) {
 
 
@@ -625,7 +648,12 @@ void ofApp::sendCommand(string s) {
 	ofLog() << "send " << s << " to arduino ";
 }
 
+void ofApp::sendCommandDelay() {
+	if (ofGetElapsedTimeMillis() > nextTrigger) {
+		sendCommand(currCmd);
+	}
 
+}
 
 
 string ofApp::serialReadCtrlrm() {
@@ -673,8 +701,6 @@ string ofApp::serialReadCtrlrm() {
 	//  }
 
 	return combinedStr;
-
-
 
 }
 

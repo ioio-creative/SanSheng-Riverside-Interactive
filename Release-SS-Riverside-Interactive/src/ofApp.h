@@ -2,13 +2,24 @@
 #include "ofMain.h"
 
 /* ======================================================
+//Compiler Flags
+======================================================*/
+//Use this flag to toggle window sizes for different usage
+//#define IOIOTEST
+//#define USE_TCP_COMMUNICATION
+//#define EXHIBITION
+#define LANDSCAPE_MODE
+
+/* ======================================================
 //Includes
 ======================================================*/
 #include "ofxCv.h"
 #include "ofxJSON.h"
 #include "VideoPlayerManager.h"
 #include "ParticleVisualsManager.h"
+#ifdef USE_TCP_COMMUNICATION
 #include "TcpClientManager.h"
+#endif
 #include "ofxKinectForWindows2.h"
 #include "ofxGui.h"
 #include "ofxSerial.h"
@@ -16,19 +27,15 @@
 #include "KinectManager.h"
 #include "KinectToFloorScreenMapper.h"
 
-/* ======================================================
-//Compiler Flags
-======================================================*/
-//Use this flag to toggle window sizes for different usage
-//#define IOIOTEST
-//#define EXHIBITION
-#define LANDSCAPE_MODE
+
 /* ======================================================
 //Settings
 ======================================================*/
+#define VIDEO_TRIGGER_DELAY 500 //millis
 
-#define TARGET_FRAMERATE 25
-
+#define TARGET_FRAMERATE 60
+//Serial
+#define BAUD 115200 
 //Kinect sources dimensions
 #define DEPTH_WIDTH 512
 #define DEPTH_HEIGHT 424
@@ -58,7 +65,7 @@
 #define KINECTAREA_HEIGHT CANVAS_HEIGHT
 #endif
 
-#define BAUD 115200 //Serial Settings
+
 
 class SerialMessage
 {
@@ -169,6 +176,8 @@ class ofApp : public ofBaseApp{
 		VideoPlayerManager VideoPlayerManager;
 		bool drawVideoPlayerManager;
 
+
+
 		vector<bool> isTriggerScene;
 		vector<float> triggerSceneTime;
 		int num_of_trigger_scene;
@@ -179,8 +188,10 @@ class ofApp : public ofBaseApp{
 		ParticleVisualsManager ParticleVisualsManager;
 		bool drawParticleVisualsManager;
 
+#ifdef USE_TCP_COMMUNICATION
 		//------------------------------------- TCP Client Manager-------------------------------------
 		TcpClientManager TcpClientManager;
+#endif
 
 		//------------------------------------- Serial ----------------------------------------------------
 
@@ -194,25 +205,29 @@ class ofApp : public ofBaseApp{
 		ofxIO::BufferedSerialDevice arduino; 
 
 		std::vector<SerialMessage> serialMessages;
-
+		void sendCommandDelay();
+		bool isCommandDelay;
 		void sendCommand(string s);
 
 		void onSerialBuffer(const ofxIO::SerialBufferEventArgs& args);
 		void onSerialError(const ofxIO::SerialBufferErrorEventArgs& args);
 
 		//FROM Control Room
-		//ofx::IO::BufferedSerialDevice ctrlrm;
 		string serialReadCtrlrm();
 		string ctrlrmReceivedString;
+		
+		bool isCmdFromPanel;
 
+		long nextTrigger;
+		string currCmd;
 
-
-
+		//------------------------------------- MISC ----------------------------------------------------
 #ifdef LANDSCAPE_MODE
 		ofFbo landscapeFbo;
 #endif
-
 		void drawAll();
+
+		void debugDraw();
 };
 
 
