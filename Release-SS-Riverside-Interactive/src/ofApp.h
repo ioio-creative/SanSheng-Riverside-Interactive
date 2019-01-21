@@ -7,7 +7,7 @@
 //Use this flag to toggle window sizes for different usage
 //#define IOIOTEST
 //#define USE_TCP_COMMUNICATION
-//#define EXHIBITION
+#define EXHIBITION
 #define LANDSCAPE_MODE
 
 /* ======================================================
@@ -31,7 +31,8 @@
 /* ======================================================
 //Settings
 ======================================================*/
-#define VIDEO_TRIGGER_DELAY 500 //millis
+#define VIDEO_FLOOR_TRIGGER_DELAY 500 //millis
+#define VIDEO_PANEL_TRIGGER_DELAY 200 //millis
 
 #define TARGET_FRAMERATE 25
 //Serial
@@ -194,7 +195,6 @@ class ofApp : public ofBaseApp{
 		//------------------------------------- Serial ----------------------------------------------------
 
 		void serialSetup();
-		string serialUpdate();
 		void serialDraw();
 
 		string receivedString;

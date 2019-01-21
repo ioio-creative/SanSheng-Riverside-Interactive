@@ -329,7 +329,7 @@ void ParticleVisualsManager::updateEmitMode()    //unsed at the moment ?
 		particleManager.emitters[i].pos = floorUserManager.floorUsers[i].pos;
 	}
 	SCENE_GRAVITY = abs(SCENE_GRAVITY);
-	particleManager.gravity(ofVec3f(0, -0.2, 0));
+	particleManager.gravity(ofVec3f(0, -0.45, 0));
 	particleManager.damp(1.05);
 }
 

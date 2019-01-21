@@ -45,7 +45,7 @@ void ofApp::setup(){
 
 	//------------------------------------- VideoPlayerManager -------------------------------------
 	VideoPlayerManager.setup(CANVAS_WIDTH,CANVAS_HEIGHT);
-	VideoPlayerManager.showDelayMillis = VIDEO_TRIGGER_DELAY;
+	VideoPlayerManager.showDelayMillis = VIDEO_PANEL_TRIGGER_DELAY;
 	drawVideoPlayerManager = true;
 
 	//------------------------------------- Particle Visuals Manager-------------------------------------
@@ -78,6 +78,8 @@ void ofApp::setup(){
 		isTriggerScene.push_back(false);
 		triggerSceneTime.push_back(0.0f);
 	}
+	ParticleVisualsManager.keyPressed('0');
+	VideoPlayerManager.keyReleased('0');
 	resetScene();
 
 }
@@ -110,12 +112,12 @@ void ofApp::update(){
 
 //------------------------------------- Serial ---------------------------------
 
-	receivedString = serialUpdate();
+
 
 	//------ Control Room -------
 	string sTemp = serialReadCtrlrm();
 	if (sTemp.find("3333") != std::string::npos) {
-
+		receivedString = sTemp;
 		ofLog() << "Show Done, Reset";
 		resetScene();
 		ParticleVisualsManager.keyPressed('0');
@@ -123,6 +125,7 @@ void ofApp::update(){
 		isCmdFromPanel = true;
 
 	}else if (sTemp.find("4444") != std::string::npos) {
+		receivedString = sTemp;
 		ofLog() << "Show Begin";
 		ParticleVisualsManager.keyPressed('1');
 		VideoPlayerManager.keyReleased('1');
@@ -147,7 +150,7 @@ void ofApp::drawAll() {
 		else {
 			if (SanShengKinectManager->bodyIdxTracked[i])
 			{
-				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.5);
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.55);
 
 			}
 			else {
@@ -446,12 +449,12 @@ void ofApp::resetScene() {
 	}
 
 	float sceneEyeVidStart = 144.0f;  //2
-	float sceneEyeExplode1Start = 157.0f;  //3
-	float sceneEyeExplode1End = sceneEyeExplode1Start + 1.5f;  //4
-	float sceneEyeExplode2Start = 173.0f;  //3
-	float sceneEyeExplode2End = sceneEyeExplode2Start + 1.5f; //4
-	float sceneEyeExplode3Start = 185.0f; //3
-	float sceneEyeExplode3End = sceneEyeExplode3Start + 1.5f; //4
+	float sceneEyeExplode1Start = 155.0f;  //3
+	float sceneEyeExplode1End = sceneEyeExplode1Start + 3.5f;  //4
+	float sceneEyeExplode2Start = 171.0f;  //3
+	float sceneEyeExplode2End = sceneEyeExplode2Start + 3.5f; //4
+	float sceneEyeExplode3Start = 182.0f; //3
+	float sceneEyeExplode3End = sceneEyeExplode3Start + 3.5f; //4
 	float sceneRainfallStart = 245.0f; //5
 	float sceneRainfallReverse = 271.0f; //6
 	float sceneRainfallEnd = 276.0f; //7
@@ -529,70 +532,6 @@ void ofApp::serialSetup() {
 }
 
 
-
-string ofApp::serialUpdate() {
-
-	string currString;
-
-	std::vector<SerialMessage>::iterator iter = serialMessages.begin();
-
-	string receivedMsg = "";
-
-	while (iter != serialMessages.end())
-	{
-
-		iter->fade -= 99;
-
-		if (iter->fade < 0)
-		{
-			iter = serialMessages.erase(iter);  //may need this to maintain performance
-		}
-		else
-		{
-
-			receivedMsg = iter->message;
-
-			if (!iter->exception.empty())
-			{
-				// y += height;
-			}
-
-			++iter;
-		}
-	}
-
-	for (int i = 0; i < receivedMsg.size(); i++) {
-		if (receivedMsg.find("0000") != std::string::npos) {
-			ofLog() << "0000";
-		}
-		else if (receivedMsg.find("1111") != std::string::npos) {
-			ofLog() << "1111";
-		}
-		else if (receivedMsg.find("2222") != std::string::npos) {
-			ofLog() << "2222";
-		}
-		else {
-			ofLog() << "other serial signal" << receivedMsg;
-		}
-
-	}
-
-	string s(receivedMsg);
-	istringstream iss(s);
-
-	do
-	{
-		string sub;
-		iss >> sub;
-
-		currString.push_back(ofToFloat(sub));
-		//cout << "Substring: " << sub << endl;
-
-	} while (iss);
-
-	return currString;
-
-}
 
 
 

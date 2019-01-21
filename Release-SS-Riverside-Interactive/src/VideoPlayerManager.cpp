@@ -78,14 +78,14 @@ void VideoPlayerManager::draw(int x1, int y1, int w1, int h1, vector<ofVec2f> bo
 	else if (currScene == 2) {
 			vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
 			for (int i = 0; i < bodyPos.size(); i++) {
-				vid[2].draw(bodyPos[i].x - 100, bodyPos[i].y - 100, 200, 200);
+				vid[2].draw(bodyPos[i].x - 200, bodyPos[i].y - 200, 400, 400);
 			}
 
 	}
 	else if (currScene == 3) {
 		vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
 		for (int i = 0; i < bodyPos.size(); i++) {
-		//	vid[3].draw(bodyPos[i].x - 100, bodyPos[i].y - 100, 200, 200);
+		//	vid[3].draw(bodyPos[i].x - 200, bodyPos[i].y - 200, 400, 400);
 		}
 	}
 	if (debugMode) {
@@ -173,8 +173,28 @@ void VideoPlayerManager::keyReleased(int k) {
 		//vid[3].setPaused(false);
 		//vid[3].play();
 		break;
+	case '.':
+		if (debugMode) {
+			vid[1].setFrame(vid[1].getCurrentFrame() + 10);
+		}
+		break;
 
+	case ',':
+		if (debugMode) {
+			vid[1].setFrame(vid[1].getCurrentFrame() - 10);
+		}
+		break;
 
+	case ' ':
+		if (debugMode) {
+			if (vid[1].isPaused()) {
+				vid[1].setPaused(false);
+			}
+			else {
+				vid[1].setPaused(true);
+			}
+		}
+		break;
 
 	default:
 		break;
