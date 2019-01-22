@@ -40,6 +40,7 @@ float MODE_REPEL_SCATTER = 7000;
 float MODE_REPEL_DAMP = 0.98;
 float PARTICLE_PATH_SCATTER = 0.8;
 float SCENE_GRAVITY = 0.4;
+float SCENE_GRAVITY_NEGATIVE = 5.0;
 
 //attract mode settings
 float MODE_ATTRACT_SCATTER = 0;

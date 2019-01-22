@@ -472,8 +472,8 @@ void ofApp::resetScene() {
 	float sceneRainfallStart = 239.0f; //5
 	float sceneRainfallReverse = 271.0f; //6
 	float sceneRainfallEnd = 276.0f; //7
-	float sceneLastInteractiveStart = 294.0f;  //8
-	float sceneAllEnd = totalEndTime; //0
+	float sceneLastInteractiveStart = totalEndTime;  //0
+	float sceneAllEnd = totalEndTime; //8
 
 		triggerSceneTime = { sceneEyeVidStart, sceneEyeExplode1Start , sceneEyeExplode1End, sceneEyeExplode2Start , sceneEyeExplode2End,sceneEyeExplode3Start , sceneEyeExplode3End,sceneRainfallStart, sceneRainfallReverse, sceneRainfallEnd, sceneLastInteractiveStart, sceneAllEnd };
 		ParticleVisualsManager.keyPressed(']');
