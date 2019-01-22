@@ -31,8 +31,8 @@
 /* ======================================================
 //Settings
 ======================================================*/
-#define VIDEO_FLOOR_TRIGGER_DELAY 300 //millis
-#define VIDEO_PANEL_TRIGGER_DELAY 200 //millis
+#define VIDEO_FLOOR_TRIGGER_DELAY 375 //millis
+#define VIDEO_PANEL_TRIGGER_DELAY 375 //millis
 
 #define TARGET_FRAMERATE 25
 //Serial

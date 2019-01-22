@@ -127,6 +127,9 @@ void ofApp::update(){
 	}else if (sTemp.find("4444") != std::string::npos) {
 		receivedString = sTemp;
 		ofLog() << "Show Begin";
+		ParticleVisualsManager.keyPressed('0');
+		VideoPlayerManager.keyReleased('0');
+
 		ParticleVisualsManager.keyPressed('1');
 		VideoPlayerManager.isDelayTrigger = true;
 		VideoPlayerManager.showDelayMillis = VIDEO_PANEL_TRIGGER_DELAY;
@@ -156,7 +159,7 @@ void ofApp::drawAll() {
 		else {
 			if (SanShengKinectManager->bodyIdxTracked[i])
 			{
-				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.45);
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.48);
 
 			}
 			else {
@@ -315,6 +318,7 @@ void ofApp::keyReleased(int key){
 	break;
 
 	case '1':
+		resetScene();
 		sendCommand("1111");
 		VideoPlayerManager.isDelayTrigger = true;
 		VideoPlayerManager.showDelayMillis = VIDEO_FLOOR_TRIGGER_DELAY;
@@ -459,17 +463,17 @@ void ofApp::resetScene() {
 	}
 
 	float sceneEyeVidStart = 144.0f;  //2
-	float sceneEyeExplode1Start = 155.0f;  //3
+	float sceneEyeExplode1Start = 156.0f;  //3
 	float sceneEyeExplode1End = sceneEyeExplode1Start + 3.5f;  //4
-	float sceneEyeExplode2Start = 171.0f;  //3
+	float sceneEyeExplode2Start = 172.0f;  //3
 	float sceneEyeExplode2End = sceneEyeExplode2Start + 3.5f; //4
-	float sceneEyeExplode3Start = 182.0f; //3
+	float sceneEyeExplode3Start = 184.0f; //3
 	float sceneEyeExplode3End = sceneEyeExplode3Start + 3.5f; //4
-	float sceneRainfallStart = 245.0f; //5
+	float sceneRainfallStart = 239.0f; //5
 	float sceneRainfallReverse = 271.0f; //6
 	float sceneRainfallEnd = 276.0f; //7
 	float sceneLastInteractiveStart = 294.0f;  //8
-	float sceneAllEnd = totalEndTime; //9
+	float sceneAllEnd = totalEndTime; //0
 
 		triggerSceneTime = { sceneEyeVidStart, sceneEyeExplode1Start , sceneEyeExplode1End, sceneEyeExplode2Start , sceneEyeExplode2End,sceneEyeExplode3Start , sceneEyeExplode3End,sceneRainfallStart, sceneRainfallReverse, sceneRainfallEnd, sceneLastInteractiveStart, sceneAllEnd };
 		ParticleVisualsManager.keyPressed(']');

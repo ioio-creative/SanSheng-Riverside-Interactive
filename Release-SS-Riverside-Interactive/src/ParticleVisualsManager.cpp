@@ -15,6 +15,9 @@ extern int P5Y;
 extern int P6X;
 extern int P6Y;
 
+extern float RING_ORBIT_RADIUS_1;
+extern float RING_ORBIT_RADIUS_2;
+
 extern float TRIGGER_SCENE_1_START;
 extern float TRIGGER_SCENE_1_END;
 extern float TRIGGER_SCENE_2A_START;
@@ -270,6 +273,7 @@ void ParticleVisualsManager::updateRepelMode()
 
 	SCENE_GRAVITY = abs(SCENE_GRAVITY);
 	particleManager.damp(MODE_REPEL_DAMP);
+	RING_ORBIT_RADIUS = RING_ORBIT_RADIUS_2;
 }
 
 //--------------------------------------------------------------
@@ -284,6 +288,7 @@ void ParticleVisualsManager::updateRepelModeReverse()
 	SCENE_GRAVITY = -abs(SCENE_GRAVITY);
 	//particleManager.gravity(ofVec3f(0, 0, 0));
 	particleManager.damp(MODE_REPEL_DAMP);
+	RING_ORBIT_RADIUS = RING_ORBIT_RADIUS_2;
 }
 
 //--------------------------------------------------------------
@@ -298,6 +303,7 @@ void ParticleVisualsManager::updateRepelModeWithRaise()
 
 	particleManager.raise(PARTICLE_MIN_RAISE_SPEED, PARTICLE_MAX_RAISE_SPEED);
 	particleManager.damp(MODE_REPEL_DAMP);
+	RING_ORBIT_RADIUS = RING_ORBIT_RADIUS_1;
 }
 
 //--------------------------------------------------------------
@@ -311,6 +317,7 @@ void ParticleVisualsManager::updateAttractMode()
 	particleManager.massAttract(attractions, MODE_ATTRACT_FORCE, MODE_ATTRACT_SCATTER);
 	particleManager.gravity(ofVec3f(0, MODE_ATTRACT_GRAVITY, 0));
 	particleManager.damp(MODE_ATTRACT_DAMP);
+	RING_ORBIT_RADIUS = RING_ORBIT_RADIUS_1;
 }
 
 //--------------------------------------------------------------
@@ -331,6 +338,7 @@ void ParticleVisualsManager::updateEmitMode()    //unsed at the moment ?
 	SCENE_GRAVITY = abs(SCENE_GRAVITY);
 	particleManager.gravity(ofVec3f(0, -0.45, 0));
 	particleManager.damp(1.05);
+	RING_ORBIT_RADIUS = RING_ORBIT_RADIUS_1;
 }
 
 //--------------------------------------------------------------

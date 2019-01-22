@@ -175,13 +175,13 @@ void VideoPlayerManager::keyReleased(int k) {
 		break;
 	case '.':
 		if (debugMode) {
-			vid[1].setFrame(vid[1].getCurrentFrame() + 10);
+			vid[1].setFrame(vid[1].getCurrentFrame() + 50);
 		}
 		break;
 
 	case ',':
 		if (debugMode) {
-			vid[1].setFrame(vid[1].getCurrentFrame() - 10);
+			vid[1].setFrame(vid[1].getCurrentFrame() - 50);
 		}
 		break;
 
