@@ -10,17 +10,17 @@ int FLOOR_CANVAS_HEIGHT = 3828;
 
 //dummy circle positions
 int P1X = 170;
-int P1Y = 2800;
+int P1Y = 2600;
 int P2X = 366;
-int P2Y = 3200;
+int P2Y = 3000;
 int P3X = 490;
 int P3Y = 6200;
 int P4X = 650;
 int P4Y = 6200;
 int P5X = 772;
-int P5Y = 3200;
+int P5Y = 3000;
 int P6X = 970;
-int P6Y = 2800;
+int P6Y = 2600;
 
 //time triggers
 float TRIGGER_SCENE_1_START = 0.1;
