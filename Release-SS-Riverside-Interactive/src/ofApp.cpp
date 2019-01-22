@@ -159,7 +159,7 @@ void ofApp::drawAll() {
 		else {
 			if (SanShengKinectManager->bodyIdxTracked[i])
 			{
-				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.48);
+				bodyPos[i] = ofVec2f(SanShengKinectManager->bodyPosOnScreen[i].x - CANVAS_WIDTH *0.04, SanShengKinectManager->bodyPosOnScreen[i].y + CANVAS_HEIGHT *0.48);
 
 			}
 			else {
@@ -471,7 +471,7 @@ void ofApp::resetScene() {
 	float sceneEyeExplode3End = sceneEyeExplode3Start + 3.5f; //4
 	float sceneRainfallStart = 239.0f; //5
 	float sceneRainfallReverse = 271.0f; //6
-	float sceneRainfallEnd = 276.0f; //7
+	float sceneRainfallEnd = 273.5f; //7
 	float sceneLastInteractiveStart = totalEndTime;  //0
 	float sceneAllEnd = totalEndTime; //8
 

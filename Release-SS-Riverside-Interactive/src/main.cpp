@@ -39,8 +39,10 @@ float MODE_REPEL_FORCE = 15000;
 float MODE_REPEL_SCATTER = 7000;
 float MODE_REPEL_DAMP = 0.98;
 float PARTICLE_PATH_SCATTER = 0.8;
-float SCENE_GRAVITY = 0.4;
-float SCENE_GRAVITY_NEGATIVE = 5.0;
+
+float SCENE_GRAVITY_1 = 0.4;
+float SCENE_GRAVITY_2 = 4.0;
+float SCENE_GRAVITY = SCENE_GRAVITY_1;
 
 //attract mode settings
 float MODE_ATTRACT_SCATTER = 0;
@@ -99,8 +101,6 @@ int main( ){
 	ofGLFWWindowSettings settings;
 
 	settings.multiMonitorFullScreen = false;
-
-
 
 #ifdef LANDSCAPE_MODE
 	#ifdef EXHIBITION
