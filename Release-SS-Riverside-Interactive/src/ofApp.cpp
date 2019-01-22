@@ -132,6 +132,11 @@ void ofApp::update(){
 		VideoPlayerManager.showDelayMillis = VIDEO_PANEL_TRIGGER_DELAY;
 		VideoPlayerManager.keyReleased('1');
 	}
+	else if (sTemp.find("5555") != std::string::npos) {
+		receivedString = sTemp;
+		ofLog() << "Play/Pause";
+		VideoPlayerManager.keyReleased(' ');
+	}
 
 
 }
@@ -203,7 +208,7 @@ void ofApp::drawAll() {
 				resetScene();
 				ParticleVisualsManager.keyPressed('0');
 				VideoPlayerManager.keyReleased('0');
-
+				sendCommand("0000");
 			}
 		}
 	}

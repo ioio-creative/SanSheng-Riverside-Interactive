@@ -78,7 +78,7 @@ void VideoPlayerManager::draw(int x1, int y1, int w1, int h1, vector<ofVec2f> bo
 	else if (currScene == 2) {
 			vid[1].draw(0, 0, videoFbo.getWidth(), videoFbo.getHeight());
 			for (int i = 0; i < bodyPos.size(); i++) {
-				vid[2].draw(bodyPos[i].x - 200, bodyPos[i].y - 200, 400, 400);
+			//	vid[2].draw(bodyPos[i].x - 200, bodyPos[i].y - 200, 400, 400);
 			}
 
 	}
@@ -140,8 +140,8 @@ void VideoPlayerManager::keyReleased(int k) {
 	case '2': //scene 1 begin
 		currScene = 2;
 
-		vid[2].setPaused(false);
-		vid[2].play();
+	//	vid[2].setPaused(false);
+	//	vid[2].play();
 		ofLog() << "eye Scene triggered";
 
 		break;
@@ -156,7 +156,7 @@ void VideoPlayerManager::keyReleased(int k) {
 
 	case '5': //scene 2 end
 		currScene = 1;
-		vid[2].stop();
+	//	vid[2].stop();
 		break;
 
 	case '6':
@@ -186,14 +186,14 @@ void VideoPlayerManager::keyReleased(int k) {
 		break;
 
 	case ' ':
-		if (debugMode) {
+		//if (debugMode) {
 			if (vid[1].isPaused()) {
 				vid[1].setPaused(false);
 			}
 			else {
 				vid[1].setPaused(true);
 			}
-		}
+	//	}
 		break;
 
 	default:
